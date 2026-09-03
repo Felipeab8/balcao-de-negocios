@@ -1,4 +1,4 @@
-/* Brasileirão Série A — temporada 2025 (aproximação) */
+/* Brasileirão Série A — temporada 2025 (aproximação); Palmeiras atualizado para 2026 */
 (window.LIGAS = window.LIGAS || []).push({
 id: 'BRA', nome: 'Brasileirão', pais: 'Brasil', nomes: 'BRA', forca: 3,
 clubes: [
@@ -8,20 +8,23 @@ clubes: [
   ['Erick Pulgar','VOL',31,77],['Jorginho','VOL',33,79],['Saúl Ñíguez','VOL',30,77],['Nicolás de la Cruz','MEI',28,79],
   ['Giorgian de Arrascaeta','MEI',31,82],['Jorge Carrascal','MEI',27,77],['Luiz Araújo','PON',29,77],['Bruno Henrique','PON',34,76],
   ['Samuel Lino','PON',25,78],['Everton Cebolinha','PON',29,76],['Pedro','ATA',28,80]] },
+/* Palmeiras: elenco de setembro de 2026 (pós-janela do meio do ano) */
 { n:'Palmeiras', cid:'São Paulo', lvl:79, c1:'#006437', c2:'#FFFFFF', p:[
-  ['Weverton','GOL',37,78],['Gustavo Gómez','ZAG',32,80],['Murilo','ZAG',28,78],['Bruno Fuchs','ZAG',26,76],
-  ['Agustín Giay','LAT',21,76],['Joaquín Piquerez','LAT',27,78],['Mayke','LAT',32,74],['Marcos Rocha','LAT',36,72],
-  ['Aníbal Moreno','VOL',26,78],['Emiliano Martínez','VOL',26,76],['Lucas Evangelista','VOL',30,75],['Andreas Pereira','MEI',29,78],
-  ['Maurício','MEI',28,77],['Felipe Anderson','PON',32,78],['Facundo Torres','PON',25,78],['Vitor Roque','ATA',20,79],
-  ['José Manuel López','ATA',24,78]] },
+  ['Carlos Miguel','GOL',27,77],['Bruno Bertinato','GOL',28,71],['Marcelo Lomba','GOL',39,70],
+  ['Gustavo Gómez','ZAG',33,79],['Murilo','ZAG',29,78],['Bruno Fuchs','ZAG',27,77],['Alexander Barboza','ZAG',31,77],
+  ['Benedetti','ZAG',22,71],['Joaquín Piquerez','LAT',28,79],['Agustín Giay','LAT',22,77],['Khellven','LAT',25,76],
+  ['Jefté','LAT',22,75],['Marlon Freitas','VOL',31,77],['Emiliano Martínez','VOL',27,77],['Lucas Evangelista','VOL',31,75],
+  ['Andreas Pereira','MEI',30,78],['Maurício','MEI',25,78],['Larson','MEI',21,71],
+  ['Jhon Arias','PON',28,80],['Ramón Sosa','PON',27,77],['Felipe Anderson','PON',33,76],
+  ['Vitor Roque','ATA',21,81],['José Manuel López','ATA',25,79],['Paulinho','ATA',26,79]] },
 { n:'Cruzeiro', cid:'Belo Horizonte', lvl:76, c1:'#003399', c2:'#FFFFFF', p:[
   ['Cássio','GOL',38,78],['Fabrício Bruno','ZAG',29,78],['Villalba','ZAG',27,76],['João Marcelo','ZAG',25,74],
   ['Fagner','LAT',36,74],['William','LAT',30,75],['Kaiki','LAT',24,73],['Lucas Romero','VOL',31,76],
   ['Lucas Silva','VOL',32,75],['Christian','VOL',25,76],['Matheus Pereira','MEI',29,80],['Wanderson','PON',30,76],
   ['Kaio Jorge','ATA',23,78],['Gabriel Barbosa','ATA',29,77]] },
 { n:'Botafogo', cid:'Rio de Janeiro', lvl:76, c1:'#0A0A0A', c2:'#FFFFFF', p:[
-  ['Neto','GOL',25,74],['Alexander Barboza','ZAG',30,77],['Bastos','ZAG',26,76],['Kaio Pantaleão','ZAG',26,73],
-  ['Cuiabano','LAT',23,75],['Vitinho','LAT',31,74],['Alex Telles','LAT',33,76],['Marlon Freitas','VOL',30,76],
+  ['Neto','GOL',25,74],['Mateo Ponte','ZAG',23,75],['Bastos','ZAG',26,76],['Kaio Pantaleão','ZAG',26,73],
+  ['Cuiabano','LAT',23,75],['Vitinho','LAT',31,74],['Alex Telles','LAT',33,76],['Cristian Medina','VOL',24,76],
   ['Gregore','VOL',31,75],['Danilo Barbosa','VOL',29,74],['Jefferson Savarino','MEI',28,78],['Artur','PON',28,76],
   ['Matheus Martins','PON',22,74],['Arthur Cabral','ATA',27,76],['Montoro','MEI',20,74]] },
 { n:'Bahia', cid:'Salvador', lvl:74, c1:'#003399', c2:'#E30613', p:[
@@ -36,7 +39,7 @@ clubes: [
 { n:'Fluminense', cid:'Rio de Janeiro', lvl:74, c1:'#7A1F3D', c2:'#006437', p:[
   ['Fábio','GOL',45,78],['Thiago Silva','ZAG',41,78],['Juan Freytes','ZAG',25,74],['Ignácio','ZAG',28,73],
   ['Samuel Xavier','LAT',35,73],['Renê','LAT',33,73],['Guga','LAT',28,73],['Hércules','VOL',24,76],
-  ['Martinelli','VOL',24,75],['Nonato','VOL',28,74],['Paulo Henrique Ganso','MEI',36,77],['Jhon Arias','PON',28,78],
+  ['Martinelli','VOL',24,75],['Nonato','VOL',28,74],['Paulo Henrique Ganso','MEI',36,77],['Kevin Serna','PON',28,75],
   ['Agustín Canobbio','PON',27,75],['Germán Cano','ATA',37,76],['Everaldo','ATA',32,73]] },
 { n:'São Paulo', cid:'São Paulo', lvl:75, c1:'#E30613', c2:'#0A0A0A', p:[
   ['Rafael','GOL',36,77],['Robert Arboleda','ZAG',34,76],['Alan Franco','ZAG',26,75],['Ferraresi','ZAG',27,74],
