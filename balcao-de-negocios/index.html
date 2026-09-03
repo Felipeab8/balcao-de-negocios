@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Balcão de Negócios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="top">
+  <div class="topin">
+    <div>
+      <div class="mark">BALCÃO DE <em>NEGÓCIOS</em></div>
+      <div class="tag" id="topTag">Janela de transferências &middot; simulador de diretoria</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="hud" id="hud" hidden></div>
+  </div>
+  <div class="ticker" id="tickerBar" hidden>
+    <span class="lbl">PLANTÃO</span>
+    <span class="vp"><span class="run" id="tickerRun"></span></span>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="intro" id="screenIntro">
+    <div>
+      <div class="eyebrow">14 dias &middot; um elenco &middot; um caixa</div>
+      <h1>Você não escala.<span>Você contrata.</span></h1>
+      <p class="lede">Um clube das oito principais ligas do mundo cai no seu colo &mdash; com o caixa real, a folha
+      salarial e os buracos que o elenco tem de verdade. Sua única função é a janela: negociar, vender, encaixar
+      salário e fechar antes do gongo. No dia seguinte a imprensa dá a nota &mdash; e é ela que decide se você fica.</p>
+      <ul class="rules">
+        <li><span class="n">01</span><span><b>Cada proposta enviada gasta um dia.</b> Recusada também. Rivais fecham com alvos seus enquanto você pensa.</span></li>
+        <li><span class="n">02</span><span><b>Duas conversas por negócio:</b> o clube dono do jogador quer valor de transferência, o jogador quer salário. Os dois precisam dizer sim.</span></li>
+        <li><span class="n">03</span><span><b>Vender é ferramenta.</b> Liberar folha e caixa é legítimo &mdash; deixar uma posição vazia é sabotagem, e a nota cobra.</span></li>
+        <li><span class="n">04</span><span><b>A nota vai de F a A+.</b> Aprovação a partir de <b>B</b> (70 pontos): reforço do time, carências resolvidas, custo-benefício, projeto e finanças.</span></li>
+      </ul>
+      <div class="actions">
+        <button class="btn" id="btnStart">Abrir a janela</button>
+        <button class="btn ghost" id="btnReroll">Sortear outro clube</button>
+        <select id="pickLiga" aria-label="Liga do sorteio"></select>
+      </div>
+      <p class="hint" style="margin-top:14px">Premier League &middot; Bundesliga &middot; La Liga &middot; Serie A &middot; Ligue 1 &middot; Brasileirão &middot; Pro League &middot; Liga Portugal</p>
+    </div>
+    <div class="dossier" id="dossier"></div>
+  </section>
+
+  <section class="desk" id="screenDesk" hidden>
+    <div>
+      <div class="stack">
+        <div class="pnl">
+          <header><h3>Elenco atual</h3><span class="r" id="squadCount"></span></header>
+          <div id="squadList"></div>
+          <div class="meterbox">
+            <div class="k"><span>Força da escalação (<b id="formLabel">4-3-3</b>)</span><b id="xiNow">0.0</b></div>
+            <div class="bar"><i id="xiBar" class="amber" style="width:0%"></i></div>
+            <div class="k" style="margin-top:9px"><span>Caixa usado</span><b id="spentPct">0%</b></div>
+            <div class="bar"><i id="spentBar" style="width:0%"></i></div>
+            <div class="k" style="margin-top:9px"><span>Folha semanal</span><b id="wagePct">0%</b></div>
+            <div class="bar"><i id="wageBar" class="pos" style="width:0%"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pnl">
+      <header>
+        <div class="tabs" role="tablist">
+          <button class="tab" id="tabMarket" role="tab" aria-selected="true">Mercado</button>
+          <button class="tab" id="tabSquad" role="tab" aria-selected="false">Vender do elenco</button>
+          <button class="tab" id="tabLineup" role="tab" aria-selected="false">Escalação</button>
+        </div>
+        <span class="r" id="listCount"></span>
+      </header>
+      <div class="filters" id="filters">
+        <select id="fPos">
+          <option value="">Todas as posições</option>
+          <option value="GOL">Goleiro</option><option value="ZAG">Zagueiro</option>
+          <option value="LAT">Lateral</option><option value="VOL">Volante</option>
+          <option value="MEI">Meia</option><option value="PON">Ponta</option>
+          <option value="ATA">Atacante</option>
+        </select>
+        <select id="fLiga"></select>
+        <select id="fSort">
+          <option value="ovr">Melhor overall</option>
+          <option value="fee">Menor pedida</option>
+          <option value="pot">Maior potencial</option>
+          <option value="age">Mais jovem</option>
+          <option value="wage">Menor salário</option>
+        </select>
+        <input type="search" id="fName" placeholder="Buscar jogador ou clube" autocomplete="off">
+        <label class="tog"><input type="checkbox" id="fNeed"> só carências</label>
+        <label class="tog"><input type="checkbox" id="fAfford"> cabe no caixa</label>
+      </div>
+      <div class="tacbar" id="tacbar" hidden>
+        <label class="tog" for="fForm">Tática</label>
+        <select id="fForm" aria-label="Formação tática"></select>
+        <button class="btn sm ghost" id="btnAuto">Escalação automática</button>
+        <div class="spacer"></div>
+        <div class="lstat">
+          <span class="k">Força da escalação</span>
+          <b id="lineupStrength">0.0</b>
+          <span class="d" id="lineupDelta"></span>
+        </div>
+      </div>
+
+      <div class="pitchwrap" id="pitchWrap" hidden>
+        <div>
+          <div class="needbar" id="needBar"></div>
+          <div class="pitch">
+            <div class="ln mid"></div>
+            <div class="ln circle"></div>
+            <div class="ln spot"></div>
+            <div class="ln area-top"></div>
+            <div class="ln area-bot"></div>
+            <div class="ln goal-top"></div>
+            <div class="ln goal-bot"></div>
+            <div id="pitchSlots"></div>
+          </div>
+          <p class="hint" id="selHint" style="margin:10px 2px 0"></p>
+        </div>
+        <div class="benchcol">
+          <div class="bhead"><span>Reservas</span><span id="benchCount"></span></div>
+          <div class="bench" id="bench"></div>
+        </div>
+      </div>
+
+      <div class="mk" id="listWrap"></div>
+    </div>
+
+    <div>
+      <div class="stack">
+        <div class="pnl">
+          <header><h3>Prévia da imprensa</h3><span class="r" id="dealsCount"></span></header>
+          <div class="gradebox">
+            <div class="gletter" id="gLetter">&ndash;</div>
+            <div class="gscore" id="gScore">0 / 100 PONTOS</div>
+            <div class="scale" id="gScale"></div>
+          </div>
+          <div id="comps"></div>
+        </div>
+        <div class="pnl">
+          <header><h3>Movimentações</h3><span class="r" id="netSpend"></span></header>
+          <div id="deals"><div class="empty">Nenhum negócio fechado ainda.</div></div>
+        </div>
+        <div class="pnl">
+          <header><h3>Últimas do dia</h3></header>
+          <div class="feed" id="feed"></div>
+          <div style="padding:12px 13px;border-top:1px solid var(--line)">
+            <button class="btn wide" id="btnClose">Fechar a janela</button>
+            <div class="hint" style="margin-top:8px;text-align:center">Encerra e publica a nota final</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="report" id="screenReport" hidden></section>
+</div>
+<div id="modalRoot"></div>
+
+<script src="data/names.js"></script>
+<script src="data/premier.js"></script>
+<script src="data/bundesliga.js"></script>
+<script src="data/laliga.js"></script>
+<script src="data/seriea.js"></script>
+<script src="data/ligue1.js"></script>
+<script src="data/brasileirao.js"></script>
+<script src="data/belgica.js"></script>
+<script src="data/portugal.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

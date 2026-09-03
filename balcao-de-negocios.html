@@ -1,0 +1,2186 @@
+<title>Balcão de Negócios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#080C20; --panel:#111739; --panel2:#182052; --panel3:#1E2765;
+  --line:#2A3369; --line-soft:#20285a;
+  --ink:#EDEFFB; --muted:#949CD2; --dim:#6C74AC;
+  --amber:#FFB020; --blue:#5B8CFF; --pos:#37D39A; --neg:#FF5F6E; --warn:#FFD166;
+  --r:6px;
+  --f-display:"Archivo Black","Archivo",Impact,sans-serif;
+  --f-body:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);margin:0;
+  background-image:radial-gradient(1100px 560px at 72% -12%, #1a2360 0%, rgba(26,35,96,0) 62%);
+  background-attachment:fixed;}
+h1,h2,h3{margin:0;text-wrap:balance}
+button{font-family:inherit;color:inherit}
+::selection{background:var(--amber);color:#1a1200}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.wrap{max-width:1400px;margin:0 auto;padding:0 18px 44px}
+
+.top{position:sticky;top:0;z-index:40;background:rgba(8,12,32,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topin{max-width:1400px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:16px}
+.mark{font-family:var(--f-display);font-size:17px;letter-spacing:-.02em;line-height:1}
+.mark em{font-style:normal;color:var(--amber)}
+.tag{font-family:var(--f-mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin-top:5px}
+.spacer{flex:1}
+.hud{display:flex;gap:14px}
+.hud .cell{border-left:1px solid var(--line);padding-left:14px;min-width:100px}
+.hud .k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.hud .v{font-family:var(--f-mono);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.35}
+.v.amber{color:var(--amber)} .v.pos{color:var(--pos)} .v.neg{color:var(--neg)}
+
+.ticker{background:var(--amber);color:#160F00;overflow:hidden;white-space:nowrap;display:flex;align-items:stretch;
+  font-family:var(--f-mono);font-size:11.5px;font-weight:600}
+.ticker .lbl{background:#160F00;color:var(--amber);padding:5px 10px;letter-spacing:.18em;font-size:10px;flex:none}
+.ticker .vp{overflow:hidden;flex:1}
+.ticker .run{display:inline-block;padding:5px 0;white-space:nowrap;animation:slide 32s linear infinite}
+@keyframes slide{from{transform:translateX(6%)}to{transform:translateX(-104%)}}
+@media (prefers-reduced-motion:reduce){.ticker .run{animation:none;padding:5px 10px}}
+
+.intro{padding:44px 0 0;display:grid;grid-template-columns:1.02fr .98fr;gap:40px;align-items:start}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.22em;color:var(--amber);text-transform:uppercase}
+.intro h1{font-family:var(--f-display);font-size:clamp(38px,5.2vw,62px);line-height:.94;letter-spacing:-.025em;margin:14px 0 16px}
+.intro h1 span{color:var(--amber);display:block}
+.lede{color:var(--muted);font-size:15.5px;line-height:1.65;max-width:60ch}
+.rules{margin:26px 0 0;padding:0;list-style:none;display:grid;gap:1px;background:var(--line-soft);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.rules li{background:var(--panel);padding:12px 14px;display:grid;grid-template-columns:24px 1fr;gap:12px;font-size:13.5px;color:var(--muted);line-height:1.55}
+.rules b{color:var(--ink);font-weight:600}
+.rules .n{font-family:var(--f-mono);color:var(--amber);font-size:12px}
+
+.dossier{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.dossier .hd{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:var(--panel2)}
+.dossier .hd .t{font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+.crest{width:36px;height:36px;border-radius:3px;display:grid;place-items:center;font-family:var(--f-display);font-size:13px;flex:none}
+.club-line{display:flex;gap:14px;align-items:center;padding:18px 16px 6px}
+.club-line h2{font-family:var(--f-display);font-size:25px;letter-spacing:-.02em;line-height:1.05}
+.club-line .sub{color:var(--dim);font-family:var(--f-mono);font-size:11px;margin-top:5px}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-soft);margin-top:16px;border-top:1px solid var(--line)}
+.dgrid > div{background:var(--panel);padding:13px 16px}
+.dgrid .k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.dgrid .v{font-family:var(--f-mono);font-size:20px;font-weight:600;margin-top:3px;font-variant-numeric:tabular-nums}
+.board{padding:14px 16px;border-top:1px solid var(--line);background:var(--panel2)}
+.board .k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin-bottom:7px}
+.board p{margin:0;font-size:13.5px;line-height:1.6;color:var(--muted)}
+.board p b{color:var(--ink)}
+
+.btn{background:var(--amber);color:#160F00;border:0;border-radius:var(--r);padding:13px 22px;font-weight:700;font-size:14px;cursor:pointer;transition:transform .12s,filter .12s}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;filter:none}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--amber);color:var(--amber);filter:none}
+.btn.sm{padding:7px 12px;font-size:12px;border-radius:4px}
+.btn.wide{width:100%}
+.actions{display:flex;gap:12px;align-items:center;margin-top:22px;flex-wrap:wrap}
+.hint{font-family:var(--f-mono);font-size:11px;color:var(--dim)}
+
+.desk{display:grid;grid-template-columns:266px minmax(0,1fr) 316px;gap:14px;padding-top:14px;align-items:start}
+.pnl{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.pnl + .pnl{margin-top:14px}
+.pnl > header{padding:10px 13px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pnl > header h3{font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;font-weight:500}
+.pnl > header .r{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.stack{position:sticky;top:78px}
+
+.srow{display:grid;grid-template-columns:36px 1fr auto;gap:9px;align-items:center;padding:7px 13px}
+.srow + .srow{border-top:1px solid var(--line-soft)}
+.srow .nm{font-size:13px;line-height:1.25;min-width:0}
+.srow .nm small{display:block;color:var(--dim);font-family:var(--f-mono);font-size:10px;margin-top:2px}
+.srow .nm b{font-weight:600}
+.pos{font-family:var(--f-mono);font-size:10px;font-weight:600;letter-spacing:.05em;text-align:center;padding:4px 0;border-radius:3px;background:var(--panel3);color:var(--muted)}
+.pos.crit{background:rgba(255,95,110,.16);color:#FF8F9A}
+.pos.soft{background:rgba(255,209,102,.14);color:var(--warn)}
+.pos.ok{background:rgba(55,211,154,.12);color:var(--pos)}
+.ovr{font-family:var(--f-mono);font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+.ovr small{display:block;font-size:10px;color:var(--pos);font-weight:500}
+.ovr small.neg{color:var(--neg)}
+
+.meterbox{padding:12px 13px;border-top:1px solid var(--line-soft)}
+.meterbox .k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;display:flex;justify-content:space-between}
+.meterbox .k b{color:var(--ink);font-weight:600;letter-spacing:0}
+.bar{height:6px;border-radius:99px;background:var(--panel3);margin-top:7px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--blue);border-radius:99px;transition:width .4s cubic-bezier(.2,.8,.2,1)}
+.bar i.amber{background:var(--amber)} .bar i.neg{background:var(--neg)} .bar i.pos{background:var(--pos)}
+
+.tabs{display:flex;gap:2px}
+.tab{background:transparent;border:1px solid transparent;border-radius:4px;padding:6px 11px;font-size:12px;font-weight:600;color:var(--dim);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--panel3);color:var(--ink);border-color:var(--line)}
+.filters{display:flex;gap:8px;padding:10px 13px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center}
+select,input[type=search],input[type=number]{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:4px;padding:6px 9px;font-family:var(--f-mono);font-size:11.5px}
+input[type=search]{flex:1;min-width:120px}
+.tog{display:flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px;color:var(--muted);cursor:pointer}
+.tog input{accent-color:var(--amber)}
+
+.mk{overflow-x:auto;max-height:min(62vh,720px);overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.13em;color:var(--dim);text-transform:uppercase;font-weight:500;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0;background:var(--panel);z-index:2}
+tbody td{padding:8px 10px;border-bottom:1px solid var(--line-soft);vertical-align:middle;white-space:nowrap}
+tbody tr:hover{background:var(--panel2)}
+tbody tr.gone{opacity:.32}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+th.num{text-align:right}
+.pname{font-weight:600;font-size:13.5px}
+.pmeta{color:var(--dim);font-family:var(--f-mono);font-size:10.5px;margin-top:2px}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:9px;letter-spacing:.08em;padding:2px 6px;border-radius:3px;background:var(--panel3);color:var(--muted);text-transform:uppercase;margin-left:6px;vertical-align:1px}
+.chip.free{background:rgba(91,140,255,.16);color:#9BB6FF}
+.chip.gem{background:rgba(255,176,32,.16);color:var(--amber)}
+.chip.star{background:rgba(255,95,110,.15);color:#FF9AA4}
+.chip.vet{background:rgba(148,156,210,.14);color:var(--muted)}
+.empty{padding:28px 14px;color:var(--dim);font-family:var(--f-mono);font-size:12px;text-align:center}
+
+.feed{max-height:250px;overflow:auto}
+.fitem{padding:9px 13px;border-bottom:1px solid var(--line-soft);font-size:12.5px;line-height:1.5;color:var(--muted);display:grid;grid-template-columns:32px 1fr;gap:9px}
+.fitem .d{font-family:var(--f-mono);font-size:10px;color:var(--dim);padding-top:2px}
+.fitem b{color:var(--ink);font-weight:600}
+.fitem.good b{color:var(--pos)} .fitem.bad b{color:var(--neg)} .fitem.rival b{color:var(--warn)}
+.deal{display:grid;grid-template-columns:1fr auto;gap:8px;padding:9px 13px;border-bottom:1px solid var(--line-soft);align-items:center}
+.deal:last-child{border-bottom:0}
+.deal .n{font-size:13px;font-weight:600}
+.deal .m{font-family:var(--f-mono);font-size:10.5px;color:var(--dim);margin-top:2px}
+.deal .p{font-family:var(--f-mono);font-size:12.5px;font-variant-numeric:tabular-nums;text-align:right}
+.deal .p small{display:block;color:var(--dim);font-size:10px}
+
+.gradebox{padding:14px 13px 16px;text-align:center;border-bottom:1px solid var(--line)}
+.gletter{font-family:var(--f-display);font-size:54px;line-height:.9;letter-spacing:-.045em}
+.gscore{font-family:var(--f-mono);font-size:11px;color:var(--dim);letter-spacing:.1em;margin-top:6px}
+.scale{display:flex;height:5px;margin:13px 0 0;gap:2px}
+.scale span{flex:1;background:var(--panel3);border-radius:2px}
+.scale span.on{background:var(--amber)}
+.comp{padding:8px 13px}
+.comp + .comp{border-top:1px solid var(--line-soft)}
+.comp .k{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);gap:8px}
+.comp .k b{font-family:var(--f-mono);font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
+
+.scrim{position:fixed;inset:0;background:rgba(4,6,18,.74);backdrop-filter:blur(3px);z-index:60;display:grid;place-items:center;padding:20px}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:8px;width:min(560px,100%);max-height:92vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.mh{padding:16px 18px;border-bottom:1px solid var(--line);background:var(--panel2);display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.modal h3{font-family:var(--f-display);font-size:22px;letter-spacing:-.02em;line-height:1.15}
+.mh .sub{color:var(--dim);font-family:var(--f-mono);font-size:11px;margin-top:6px;line-height:1.5}
+.x{background:transparent;border:1px solid var(--line);border-radius:4px;width:28px;height:28px;cursor:pointer;color:var(--muted);font-size:14px;flex:none}
+.x:hover{border-color:var(--neg);color:var(--neg)}
+.attrs{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-soft)}
+.attrs > div{background:var(--panel);padding:11px 14px}
+.attrs .k{font-family:var(--f-mono);font-size:9px;letter-spacing:.13em;color:var(--dim);text-transform:uppercase}
+.attrs .v{font-family:var(--f-mono);font-size:17px;font-weight:600;margin-top:3px;font-variant-numeric:tabular-nums}
+.negotiate{padding:16px 18px;display:grid;gap:15px}
+.field .k{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--muted);margin-bottom:8px;gap:10px}
+.field .k b{font-family:var(--f-mono);font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--amber);background:transparent}
+.quick{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.quick button{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:4px 9px;font-family:var(--f-mono);font-size:10.5px;color:var(--muted);cursor:pointer}
+.quick button:hover{border-color:var(--amber);color:var(--amber)}
+.msg{padding:11px 13px;border-radius:4px;font-size:13px;line-height:1.55;border-left:3px solid var(--line);background:var(--panel2)}
+.msg.ok{background:rgba(55,211,154,.09);border-color:var(--pos)}
+.msg.no{background:rgba(255,95,110,.09);border-color:var(--neg)}
+.msg.mid{background:rgba(255,176,32,.09);border-color:var(--amber)}
+.msg .who{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:4px}
+.mfoot{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:14px 18px;border-top:1px solid var(--line);background:var(--panel2);flex-wrap:wrap}
+
+.report{padding:36px 0 0;max-width:960px;margin:0 auto}
+.verdict{text-align:center;padding:0 0 8px}
+.verdict .big{font-family:var(--f-display);font-size:clamp(74px,13vw,148px);line-height:.82;letter-spacing:-.05em}
+.verdict h2{font-family:var(--f-display);font-size:clamp(23px,3.4vw,36px);letter-spacing:-.025em;margin:16px 0 10px}
+.verdict p{color:var(--muted);font-size:15px;line-height:1.65;max-width:62ch;margin:0 auto}
+.stamp{display:inline-block;font-family:var(--f-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;padding:6px 14px;border-radius:99px;border:1px solid;margin-bottom:14px}
+.stamp.win{color:var(--pos);border-color:rgba(55,211,154,.5);background:rgba(55,211,154,.08)}
+.stamp.lose{color:var(--neg);border-color:rgba(255,95,110,.5);background:rgba(255,95,110,.08)}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:30px;align-items:start}
+.crow{padding:12px 15px}
+.crow + .crow{border-top:1px solid var(--line-soft)}
+.crow .t2{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.crow .nm{font-size:13.5px;font-weight:600}
+.crow .sc{font-family:var(--f-mono);font-size:12px;font-variant-numeric:tabular-nums;color:var(--amber);white-space:nowrap}
+.crow p{margin:5px 0 0;font-size:12px;color:var(--dim);line-height:1.55}
+@media(max-width:1080px){
+  .desk{grid-template-columns:1fr}
+  .stack{position:static}
+  .intro{grid-template-columns:1fr;gap:28px;padding-top:28px}
+  .rgrid{grid-template-columns:1fr}
+  .hud{display:none}
+  .mk{max-height:none}
+}
+.actions select{padding:12px 12px;font-size:12.5px;border-radius:var(--r)}
+.actions select:hover{border-color:var(--amber)}
+
+/* ---------- escalação: barra de tática, campo e banco ---------- */
+.tacbar{display:flex;gap:10px;align-items:center;padding:10px 13px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tacbar .tog{color:var(--dim);letter-spacing:.14em;text-transform:uppercase;font-size:9.5px}
+.lstat{display:flex;align-items:baseline;gap:8px}
+.lstat .k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.lstat b{font-family:var(--f-mono);font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.lstat .d{font-family:var(--f-mono);font-size:10.5px;color:var(--dim)}
+.chip.xi{background:rgba(55,211,154,.16);color:var(--pos)}
+
+.pitchwrap{display:grid;grid-template-columns:minmax(0,1fr) 234px;gap:12px;padding:12px 13px;align-items:start}
+.pitch{position:relative;max-width:min(100%,436px);margin:0 auto;aspect-ratio:68/100;border-radius:6px;
+  border:1px solid var(--line);overflow:hidden;
+  background:
+    repeating-linear-gradient(180deg, rgba(255,255,255,.022) 0 9%, rgba(0,0,0,0) 9% 18%),
+    linear-gradient(180deg, #123329 0%, #0D2620 55%, #102D25 100%);}
+.ln{position:absolute;border:1px solid rgba(233,240,255,.15);pointer-events:none}
+.ln.mid{left:0;right:0;top:50%;border-width:0 0 1px 0}
+.ln.circle{left:50%;top:50%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%}
+.ln.spot{left:50%;top:50%;width:5px;height:5px;transform:translate(-50%,-50%);border-radius:50%;background:rgba(233,240,255,.28);border:0}
+.ln.area-top{left:21%;right:21%;top:-1px;height:15%;border-top:0}
+.ln.area-bot{left:21%;right:21%;bottom:-1px;height:15%;border-bottom:0}
+.ln.goal-top{left:36%;right:36%;top:-1px;height:6%;border-top:0}
+.ln.goal-bot{left:36%;right:36%;bottom:-1px;height:6%;border-bottom:0}
+
+.slot{position:absolute;transform:translate(-50%,-50%);width:70px;display:grid;justify-items:center;gap:3px;
+  background:transparent;border:0;padding:0;cursor:pointer;font-family:var(--f-body)}
+.slot .badge{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--f-mono);font-weight:600;font-size:13px;font-variant-numeric:tabular-nums;
+  box-shadow:0 3px 10px rgba(0,0,0,.45)}
+.badge.b-GOL{background:#7FA7FF;color:#08132E}
+.badge.b-ZAG,.badge.b-LAT{background:#54D9A8;color:#04241A}
+.badge.b-VOL,.badge.b-MEI{background:#FFC358;color:#1A1200}
+.badge.b-PON,.badge.b-ATA{background:#FF8A96;color:#2B0509}
+.badge.out{box-shadow:0 0 0 2px var(--neg), 0 3px 10px rgba(0,0,0,.45)}
+.badge.vaga{background:rgba(8,12,32,.35);border:1px dashed rgba(233,240,255,.35);color:rgba(233,240,255,.6);font-size:10px}
+.slot .nm{display:grid;justify-items:center;line-height:1.2}
+.slot .who{font-size:10.5px;font-weight:600;color:#EDF3FF;text-shadow:0 1px 3px rgba(0,0,0,.95);
+  max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slot .mini{font-family:var(--f-mono);font-size:8.5px;color:rgba(237,243,255,.5);text-shadow:0 1px 2px rgba(0,0,0,.9)}
+.slot .warn{font-family:var(--f-mono);font-size:8.5px;color:#FF9AA4;text-shadow:0 1px 2px rgba(0,0,0,.9)}
+.slot .rm{position:absolute;top:-7px;right:4px;width:17px;height:17px;border-radius:50%;
+  background:var(--panel3);border:1px solid var(--line);color:var(--muted);font-size:11px;line-height:15px;opacity:0;transition:opacity .15s}
+.slot:hover .rm,.slot:focus-visible .rm{opacity:1}
+.slot .rm:hover{background:var(--neg);color:#1a0004;border-color:var(--neg)}
+.slot.sel .badge{box-shadow:0 0 0 3px var(--amber), 0 3px 10px rgba(0,0,0,.45)}
+.slot.vazio.sel .badge{border-style:solid}
+
+.benchcol{display:flex;flex-direction:column;min-height:0;max-height:684px;
+  border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel2)}
+.bhead{display:flex;justify-content:space-between;gap:8px;padding:9px 11px;border-bottom:1px solid var(--line);
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.bench{overflow:auto;flex:1}
+.brow{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:8px;align-items:center;width:100%;
+  text-align:left;background:transparent;border:0;border-bottom:1px solid var(--line-soft);
+  padding:7px 9px;cursor:pointer;color:inherit;font-family:var(--f-body)}
+.brow:hover{background:var(--panel3)}
+.brow.sel{background:rgba(255,176,32,.16);box-shadow:inset 3px 0 0 var(--amber)}
+.brow.fit{box-shadow:inset 3px 0 0 var(--pos)}
+.brow.unfit{opacity:.4}
+.brow .bn{font-size:12.5px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brow .bn small{display:block;font-family:var(--f-mono);font-size:9.5px;color:var(--dim);font-weight:400}
+.brow .bo{font-family:var(--f-mono);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+.brow .bo small{display:block;font-size:9px;color:var(--neg)}
+@media(max-width:1080px){
+  .pitchwrap{grid-template-columns:1fr}
+  .benchcol{max-height:340px}
+}
+
+/* ---------- carências no campinho ---------- */
+.needbar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 11px}
+.needchip{flex:1 1 128px;display:grid;gap:5px;text-align:left;background:var(--panel2);
+  border:1px solid var(--line);border-left:3px solid var(--neg);border-radius:5px;
+  padding:7px 10px;cursor:pointer;color:inherit;font-family:var(--f-body)}
+.needchip.soft{border-left-color:var(--warn)}
+.needchip.done{border-left-color:var(--pos);opacity:.72}
+.needchip:hover{border-color:var(--amber);opacity:1}
+.nc-t{font-size:12px;font-weight:600;display:flex;align-items:baseline;gap:6px}
+.nc-t em{font-style:normal;font-family:var(--f-mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--neg)}
+.needchip.soft .nc-t em{color:var(--warn)}
+.needchip.done .nc-t em{color:var(--pos)}
+.nc-b{display:block;height:4px;border-radius:99px;background:var(--panel3);overflow:hidden}
+.nc-b i{display:block;height:100%;background:var(--neg);border-radius:99px;transition:width .4s cubic-bezier(.2,.8,.2,1)}
+.needchip.soft .nc-b i{background:var(--warn)}
+.needchip.done .nc-b i{background:var(--pos)}
+.nc-v{display:flex;justify-content:space-between;gap:6px;font-family:var(--f-mono);font-size:9.5px;color:var(--dim)}
+.nc-v .go{color:var(--amber)}
+.needbar .allok{flex:1;background:rgba(55,211,154,.08);border:1px solid rgba(55,211,154,.35);
+  border-radius:5px;padding:9px 11px;font-size:12px;color:var(--pos)}
+.needbar .allok b{color:var(--ink)}
+
+.slot .badge{position:relative;z-index:1}
+.slot.need::before{content:'';position:absolute;left:50%;top:17px;width:54px;height:54px;
+  transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle closest-side, rgba(255,95,110,.55), rgba(255,95,110,0))}
+.slot.need.soft::before{background:radial-gradient(circle closest-side, rgba(255,209,102,.5), rgba(255,209,102,0))}
+.slot.need.crit::before{animation:pulseNeed 2.6s ease-in-out infinite}
+.slot.need .mini{color:#FF9AA4}
+.slot.need.soft .mini{color:var(--warn)}
+@keyframes pulseNeed{
+  0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.16)}
+}
+@media(prefers-reduced-motion:reduce){.slot.need.crit::before{animation:none;opacity:.8}}
+</style>
+
+<div class="top">
+  <div class="topin">
+    <div>
+      <div class="mark">BALCÃO DE <em>NEGÓCIOS</em></div>
+      <div class="tag" id="topTag">Janela de transferências &middot; simulador de diretoria</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="hud" id="hud" hidden></div>
+  </div>
+  <div class="ticker" id="tickerBar" hidden>
+    <span class="lbl">PLANTÃO</span>
+    <span class="vp"><span class="run" id="tickerRun"></span></span>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="intro" id="screenIntro">
+    <div>
+      <div class="eyebrow">14 dias &middot; um elenco &middot; um caixa</div>
+      <h1>Você não escala.<span>Você contrata.</span></h1>
+      <p class="lede">Um clube das oito principais ligas do mundo cai no seu colo &mdash; com o caixa real, a folha
+      salarial e os buracos que o elenco tem de verdade. Sua única função é a janela: negociar, vender, encaixar
+      salário e fechar antes do gongo. No dia seguinte a imprensa dá a nota &mdash; e é ela que decide se você fica.</p>
+      <ul class="rules">
+        <li><span class="n">01</span><span><b>Cada proposta enviada gasta um dia.</b> Recusada também. Rivais fecham com alvos seus enquanto você pensa.</span></li>
+        <li><span class="n">02</span><span><b>Duas conversas por negócio:</b> o clube dono do jogador quer valor de transferência, o jogador quer salário. Os dois precisam dizer sim.</span></li>
+        <li><span class="n">03</span><span><b>Vender é ferramenta.</b> Liberar folha e caixa é legítimo &mdash; deixar uma posição vazia é sabotagem, e a nota cobra.</span></li>
+        <li><span class="n">04</span><span><b>A nota vai de F a A+.</b> Aprovação a partir de <b>B</b> (70 pontos): reforço do time, carências resolvidas, custo-benefício, projeto e finanças.</span></li>
+      </ul>
+      <div class="actions">
+        <button class="btn" id="btnStart">Abrir a janela</button>
+        <button class="btn ghost" id="btnReroll">Sortear outro clube</button>
+        <select id="pickLiga" aria-label="Liga do sorteio"></select>
+      </div>
+      <p class="hint" style="margin-top:14px">Premier League &middot; Bundesliga &middot; La Liga &middot; Serie A &middot; Ligue 1 &middot; Brasileirão &middot; Pro League &middot; Liga Portugal</p>
+    </div>
+    <div class="dossier" id="dossier"></div>
+  </section>
+
+  <section class="desk" id="screenDesk" hidden>
+    <div>
+      <div class="stack">
+        <div class="pnl">
+          <header><h3>Elenco atual</h3><span class="r" id="squadCount"></span></header>
+          <div id="squadList"></div>
+          <div class="meterbox">
+            <div class="k"><span>Força da escalação (<b id="formLabel">4-3-3</b>)</span><b id="xiNow">0.0</b></div>
+            <div class="bar"><i id="xiBar" class="amber" style="width:0%"></i></div>
+            <div class="k" style="margin-top:9px"><span>Caixa usado</span><b id="spentPct">0%</b></div>
+            <div class="bar"><i id="spentBar" style="width:0%"></i></div>
+            <div class="k" style="margin-top:9px"><span>Folha semanal</span><b id="wagePct">0%</b></div>
+            <div class="bar"><i id="wageBar" class="pos" style="width:0%"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pnl">
+      <header>
+        <div class="tabs" role="tablist">
+          <button class="tab" id="tabMarket" role="tab" aria-selected="true">Mercado</button>
+          <button class="tab" id="tabSquad" role="tab" aria-selected="false">Vender do elenco</button>
+          <button class="tab" id="tabLineup" role="tab" aria-selected="false">Escalação</button>
+        </div>
+        <span class="r" id="listCount"></span>
+      </header>
+      <div class="filters" id="filters">
+        <select id="fPos">
+          <option value="">Todas as posições</option>
+          <option value="GOL">Goleiro</option><option value="ZAG">Zagueiro</option>
+          <option value="LAT">Lateral</option><option value="VOL">Volante</option>
+          <option value="MEI">Meia</option><option value="PON">Ponta</option>
+          <option value="ATA">Atacante</option>
+        </select>
+        <select id="fLiga"></select>
+        <select id="fSort">
+          <option value="ovr">Melhor overall</option>
+          <option value="fee">Menor pedida</option>
+          <option value="pot">Maior potencial</option>
+          <option value="age">Mais jovem</option>
+          <option value="wage">Menor salário</option>
+        </select>
+        <input type="search" id="fName" placeholder="Buscar jogador ou clube" autocomplete="off">
+        <label class="tog"><input type="checkbox" id="fNeed"> só carências</label>
+        <label class="tog"><input type="checkbox" id="fAfford"> cabe no caixa</label>
+      </div>
+      <div class="tacbar" id="tacbar" hidden>
+        <label class="tog" for="fForm">Tática</label>
+        <select id="fForm" aria-label="Formação tática"></select>
+        <button class="btn sm ghost" id="btnAuto">Escalação automática</button>
+        <div class="spacer"></div>
+        <div class="lstat">
+          <span class="k">Força da escalação</span>
+          <b id="lineupStrength">0.0</b>
+          <span class="d" id="lineupDelta"></span>
+        </div>
+      </div>
+
+      <div class="pitchwrap" id="pitchWrap" hidden>
+        <div>
+          <div class="needbar" id="needBar"></div>
+          <div class="pitch">
+            <div class="ln mid"></div>
+            <div class="ln circle"></div>
+            <div class="ln spot"></div>
+            <div class="ln area-top"></div>
+            <div class="ln area-bot"></div>
+            <div class="ln goal-top"></div>
+            <div class="ln goal-bot"></div>
+            <div id="pitchSlots"></div>
+          </div>
+          <p class="hint" id="selHint" style="margin:10px 2px 0"></p>
+        </div>
+        <div class="benchcol">
+          <div class="bhead"><span>Reservas</span><span id="benchCount"></span></div>
+          <div class="bench" id="bench"></div>
+        </div>
+      </div>
+
+      <div class="mk" id="listWrap"></div>
+    </div>
+
+    <div>
+      <div class="stack">
+        <div class="pnl">
+          <header><h3>Prévia da imprensa</h3><span class="r" id="dealsCount"></span></header>
+          <div class="gradebox">
+            <div class="gletter" id="gLetter">&ndash;</div>
+            <div class="gscore" id="gScore">0 / 100 PONTOS</div>
+            <div class="scale" id="gScale"></div>
+          </div>
+          <div id="comps"></div>
+        </div>
+        <div class="pnl">
+          <header><h3>Movimentações</h3><span class="r" id="netSpend"></span></header>
+          <div id="deals"><div class="empty">Nenhum negócio fechado ainda.</div></div>
+        </div>
+        <div class="pnl">
+          <header><h3>Últimas do dia</h3></header>
+          <div class="feed" id="feed"></div>
+          <div style="padding:12px 13px;border-top:1px solid var(--line)">
+            <button class="btn wide" id="btnClose">Fechar a janela</button>
+            <div class="hint" style="margin-top:8px;text-align:center">Encerra e publica a nota final</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="report" id="screenReport" hidden></section>
+</div>
+<div id="modalRoot"></div>
+
+<script>
+/* Bancos de nomes por país — usados só para completar o elenco de reserva
+   quando a base de jogadores reais não cobre a profundidade da posição. */
+window.NOMES = {
+  ING: {
+    f: ['Jack','Harry','Callum','Ryan','Tyler','Lewis','Connor','Josh','Alfie','Reece','Kane','Dylan','Ellis','Finley','Owen','Mason'],
+    s: ['Whitfield','Hargreaves','Bradshaw','Ellington','Marsden','Ashworth','Kirby','Pemberton','Hollis','Rowntree','Sedgwick','Brammall','Aldridge','Cotterill']
+  },
+  ALE: {
+    f: ['Lukas','Jonas','Til','Fynn','Moritz','Nico','Elias','Marvin','Tim','Justin','Leon','Maximilian','Kai','Ole'],
+    s: ['Reinartz','Wagenknecht','Hoffmeier','Brunnbauer','Kalthoff','Steinbrück','Lehnhardt','Vogtmann','Krautzig','Sondermann','Ebersbach','Wintermann']
+  },
+  ESP: {
+    f: ['Álvaro','Iker','Unai','Pablo','Hugo','Marc','Adrián','Rubén','Gonzalo','Javi','Aitor','Nacho','Bruno','Izan'],
+    s: ['Berrocal','Quintanilla','Aramendi','Solórzano','Vilanova','Peñaranda','Cifuentes','Larrañaga','Berzosa','Otxoa','Colmenar','Zubillaga']
+  },
+  ITA: {
+    f: ['Lorenzo','Matteo','Andrea','Riccardo','Davide','Simone','Tommaso','Filippo','Gianluca','Nicolò','Pietro','Alessio'],
+    s: ['Bertolazzi','Sconcerti','Marcheggiani','Filippini','Vergassola','Randazzo','Pellicano','Cavallini','Trebeschi','Nardozzi','Sabbadin','Muratori']
+  },
+  FRA: {
+    f: ['Enzo','Théo','Malo','Ilan','Noah','Mathis','Yanis','Bilal','Rayan','Lucas','Ibrahim','Kylian','Sacha','Amine'],
+    s: ['Kervalec','Boutonnet','Ndiaye-Faye','Delaunay','Charbonnier','Sissoko','Traoré-Blin','Perrichon','Lagarrigue','Hounkpatin','Mbemba','Vasseur']
+  },
+  BRA: {
+    f: ['Kauã','Ryan','Vitinho','Guilherme','Pedrinho','Matheus','Wesley','Kaique','Riquelme','Léo','Yuri','Nathan','Cauã','Igor'],
+    s: ['Bragantini','Serafim','Marcondes','Quaresma','Bittencourt','Vilhena','Cavalcanti','Peçanha','Dornelles','Sampaio','Bandeira','Ferraz']
+  },
+  BEL: {
+    f: ['Senne','Wout','Lars','Milan','Arne','Stan','Vic','Jarne','Sem','Lucas','Tuur','Kobe'],
+    s: ['Vandersteen','Vermeulen','De Backer','Van Damme','Coppens','Segers','Vanhoutte','Claeys','Buyens','Wauters','Dhondt','Verhaeghe']
+  },
+  POR: {
+    f: ['Diogo','Tiago','Gonçalo','Rodrigo','Afonso','Rúben','Fábio','Duarte','Salvador','Martim','Ivo','Bernardo'],
+    s: ['Vilaverde','Carvalhosa','Trigueiro','Palhinhas','Vasconcelos','Bragança','Sardinha','Estrela','Loureiro','Cordeiro','Maia','Pinhão']
+  }
+};
+
+/* Premier League — temporada 2025/26 (aproximação)
+   Clube: n=nome, cid=cidade, lvl=nível do elenco, c1/c2=cores
+   Jogador: [nome, posição, idade, overall] */
+(window.LIGAS = window.LIGAS || []).push({
+id: 'PL', nome: 'Premier League', pais: 'Inglaterra', nomes: 'ING', forca: 5,
+clubes: [
+{ n:'Arsenal', cid:'Londres', lvl:85, c1:'#EF0107', c2:'#0A1F44', p:[
+  ['David Raya','GOL',30,85],['Kepa Arrizabalaga','GOL',31,77],['William Saliba','ZAG',24,87],['Gabriel Magalhães','ZAG',28,86],
+  ['Cristhian Mosquera','ZAG',21,77],['Jurriën Timber','LAT',24,83],['Riccardo Calafiori','LAT',23,80],['Myles Lewis-Skelly','LAT',19,79],
+  ['Declan Rice','VOL',26,88],['Martín Zubimendi','VOL',26,85],['Christian Nørgaard','VOL',31,77],['Martin Ødegaard','MEI',27,86],
+  ['Eberechi Eze','MEI',27,84],['Bukayo Saka','PON',24,88],['Gabriel Martinelli','PON',24,82],['Noni Madueke','PON',23,79],
+  ['Viktor Gyökeres','ATA',27,85],['Kai Havertz','ATA',26,83]] },
+{ n:'Aston Villa', cid:'Birmingham', lvl:80, c1:'#670E36', c2:'#95BFE5', p:[
+  ['Emiliano Martínez','GOL',33,85],['Ezri Konsa','ZAG',28,81],['Pau Torres','ZAG',28,81],['Tyrone Mings','ZAG',32,77],
+  ['Ian Maatsen','LAT',23,78],['Matty Cash','LAT',28,77],['Lucas Digne','LAT',32,77],['Amadou Onana','VOL',24,80],
+  ['Youri Tielemans','VOL',28,82],['Boubacar Kamara','VOL',26,80],['John McGinn','MEI',31,79],['Morgan Rogers','MEI',23,82],
+  ['Donyell Malen','PON',26,78],['Jadon Sancho','PON',25,78],['Ollie Watkins','ATA',29,84]] },
+{ n:'Bournemouth', cid:'Bournemouth', lvl:76, c1:'#DA291C', c2:'#0A0A0A', p:[
+  ['Đorđe Petrović','GOL',26,78],['Marcos Senesi','ZAG',28,79],['Bafodé Diakité','ZAG',24,78],['James Hill','ZAG',23,74],
+  ['Adrien Truffert','LAT',23,77],['Adam Smith','LAT',34,74],['Lewis Cook','VOL',28,77],['Alex Scott','VOL',22,77],
+  ['Ryan Christie','MEI',30,77],['Antoine Semenyo','PON',25,82],['Justin Kluivert','PON',26,80],['Evanilson','ATA',26,79],
+  ['Ben Doak','PON',20,76]] },
+{ n:'Brentford', cid:'Londres', lvl:75, c1:'#E30613', c2:'#140F0F', p:[
+  ['Caoimhín Kelleher','GOL',27,78],['Nathan Collins','ZAG',24,80],['Sepp van den Berg','ZAG',23,77],['Kristoffer Ajer','ZAG',27,76],
+  ['Aaron Hickey','LAT',23,76],['Keane Lewis-Potter','LAT',24,77],['Jordan Henderson','VOL',35,76],['Yehor Yarmoliuk','VOL',21,76],
+  ['Mikkel Damsgaard','MEI',25,79],['Kevin Schade','PON',23,78],['Dango Ouattara','PON',23,77],['Igor Thiago','ATA',24,79]] },
+{ n:'Brighton', cid:'Brighton', lvl:78, c1:'#0057B8', c2:'#FFCD00', p:[
+  ['Bart Verbruggen','GOL',23,80],['Jan Paul van Hecke','ZAG',25,79],['Lewis Dunk','ZAG',33,78],['Diego Gómez','VOL',22,76],
+  ['Ferdi Kadıoğlu','LAT',26,78],['Maxim De Cuyper','LAT',25,78],['Carlos Baleba','VOL',21,82],['Yasin Ayari','VOL',22,77],
+  ['Georginio Rutter','MEI',23,79],['Kaoru Mitoma','PON',28,82],['Yankuba Minteh','PON',21,79],['Brajan Gruda','PON',21,77],
+  ['Danny Welbeck','ATA',34,77],['Stefanos Tzimas','ATA',19,75]] },
+{ n:'Burnley', cid:'Burnley', lvl:71, c1:'#6C1D45', c2:'#99D6EA', p:[
+  ['Martin Dúbravka','GOL',36,76],['Maxime Estève','ZAG',23,74],['Hjalmar Ekdal','ZAG',26,72],['Bashir Humphreys','ZAG',22,73],
+  ['Quilindschy Hartman','LAT',24,74],['Connor Roberts','LAT',30,73],['Josh Cullen','VOL',29,75],['Josh Laurent','VOL',30,73],
+  ['Lesley Ugochukwu','VOL',21,75],['Jaidon Anthony','PON',25,74],['Zian Flemming','ATA',27,74],['Armando Broja','ATA',24,74]] },
+{ n:'Chelsea', cid:'Londres', lvl:84, c1:'#034694', c2:'#0A1F44', p:[
+  ['Robert Sánchez','GOL',28,79],['Filip Jörgensen','GOL',23,76],['Levi Colwill','ZAG',22,82],['Wesley Fofana','ZAG',24,80],
+  ['Trevoh Chalobah','ZAG',26,79],['Marc Cucurella','LAT',27,83],['Reece James','LAT',25,82],['Malo Gusto','LAT',22,79],
+  ['Moisés Caicedo','VOL',24,87],['Roméo Lavia','VOL',21,79],['Enzo Fernández','MEI',24,85],['Cole Palmer','MEI',23,87],
+  ['Pedro Neto','PON',25,80],['Estêvão','PON',18,80],['Alejandro Garnacho','PON',21,79],['Jamie Gittens','PON',21,77],
+  ['João Pedro','ATA',24,82],['Liam Delap','ATA',22,78]] },
+{ n:'Crystal Palace', cid:'Londres', lvl:78, c1:'#1B458F', c2:'#C4122E', p:[
+  ['Dean Henderson','GOL',28,80],['Marc Guéhi','ZAG',25,84],['Maxence Lacroix','ZAG',25,80],['Chris Richards','ZAG',25,78],
+  ['Daniel Muñoz','LAT',29,81],['Tyrick Mitchell','LAT',26,79],['Adam Wharton','VOL',21,82],['Jefferson Lerma','VOL',30,77],
+  ['Daichi Kamada','MEI',29,79],['Ismaïla Sarr','PON',27,80],['Yeremy Pino','PON',23,78],['Jean-Philippe Mateta','ATA',28,81]] },
+{ n:'Everton', cid:'Liverpool', lvl:75, c1:'#003399', c2:'#0B1B3C', p:[
+  ['Jordan Pickford','GOL',31,84],['James Tarkowski','ZAG',32,79],['Jarrad Branthwaite','ZAG',23,83],['Michael Keane','ZAG',32,74],
+  ['Vitalii Mykolenko','LAT',26,77],['Nathan Patterson','LAT',23,74],['Idrissa Gueye','VOL',36,77],['James Garner','VOL',24,77],
+  ['Kiernan Dewsbury-Hall','MEI',27,77],['Jack Grealish','PON',30,80],['Iliman Ndiaye','PON',25,79],['Beto','ATA',27,76],
+  ['Thierno Barry','ATA',22,76]] },
+{ n:'Fulham', cid:'Londres', lvl:77, c1:'#CC0000', c2:'#0B0B0B', p:[
+  ['Bernd Leno','GOL',33,80],['Joachim Andersen','ZAG',29,80],['Calvin Bassey','ZAG',25,79],['Issa Diop','ZAG',28,76],
+  ['Antonee Robinson','LAT',28,80],['Kenny Tete','LAT',29,76],['Sander Berge','VOL',27,79],['Saša Lukić','VOL',29,78],
+  ['Emile Smith Rowe','MEI',25,77],['Harry Wilson','MEI',28,77],['Alex Iwobi','PON',29,80],['Adama Traoré','PON',29,76],
+  ['Raúl Jiménez','ATA',34,78],['Rodrigo Muniz','ATA',24,77]] },
+{ n:'Leeds United', cid:'Leeds', lvl:73, c1:'#FFCD00', c2:'#1D428A', p:[
+  ['Lucas Perri','GOL',27,77],['Joe Rodon','ZAG',27,76],['Pascal Struijk','ZAG',26,76],['Jaka Bijol','ZAG',26,76],
+  ['Jayden Bogle','LAT',25,74],['Gabriel Gudmundsson','LAT',26,75],['Ethan Ampadu','VOL',25,77],['Anton Stach','VOL',26,77],
+  ['Ilia Gruev','VOL',25,74],['Brenden Aaronson','MEI',25,75],['Daniel James','PON',27,76],['Noah Okafor','PON',25,76],
+  ['Dominic Calvert-Lewin','ATA',28,76],['Joël Piroe','ATA',26,75]] },
+{ n:'Liverpool', cid:'Liverpool', lvl:86, c1:'#C8102E', c2:'#00B2A9', p:[
+  ['Alisson','GOL',33,87],['Giorgi Mamardashvili','GOL',25,80],['Ibrahima Konaté','ZAG',26,84],['Virgil van Dijk','ZAG',34,87],
+  ['Joe Gomez','ZAG',28,78],['Andrew Robertson','LAT',31,82],['Jeremie Frimpong','LAT',24,81],['Milos Kerkez','LAT',21,80],
+  ['Ryan Gravenberch','VOL',23,85],['Alexis Mac Allister','VOL',26,85],['Curtis Jones','VOL',24,79],['Dominik Szoboszlai','MEI',25,84],
+  ['Florian Wirtz','MEI',22,87],['Mohamed Salah','PON',33,89],['Cody Gakpo','PON',26,82],['Alexander Isak','ATA',26,88],
+  ['Hugo Ekitiké','ATA',23,83]] },
+{ n:'Manchester City', cid:'Manchester', lvl:86, c1:'#6CABDD', c2:'#1C2C5B', p:[
+  ['Gianluigi Donnarumma','GOL',26,87],['James Trafford','GOL',23,78],['Rúben Dias','ZAG',28,87],['Joško Gvardiol','ZAG',23,85],
+  ['Nathan Aké','ZAG',30,80],['Matheus Nunes','LAT',27,79],['Rico Lewis','LAT',21,78],['Rodri','VOL',29,90],
+  ['Tijjani Reijnders','VOL',27,84],['Nico González','VOL',23,80],['Bernardo Silva','MEI',31,85],['Phil Foden','MEI',25,86],
+  ['Rayan Cherki','MEI',22,80],['Jérémy Doku','PON',23,84],['Savinho','PON',21,81],['Erling Haaland','ATA',25,91],
+  ['Omar Marmoush','ATA',26,84]] },
+{ n:'Manchester United', cid:'Manchester', lvl:82, c1:'#DA291C', c2:'#0A0A0A', p:[
+  ['Senne Lammens','GOL',23,77],['Altay Bayındır','GOL',27,75],['Matthijs de Ligt','ZAG',26,83],['Leny Yoro','ZAG',20,80],
+  ['Lisandro Martínez','ZAG',27,82],['Luke Shaw','LAT',30,78],['Noussair Mazraoui','LAT',28,79],['Patrick Dorgu','LAT',21,76],
+  ['Casemiro','VOL',33,79],['Manuel Ugarte','VOL',24,79],['Kobbie Mainoo','VOL',20,79],['Bruno Fernandes','MEI',31,87],
+  ['Mason Mount','MEI',26,78],['Bryan Mbeumo','PON',26,83],['Amad Diallo','PON',23,80],['Matheus Cunha','MEI',26,82],
+  ['Benjamin Šeško','ATA',22,82]] },
+{ n:'Newcastle United', cid:'Newcastle', lvl:82, c1:'#E8E8E8', c2:'#141414', p:[
+  ['Nick Pope','GOL',33,80],['Aaron Ramsdale','GOL',27,78],['Sven Botman','ZAG',25,82],['Fabian Schär','ZAG',33,80],
+  ['Malick Thiaw','ZAG',24,80],['Kieran Trippier','LAT',35,77],['Tino Livramento','LAT',23,80],['Lewis Hall','LAT',21,80],
+  ['Sandro Tonali','VOL',25,85],['Bruno Guimarães','VOL',28,86],['Joelinton','VOL',29,82],['Harvey Barnes','PON',28,79],
+  ['Anthony Gordon','PON',24,83],['Anthony Elanga','PON',23,79],['Nick Woltemade','ATA',23,80],['Yoane Wissa','ATA',29,79]] },
+{ n:'Nottingham Forest', cid:'Nottingham', lvl:78, c1:'#DD0000', c2:'#0A0A0A', p:[
+  ['Matz Sels','GOL',33,80],['John Victor','GOL',29,76],['Nikola Milenković','ZAG',27,82],['Murillo','ZAG',23,82],
+  ['Ola Aina','LAT',28,79],['Neco Williams','LAT',24,78],['Elliot Anderson','VOL',22,80],['Nicolás Domínguez','VOL',27,78],
+  ['Douglas Luiz','VOL',27,79],['Morgan Gibbs-White','MEI',25,83],['Callum Hudson-Odoi','PON',24,78],['Dan Ndoye','PON',24,79],
+  ['Chris Wood','ATA',33,80],['Igor Jesus','ATA',24,77]] },
+{ n:'Sunderland', cid:'Sunderland', lvl:73, c1:'#EB172B', c2:'#211E1F', p:[
+  ['Robin Roefs','GOL',22,75],['Dan Ballard','ZAG',26,75],['Nordi Mukiele','ZAG',27,77],['Omar Alderete','ZAG',28,76],
+  ['Trai Hume','LAT',23,76],['Reinildo','LAT',31,74],['Noah Sadiki','VOL',20,75],['Granit Xhaka','VOL',33,80],
+  ['Enzo Le Fée','MEI',25,77],['Chemsdine Talbi','PON',20,75],['Simon Adingra','PON',23,76],['Wilson Isidor','ATA',25,76],
+  ['Brian Brobbey','ATA',23,78]] },
+{ n:'Tottenham Hotspur', cid:'Londres', lvl:81, c1:'#D9DEE8', c2:'#132257', p:[
+  ['Guglielmo Vicario','GOL',29,81],['Cristian Romero','ZAG',27,85],['Micky van de Ven','ZAG',24,83],['Kevin Danso','ZAG',27,77],
+  ['Destiny Udogie','LAT',23,80],['Pedro Porro','LAT',26,81],['Djed Spence','LAT',25,78],['Rodrigo Bentancur','VOL',28,80],
+  ['Lucas Bergvall','VOL',19,79],['Pape Matar Sarr','VOL',23,79],['Xavi Simons','MEI',22,83],['Mohammed Kudus','PON',25,82],
+  ['Brennan Johnson','PON',24,79],['Dominic Solanke','ATA',28,80],['Richarlison','ATA',28,79]] },
+{ n:'West Ham United', cid:'Londres', lvl:76, c1:'#7A263A', c2:'#1BB1E7', p:[
+  ['Alphonse Areola','GOL',32,78],['Max Kilman','ZAG',28,79],['Jean-Clair Todibo','ZAG',25,79],['Konstantinos Mavropanos','ZAG',27,77],
+  ['Aaron Wan-Bissaka','LAT',27,79],['El Hadji Malick Diouf','LAT',21,76],['Tomáš Souček','VOL',30,79],['Guido Rodríguez','VOL',31,76],
+  ['Lucas Paquetá','MEI',28,82],['Jarrod Bowen','PON',28,83],['Crysencio Summerville','PON',23,78],['Niclas Füllkrug','ATA',32,78],
+  ['Callum Wilson','ATA',33,76]] },
+{ n:'Wolverhampton', cid:'Wolverhampton', lvl:75, c1:'#FDB913', c2:'#231F20', p:[
+  ['José Sá','GOL',32,79],['Emmanuel Agbadou','ZAG',27,77],['Toti Gomes','ZAG',26,76],['Yerson Mosquera','ZAG',24,74],
+  ['Nélson Semedo','LAT',31,76],['Hugo Bueno','LAT',23,74],['André','VOL',24,79],['João Gomes','VOL',24,80],
+  ['Jean-Ricner Bellegarde','MEI',26,76],['Marshall Munetsi','MEI',29,76],['Hwang Hee-chan','PON',29,76],['Rodrigo Gomes','PON',22,75],
+  ['Jørgen Strand Larsen','ATA',25,79]] }
+]});
+
+/* Bundesliga — temporada 2025/26 (aproximação) */
+(window.LIGAS = window.LIGAS || []).push({
+id: 'BUN', nome: 'Bundesliga', pais: 'Alemanha', nomes: 'ALE', forca: 4,
+clubes: [
+{ n:'Bayern de Munique', cid:'Munique', lvl:86, c1:'#DC052D', c2:'#0066B2', p:[
+  ['Manuel Neuer','GOL',39,84],['Jonas Urbig','GOL',22,76],['Dayot Upamecano','ZAG',27,85],['Kim Min-jae','ZAG',29,82],
+  ['Jonathan Tah','ZAG',29,83],['Alphonso Davies','LAT',25,84],['Konrad Laimer','LAT',28,80],['Josip Stanišić','LAT',25,78],
+  ['Joshua Kimmich','VOL',30,87],['Leon Goretzka','VOL',30,81],['Aleksandar Pavlović','VOL',21,80],['Jamal Musiala','MEI',22,87],
+  ['Michael Olise','PON',23,86],['Serge Gnabry','PON',30,80],['Luis Díaz','PON',28,85],['Harry Kane','ATA',32,90],
+  ['Nicolas Jackson','ATA',24,81]] },
+{ n:'Bayer Leverkusen', cid:'Leverkusen', lvl:80, c1:'#E32219', c2:'#0B0B0B', p:[
+  ['Mark Flekken','GOL',32,79],['Edmond Tapsoba','ZAG',26,81],['Loïc Badé','ZAG',25,80],['Jarell Quansah','ZAG',22,79],
+  ['Alejandro Grimaldo','LAT',30,84],['Arthur','LAT',22,76],['Robert Andrich','VOL',31,80],['Exequiel Palacios','VOL',26,79],
+  ['Aleix García','VOL',28,80],['Malik Tillman','MEI',23,81],['Ibrahim Maza','MEI',19,77],['Ernest Poku','PON',21,76],
+  ['Patrik Schick','ATA',29,83],['Christian Kofane','ATA',19,74]] },
+{ n:'Eintracht Frankfurt', cid:'Frankfurt', lvl:79, c1:'#E1000F', c2:'#0A0A0A', p:[
+  ['Michael Zetterer','GOL',30,77],['Robin Koch','ZAG',29,79],['Arthur Theate','ZAG',25,78],['Rasmus Kristensen','ZAG',28,76],
+  ['Nathaniel Brown','LAT',22,77],['Nnamdi Collins','LAT',21,77],['Ellyes Skhiri','VOL',30,79],['Hugo Larsson','VOL',21,79],
+  ['Can Uzun','MEI',19,78],['Ritsu Doan','PON',27,80],['Jean-Mattéo Bahoya','PON',20,77],['Ansgar Knauff','PON',23,78],
+  ['Jonathan Burkardt','ATA',25,79]] },
+{ n:'Borussia Dortmund', cid:'Dortmund', lvl:81, c1:'#FDE100', c2:'#0A0A0A', p:[
+  ['Gregor Kobel','GOL',28,84],['Nico Schlotterbeck','ZAG',25,83],['Waldemar Anton','ZAG',29,79],['Niklas Süle','ZAG',30,78],
+  ['Julian Ryerson','LAT',28,78],['Daniel Svensson','LAT',23,77],['Ramy Bensebaini','LAT',30,78],['Marcel Sabitzer','VOL',31,79],
+  ['Felix Nmecha','VOL',25,79],['Pascal Groß','VOL',34,78],['Julian Brandt','MEI',29,81],['Maximilian Beier','MEI',22,79],
+  ['Karim Adeyemi','PON',23,81],['Jobe Bellingham','VOL',20,78],['Serhou Guirassy','ATA',29,85]] },
+{ n:'RB Leipzig', cid:'Leipzig', lvl:79, c1:'#DD0741', c2:'#001F47', p:[
+  ['Péter Gulácsi','GOL',35,79],['Willi Orbán','ZAG',32,79],['Castello Lukeba','ZAG',22,82],['El Chadaille Bitshiabu','ZAG',20,77],
+  ['David Raum','LAT',27,80],['Lukas Klostermann','LAT',29,76],['Ridle Baku','LAT',27,77],['Nicolas Seiwald','VOL',24,78],
+  ['Xaver Schlager','VOL',27,77],['Christoph Baumgartner','MEI',26,79],['Antonio Nusa','PON',20,80],['Yan Diomande','PON',18,76],
+  ['Romulo','PON',22,77],['Yussuf Poulsen','ATA',31,76]] },
+{ n:'VfB Stuttgart', cid:'Stuttgart', lvl:78, c1:'#E32219', c2:'#0A0A0A', p:[
+  ['Alexander Nübel','GOL',29,81],['Jeff Chabot','ZAG',27,78],['Finn Jeltsch','ZAG',19,76],['Ramon Hendriks','ZAG',24,75],
+  ['Maximilian Mittelstädt','LAT',28,79],['Josha Vagnoman','LAT',24,75],['Atakan Karazor','VOL',28,77],['Angelo Stiller','VOL',24,81],
+  ['Chema Andrés','VOL',21,76],['Bilal El Khannouss','MEI',21,79],['Chris Führich','PON',27,78],['Jamie Leweling','PON',24,77],
+  ['Deniz Undav','ATA',29,82],['Ermedin Demirović','ATA',27,78]] },
+{ n:'Werder Bremen', cid:'Bremen', lvl:74, c1:'#1D9053', c2:'#0A0A0A', p:[
+  ['Karl Hein','GOL',23,73],['Marco Friedl','ZAG',27,77],['Senne Lynen','VOL',26,76],['Amos Pieper','ZAG',27,74],
+  ['Mio Backhaus','GOL',21,74],['Felix Agu','LAT',26,73],['Olivier Deman','LAT',25,73],['Jens Stage','VOL',28,76],
+  ['Romano Schmid','MEI',25,76],['Marco Grüll','PON',27,76],['Samuel Mbangula','PON',21,76],['Justin Njinmah','ATA',24,74],
+  ['Isaac Schmidt','LAT',25,74]] },
+{ n:'Borussia Mönchengladbach', cid:'Mönchengladbach', lvl:74, c1:'#0A0A0A', c2:'#00A650', p:[
+  ['Moritz Nicolas','GOL',27,76],['Nico Elvedi','ZAG',28,77],['Marvin Friedrich','ZAG',30,74],['Kevin Diks','LAT',28,75],
+  ['Joe Scally','LAT',26,75],['Julian Weigl','VOL',30,77],['Rocco Reitz','VOL',23,76],['Philipp Sander','VOL',27,74],
+  ['Kevin Stöger','MEI',31,75],['Franck Honorat','PON',29,76],['Haris Tabaković','ATA',31,74],['Grant-Leon Ranos','ATA',22,73]] },
+{ n:'VfL Wolfsburg', cid:'Wolfsburg', lvl:74, c1:'#65B32E', c2:'#0A0A0A', p:[
+  ['Kamil Grabara','GOL',26,77],['Cédric Zesiger','ZAG',27,74],['Moritz Jenz','ZAG',26,74],['Joakim Mæhle','LAT',28,76],
+  ['Rogério','LAT',27,75],['Maximilian Arnold','VOL',31,77],['Mattias Svanberg','VOL',26,76],['Lovro Majer','MEI',27,77],
+  ['Mohammed Amoura','PON',25,79],['Jonas Wind','ATA',26,77],['Marius Ducksch','ATA',31,76],['Aster Vranckx','VOL',23,75]] },
+{ n:'Mainz 05', cid:'Mainz', lvl:75, c1:'#C3141E', c2:'#FFFFFF', p:[
+  ['Robin Zentner','GOL',30,77],['Andreas Hanche-Olsen','ZAG',28,75],['Stefan Bell','ZAG',33,73],['Danny da Costa','LAT',32,73],
+  ['Phillipp Mwene','LAT',31,74],['Dominik Kohr','VOL',31,75],['Kaishu Sano','VOL',23,76],['Nadiem Amiri','MEI',28,78],
+  ['Paul Nebel','MEI',22,77],['Lee Jae-sung','MEI',33,76],['Nelson Weiper','ATA',20,74],['Armindo Sieb','PON',22,76]] },
+{ n:'SC Freiburg', cid:'Freiburg', lvl:76, c1:'#E2001A', c2:'#0A0A0A', p:[
+  ['Noah Atubolu','GOL',23,78],['Matthias Ginter','ZAG',31,78],['Philipp Lienhart','ZAG',29,76],['Lukas Kübler','LAT',33,73],
+  ['Christian Günter','LAT',32,75],['Maximilian Eggestein','VOL',29,77],['Patrick Osterhage','VOL',25,75],['Vincenzo Grifo','MEI',32,79],
+  ['Yuito Suzuki','MEI',24,75],['Junior Adamu','ATA',24,75],['Lucas Höler','ATA',31,74],['Jan-Niklas Beste','PON',26,75]] },
+{ n:'FC Augsburg', cid:'Augsburg', lvl:72, c1:'#BA3733', c2:'#0A0A0A', p:[
+  ['Finn Dahmen','GOL',28,76],['Jeffrey Gouweleeuw','ZAG',34,74],['Keven Schlotterbeck','ZAG',29,73],['Marius Wolf','LAT',30,74],
+  ['Dimitrios Giannoulis','LAT',30,73],['Elvis Rexhbeçaj','VOL',28,74],['Kristijan Jakić','VOL',28,73],['Alexis Claude-Maurice','MEI',27,75],
+  ['Mert Kömür','MEI',20,74],['Samuel Essende','ATA',22,75],['Phillip Tietz','ATA',28,74]] },
+{ n:'TSG Hoffenheim', cid:'Sinsheim', lvl:74, c1:'#1961B5', c2:'#FFFFFF', p:[
+  ['Oliver Baumann','GOL',35,77],['David Jurásek','LAT',25,74],['Robert Hranáč','ZAG',25,76],['Ozan Kabak','ZAG',25,77],
+  ['Albian Hajdari','ZAG',22,75],['Vladimír Coufal','LAT',33,74],['Alexander Prass','LAT',24,76],['Leon Avdullahu','VOL',22,75],
+  ['Umut Tohumcu','VOL',21,74],['Andrej Kramarić','MEI',34,78],['Fisnik Asllani','ATA',23,77],['Wouter Burger','VOL',24,75]] },
+{ n:'Union Berlin', cid:'Berlim', lvl:73, c1:'#EB1923', c2:'#FFE500', p:[
+  ['Frederik Rønnow','GOL',33,77],['Danilho Doekhi','ZAG',27,76],['Leopold Querfeld','ZAG',21,75],['Diogo Leite','ZAG',26,75],
+  ['Christopher Trimmel','LAT',38,72],['Tom Rothe','LAT',21,75],['Rani Khedira','VOL',31,75],['János Schäfer','VOL',27,74],
+  ['Janik Haberer','MEI',31,74],['Andrej Ilić','MEI',25,74],['Oliver Burke','PON',28,74],['Ilyas Ansah','ATA',23,74]] },
+{ n:'FC St. Pauli', cid:'Hamburgo', lvl:70, c1:'#614C3F', c2:'#0A0A0A', p:[
+  ['Nikola Vasilj','GOL',29,74],['Hauke Wahl','ZAG',31,73],['Karol Mets','ZAG',32,72],['David Nemeth','ZAG',24,72],
+  ['Manolis Saliakas','LAT',29,72],['Philipp Treu','LAT',24,71],['Jackson Irvine','VOL',32,74],['Danel Sinani','MEI',29,73],
+  ['Morgan Guilavogui','PON',27,73],['Andréas Hountondji','ATA',23,72],['Eric Smith','ZAG',28,72]] },
+{ n:'1. FC Heidenheim', cid:'Heidenheim', lvl:69, c1:'#E1002A', c2:'#0A0A0A', p:[
+  ['Kevin Müller','GOL',34,72],['Patrick Mainka','ZAG',30,72],['Benedikt Gimber','ZAG',28,71],['Omar Traoré','LAT',25,71],
+  ['Jonas Föhrenbach','LAT',29,70],['Niklas Dorsch','VOL',27,73],['Jan Schöppner','VOL',26,73],['Sirlord Conteh','PON',28,72],
+  ['Mathias Honsak','MEI',28,72],['Budu Zivzivadze','ATA',31,72]] },
+{ n:'Hamburger SV', cid:'Hamburgo', lvl:71, c1:'#0B67B2', c2:'#0A0A0A', p:[
+  ['Daniel Heuer Fernandes','GOL',32,74],['Luka Vušković','ZAG',18,76],['Sebastian Schonlau','ZAG',31,73],['Dennis Hadžikadunić','ZAG',27,72],
+  ['Miro Muheim','LAT',28,73],['William Mikelbrencis','LAT',21,71],['Jonas Meffert','VOL',31,73],['Nicolás Capaldo','VOL',27,73],
+  ['Fábio Vieira','MEI',25,76],['Ransford Königsdörffer','PON',24,74],['Rayan Philippe','ATA',25,74],['Robert Glatzel','ATA',31,74]] },
+{ n:'1. FC Köln', cid:'Colônia', lvl:71, c1:'#ED1C24', c2:'#0A0A0A', p:[
+  ['Marvin Schwäbe','GOL',30,74],['Timo Hübers','ZAG',29,72],['Joel Schmied','ZAG',27,71],['Dominique Heintz','ZAG',32,71],
+  ['Rav van den Berg','ZAG',21,73],['Eric Martel','VOL',23,73],['Isak Johannesson','MEI',22,74],['Denis Huseinbašić','VOL',24,72],
+  ['Marius Bülter','PON',32,74],['Luca Waldschmidt','ATA',29,75],['Tim Lemperle','ATA',23,75],['Ragnar Ache','ATA',27,75]] }
+]});
+
+/* La Liga — temporada 2025/26 (aproximação) */
+(window.LIGAS = window.LIGAS || []).push({
+id: 'LAL', nome: 'La Liga', pais: 'Espanha', nomes: 'ESP', forca: 5,
+clubes: [
+{ n:'Real Madrid', cid:'Madri', lvl:87, c1:'#FEBE10', c2:'#00529F', p:[
+  ['Thibaut Courtois','GOL',33,88],['Andriy Lunin','GOL',26,78],['Éder Militão','ZAG',27,84],['Dean Huijsen','ZAG',20,82],
+  ['Antonio Rüdiger','ZAG',32,83],['David Alaba','ZAG',33,79],['Dani Carvajal','LAT',33,83],['Trent Alexander-Arnold','LAT',27,85],
+  ['Álvaro Carreras','LAT',22,80],['Fran García','LAT',26,76],['Aurélien Tchouaméni','VOL',25,84],['Eduardo Camavinga','VOL',22,83],
+  ['Federico Valverde','VOL',27,88],['Jude Bellingham','MEI',22,88],['Arda Güler','MEI',20,82],['Franco Mastantuono','PON',18,78],
+  ['Vinícius Júnior','PON',25,90],['Rodrygo','PON',24,85],['Brahim Díaz','PON',26,81],['Kylian Mbappé','ATA',26,91],
+  ['Gonzalo García','ATA',21,77]] },
+{ n:'Barcelona', cid:'Barcelona', lvl:86, c1:'#A50044', c2:'#004D98', p:[
+  ['Joan García','GOL',24,83],['Wojciech Szczęsny','GOL',35,80],['Pau Cubarsí','ZAG',18,83],['Ronald Araújo','ZAG',26,83],
+  ['Andreas Christensen','ZAG',29,79],['Eric García','ZAG',24,78],['Alejandro Balde','LAT',22,81],['Jules Koundé','LAT',26,84],
+  ['Gerard Martín','LAT',23,75],['Pedri','MEI',22,88],['Frenkie de Jong','VOL',28,85],['Gavi','VOL',21,82],
+  ['Marc Casadó','VOL',22,78],['Dani Olmo','MEI',27,84],['Fermín López','MEI',22,80],['Raphinha','PON',28,87],
+  ['Lamine Yamal','PON',18,89],['Marcus Rashford','PON',28,82],['Robert Lewandowski','ATA',37,84],['Ferran Torres','ATA',25,80]] },
+{ n:'Atlético de Madrid', cid:'Madri', lvl:83, c1:'#CB3524', c2:'#262E62', p:[
+  ['Jan Oblak','GOL',32,85],['Juan Musso','GOL',31,76],['Robin Le Normand','ZAG',28,81],['José María Giménez','ZAG',30,81],
+  ['Dávid Hancko','ZAG',27,81],['Clément Lenglet','ZAG',30,78],['Nahuel Molina','LAT',27,79],['Matteo Ruggeri','LAT',23,77],
+  ['Marcos Llorente','LAT',30,81],['Pablo Barrios','VOL',22,80],['Koke','VOL',33,80],['Johnny Cardoso','VOL',24,78],
+  ['Conor Gallagher','MEI',25,79],['Álex Baena','MEI',24,81],['Thiago Almada','MEI',24,81],['Giuliano Simeone','PON',22,77],
+  ['Antoine Griezmann','ATA',34,84],['Julián Álvarez','ATA',25,87],['Alexander Sørloth','ATA',29,80]] },
+{ n:'Athletic Club', cid:'Bilbao', lvl:79, c1:'#EE2523', c2:'#0A0A0A', p:[
+  ['Unai Simón','GOL',28,84],['Dani Vivian','ZAG',26,80],['Aymeric Laporte','ZAG',31,80],['Aitor Paredes','ZAG',24,78],
+  ['Yuri Berchiche','LAT',35,76],['Andoni Gorosabel','LAT',28,76],['Adama Boiro','LAT',22,74],['Mikel Jauregizar','VOL',22,78],
+  ['Mikel Vesga','VOL',32,76],['Beñat Prados','VOL',24,75],['Oihan Sancet','MEI',25,81],['Nico Williams','PON',23,85],
+  ['Iñaki Williams','PON',31,79],['Álex Berenguer','PON',30,77],['Gorka Guruzeta','ATA',29,77],['Maroan Sannadi','ATA',24,75]] },
+{ n:'Villarreal', cid:'Villarreal', lvl:79, c1:'#FFE667', c2:'#005187', p:[
+  ['Luiz Júnior','GOL',24,80],['Juan Foyth','ZAG',27,79],['Rafa Marín','ZAG',23,76],['Renato Veiga','ZAG',22,78],
+  ['Sergi Cardona','LAT',26,76],['Santiago Mouriño','LAT',22,76],['Dani Parejo','VOL',36,80],['Santi Comesaña','VOL',25,79],
+  ['Pape Gueye','VOL',26,77],['Alberto Moleiro','MEI',22,79],['Tajon Buchanan','PON',26,77],['Nicolas Pépé','PON',30,78],
+  ['Georges Mikautadze','ATA',24,79],['Ayoze Pérez','ATA',32,79]] },
+{ n:'Real Betis', cid:'Sevilha', lvl:78, c1:'#00954C', c2:'#FFFFFF', p:[
+  ['Álvaro Valles','GOL',28,77],['Marc Bartra','ZAG',34,76],['Natan','ZAG',24,77],['Diego Llorente','ZAG',32,76],
+  ['Héctor Bellerín','LAT',30,77],['Ricardo Rodríguez','LAT',33,74],['Nelson Deossa','VOL',25,76],['Sergi Altimira','VOL',24,75],
+  ['Pablo Fornals','MEI',29,79],['Giovani Lo Celso','MEI',29,79],['Antony','PON',25,83],['Ez Abde','PON',23,79],
+  ['Rodrigo Riquelme','PON',25,77],['Cucho Hernández','ATA',26,78],['Cédric Bakambu','ATA',34,75]] },
+{ n:'Celta de Vigo', cid:'Vigo', lvl:76, c1:'#8AC3EE', c2:'#0A0A0A', p:[
+  ['Ionuț Radu','GOL',28,76],['Carl Starfelt','ZAG',30,76],['Marcos Alonso','ZAG',34,75],['Javi Rodríguez','ZAG',23,74],
+  ['Óscar Mingueza','LAT',26,78],['Carlos Domínguez','LAT',24,74],['Fran Beltrán','VOL',26,76],['Ilaix Moriba','VOL',22,76],
+  ['Hugo Álvarez','MEI',22,76],['Iago Aspas','MEI',38,78],['Williot Swedberg','PON',21,76],['Ferran Jutglà','PON',26,77],
+  ['Borja Iglesias','ATA',32,77],['Pablo Durán','ATA',22,74]] },
+{ n:'Rayo Vallecano', cid:'Madri', lvl:74, c1:'#E53027', c2:'#FFFFFF', p:[
+  ['Augusto Batalla','GOL',29,76],['Florian Lejeune','ZAG',34,75],['Abdul Mumin','ZAG',27,74],['Pep Chavarría','LAT',27,74],
+  ['Andrei Rațiu','LAT',27,78],['Óscar Valentín','VOL',31,74],['Pathé Ciss','VOL',31,74],['Unai López','VOL',30,74],
+  ['Isi Palazón','PON',30,77],['Álvaro García','PON',32,76],['Jorge de Frutos','PON',28,76],['Sergio Camello','ATA',24,76]] },
+{ n:'Osasuna', cid:'Pamplona', lvl:73, c1:'#D91A21', c2:'#001A57', p:[
+  ['Sergio Herrera','GOL',32,75],['Alejandro Catena','ZAG',31,75],['Enzo Boyomo','ZAG',24,75],['Juan Cruz','LAT',26,73],
+  ['Abel Bretones','LAT',25,73],['Lucas Torró','VOL',31,74],['Jon Moncayola','VOL',27,76],['Iker Muñoz','VOL',22,74],
+  ['Aimar Oroz','MEI',24,77],['Rubén García','MEI',32,74],['Víctor Muñoz','PON',22,74],['Ante Budimir','ATA',34,78]] },
+{ n:'Mallorca', cid:'Palma', lvl:73, c1:'#E20613', c2:'#0A0A0A', p:[
+  ['Leo Román','GOL',25,75],['Antonio Raíllo','ZAG',34,75],['Martin Valjent','ZAG',30,76],['Marash Kumbulla','ZAG',25,74],
+  ['Johan Mojica','LAT',33,73],['Pablo Maffeo','LAT',28,76],['Manu Morlanes','VOL',26,75],['Samú Costa','VOL',25,76],
+  ['Sergi Darder','MEI',31,77],['Dani Rodríguez','MEI',37,73],['Jan Virgili','PON',20,74],['Vedat Muriqi','ATA',31,78],
+  ['Takuma Asano','PON',31,74]] },
+{ n:'Real Sociedad', cid:'San Sebastián', lvl:77, c1:'#0067B1', c2:'#FFFFFF', p:[
+  ['Álex Remiro','GOL',30,80],['Igor Zubeldia','ZAG',28,77],['Jon Martín','ZAG',22,74],['Duje Ćaleta-Car','ZAG',29,76],
+  ['Aritz Elustondo','ZAG',31,74],['Jon Aramburu','LAT',23,76],['Sergio Gómez','LAT',25,76],['Beñat Turrientes','VOL',23,76],
+  ['Luka Sučić','VOL',23,78],['Pablo Marín','VOL',22,75],['Brais Méndez','MEI',28,79],['Take Kubo','PON',24,82],
+  ['Ander Barrenetxea','PON',23,78],['Mikel Oyarzabal','ATA',28,82],['Orri Óskarsson','ATA',21,76]] },
+{ n:'Valencia', cid:'Valência', lvl:74, c1:'#F5A31A', c2:'#0A0A0A', p:[
+  ['Julen Agirrezabala','GOL',24,76],['Mouctar Diakhaby','ZAG',28,76],['César Tárrega','ZAG',23,75],['Yarek Gasiorowski','ZAG',20,74],
+  ['José Gayà','LAT',30,77],['Dimitri Foulquier','LAT',32,73],['Pepelu','VOL',27,76],['Javi Guerra','VOL',22,78],
+  ['André Almeida','VOL',25,74],['Diego López','PON',23,77],['Luis Rioja','PON',31,74],['Hugo Duro','ATA',26,76],
+  ['Arnaut Danjuma','PON',28,76]] },
+{ n:'Getafe', cid:'Getafe', lvl:72, c1:'#005999', c2:'#FFFFFF', p:[
+  ['David Soria','GOL',32,76],['Djené','ZAG',33,75],['Domingos Duarte','ZAG',30,73],['Abdel Abqar','ZAG',26,73],
+  ['Diego Rico','LAT',32,72],['Kiko Femenía','LAT',34,73],['Luis Milla','VOL',28,75],['Mauro Arambarri','VOL',30,76],
+  ['Álex Sancris','MEI',24,73],['Christantus Uche','PON',22,76],['Adrián Liso','PON',20,73],['Borja Mayoral','ATA',28,76]] },
+{ n:'Espanyol', cid:'Barcelona', lvl:72, c1:'#007FC8', c2:'#FFFFFF', p:[
+  ['Marko Dmitrović','GOL',33,76],['Leandro Cabrera','ZAG',34,74],['Fernando Calero','ZAG',30,74],['Clemens Riedel','ZAG',22,73],
+  ['Omar El Hilali','LAT',22,74],['Carlos Romero','LAT',24,74],['Urko González','VOL',23,74],['Pol Lozano','VOL',26,74],
+  ['Pere Milla','MEI',33,74],['Javi Puado','ATA',27,77],['Roberto Fernández','ATA',23,74],['Kike García','ATA',35,74]] },
+{ n:'Deportivo Alavés', cid:'Vitoria-Gasteiz', lvl:71, c1:'#0761AF', c2:'#FFFFFF', p:[
+  ['Antonio Sivera','GOL',29,76],['Facundo Garcés','ZAG',25,74],['Nahuel Tenaglia','ZAG',29,73],['Moussa Diarra','ZAG',24,73],
+  ['Youssef Enríquez','LAT',22,72],['Jonny Otto','LAT',31,73],['Antonio Blanco','VOL',24,75],['Pablo Ibáñez','VOL',26,74],
+  ['Carlos Vicente','PON',26,75],['Carles Aleñá','MEI',27,74],['Toni Martínez','ATA',28,75],['Lucas Boyé','ATA',29,75]] },
+{ n:'Sevilla', cid:'Sevilha', lvl:74, c1:'#D2143B', c2:'#FFFFFF', p:[
+  ['Ørjan Nyland','GOL',35,76],['Marcão','ZAG',29,74],['César Azpilicueta','ZAG',36,75],['Kike Salas','ZAG',23,74],
+  ['Juanlu Sánchez','LAT',22,76],['Gabriel Suazo','LAT',28,76],['Nemanja Gudelj','VOL',34,75],['Lucien Agoumé','VOL',23,76],
+  ['Djibril Sow','VOL',28,75],['Rubén Vargas','PON',27,77],['Alfon González','PON',25,74],['Isaac Romero','ATA',25,76],
+  ['Akor Adams','ATA',25,75]] },
+{ n:'Girona', cid:'Girona', lvl:72, c1:'#D8232A', c2:'#FFFFFF', p:[
+  ['Paulo Gazzaniga','GOL',33,76],['Ladislav Krejčí','ZAG',26,77],['Daley Blind','ZAG',35,73],['Alejandro Francés','ZAG',22,75],
+  ['Arnau Martínez','LAT',22,75],['Alex Moreno','LAT',32,74],['Iván Martín','VOL',26,75],['Axel Witsel','VOL',36,74],
+  ['Joel Roca','PON',21,73],['Portu','PON',33,74],['Cristhian Stuani','ATA',38,74],['Vladyslav Vanat','ATA',23,76]] },
+{ n:'Levante', cid:'Valência', lvl:68, c1:'#003DA6', c2:'#E30613', p:[
+  ['Mathew Ryan','GOL',33,74],['Unai Elgezabal','ZAG',30,71],['Matías Moreno','ZAG',22,70],['Manu Sánchez','LAT',25,71],
+  ['Jeremy Toljan','LAT',31,71],['Unai Vencedor','VOL',25,72],['Oriol Rey','VOL',28,71],['Carlos Álvarez','MEI',22,76],
+  ['Iván Romero','ATA',24,73],['Goduine Koyalipou','ATA',26,71]] },
+{ n:'Elche', cid:'Elche', lvl:69, c1:'#009B48', c2:'#FFFFFF', p:[
+  ['Matías Dituro','GOL',37,72],['Pedro Bigas','ZAG',35,71],['Víctor Chust','ZAG',25,72],['David Affengruber','ZAG',24,72],
+  ['John Núñez','LAT',24,71],['Héctor Fort','LAT',19,72],['Marc Aguado','VOL',28,72],['Aleix Febas','MEI',29,73],
+  ['Germán Valera','PON',24,71],['Rafa Mir','ATA',28,74],['Álvaro Rodríguez','ATA',21,73]] },
+{ n:'Real Oviedo', cid:'Oviedo', lvl:67, c1:'#0B3B8C', c2:'#FFFFFF', p:[
+  ['Aarón Escandell','GOL',30,71],['David Costas','ZAG',28,71],['Dani Calvo','ZAG',31,70],['Nacho Vidal','LAT',30,70],
+  ['Lucas Ahijado','LAT',24,69],['Leander Dendoncker','VOL',30,74],['Santiago Colombatto','VOL',28,71],['Ilyas Chaira','PON',26,71],
+  ['Salomón Rondón','ATA',36,73],['Haissem Hassan','PON',26,71]] }
+]});
+
+/* Serie A — temporada 2025/26 (aproximação) */
+(window.LIGAS = window.LIGAS || []).push({
+id: 'ITA', nome: 'Serie A', pais: 'Itália', nomes: 'ITA', forca: 4,
+clubes: [
+{ n:'Napoli', cid:'Nápoles', lvl:83, c1:'#12A0D7', c2:'#003C82', p:[
+  ['Alex Meret','GOL',28,80],['Vanja Milinković-Savić','GOL',28,79],['Amir Rrahmani','ZAG',31,81],['Alessandro Buongiorno','ZAG',26,82],
+  ['Sam Beukema','ZAG',27,79],['Juan Jesus','ZAG',34,74],['Giovanni Di Lorenzo','LAT',32,82],['Mathías Olivera','LAT',28,78],
+  ['Leonardo Spinazzola','LAT',32,77],['Stanislav Lobotka','VOL',30,84],['Frank Anguissa','VOL',29,83],['Billy Gilmour','VOL',24,78],
+  ['Scott McTominay','MEI',28,84],['Kevin De Bruyne','MEI',34,86],['Matteo Politano','PON',32,79],['David Neres','PON',28,81],
+  ['Eljif Elmas','PON',26,78],['Romelu Lukaku','ATA',32,82],['Rasmus Højlund','ATA',22,80],['Lorenzo Lucca','ATA',25,77]] },
+{ n:'Internazionale', cid:'Milão', lvl:84, c1:'#0068A8', c2:'#0A0A0A', p:[
+  ['Yann Sommer','GOL',36,82],['Josep Martínez','GOL',27,77],['Alessandro Bastoni','ZAG',26,86],['Francesco Acerbi','ZAG',37,79],
+  ['Stefan de Vrij','ZAG',33,79],['Yann Bisseck','ZAG',24,79],['Manuel Akanji','ZAG',30,82],['Denzel Dumfries','LAT',29,82],
+  ['Federico Dimarco','LAT',27,84],['Carlos Augusto','LAT',26,78],['Nicolò Barella','VOL',28,86],['Hakan Çalhanoğlu','VOL',31,84],
+  ['Petar Sučić','VOL',22,77],['Henrikh Mkhitaryan','MEI',36,79],['Piotr Zieliński','MEI',31,79],['Davide Frattesi','MEI',26,79],
+  ['Marcus Thuram','ATA',28,85],['Lautaro Martínez','ATA',28,87],['Ange-Yoan Bonny','ATA',22,77],['Francesco Pio Esposito','ATA',20,76]] },
+{ n:'Atalanta', cid:'Bérgamo', lvl:80, c1:'#1D71B8', c2:'#0A0A0A', p:[
+  ['Marco Carnesecchi','GOL',25,81],['Isak Hien','ZAG',26,80],['Sead Kolašinac','ZAG',32,77],['Berat Djimsiti','ZAG',32,78],
+  ['Giorgio Scalvini','ZAG',22,79],['Raoul Bellanova','LAT',25,79],['Davide Zappacosta','LAT',33,76],['Nicola Zalewski','LAT',23,76],
+  ['Marten de Roon','VOL',30,79],['Éderson','VOL',26,83],['Mario Pašalić','MEI',30,77],['Ademola Lookman','PON',28,84],
+  ['Charles De Ketelaere','MEI',24,81],['Kamaldeen Sulemana','PON',23,77],['Gianluca Scamacca','ATA',26,78],['Nikola Krstović','ATA',25,78]] },
+{ n:'Juventus', cid:'Turim', lvl:81, c1:'#0A0A0A', c2:'#FFFFFF', p:[
+  ['Michele Di Gregorio','GOL',28,80],['Mattia Perin','GOL',33,76],['Gleison Bremer','ZAG',28,85],['Federico Gatti','ZAG',27,79],
+  ['Pierre Kalulu','ZAG',25,79],['Lloyd Kelly','ZAG',27,77],['Andrea Cambiaso','LAT',25,80],['Juan Cabal','LAT',24,76],
+  ['Manuel Locatelli','VOL',27,80],['Khéphren Thuram','VOL',24,81],['Weston McKennie','VOL',27,78],['Teun Koopmeiners','MEI',27,79],
+  ['Kenan Yıldız','PON',20,83],['Francisco Conceição','PON',23,79],['Dušan Vlahović','ATA',25,81],['Jonathan David','ATA',25,81],
+  ['Loïs Openda','ATA',25,81]] },
+{ n:'Roma', cid:'Roma', lvl:79, c1:'#8E1F2F', c2:'#F0BC42', p:[
+  ['Mile Svilar','GOL',26,83],['Gianluca Mancini','ZAG',29,79],['Evan Ndicka','ZAG',26,80],['Mario Hermoso','ZAG',30,77],
+  ['Daniele Ghilardi','ZAG',22,75],['Zeki Çelik','LAT',28,76],['Angeliño','LAT',28,78],['Wesley','LAT',22,78],
+  ['Bryan Cristante','VOL',30,78],['Manu Koné','VOL',24,82],['Neil El Aynaoui','VOL',24,77],['Lorenzo Pellegrini','MEI',29,79],
+  ['Paulo Dybala','MEI',32,82],['Matías Soulé','PON',22,79],['Leon Bailey','PON',28,78],['Artem Dovbyk','ATA',28,78],
+  ['Evan Ferguson','ATA',21,77]] },
+{ n:'Fiorentina', cid:'Florença', lvl:77, c1:'#7B2E8E', c2:'#FFFFFF', p:[
+  ['David de Gea','GOL',35,82],['Marin Pongračić','ZAG',28,76],['Pietro Comuzzo','ZAG',20,78],['Luca Ranieri','ZAG',26,76],
+  ['Pablo Marí','ZAG',32,74],['Dodô','LAT',27,78],['Robin Gosens','LAT',31,78],['Nicolò Fagioli','VOL',24,78],
+  ['Rolando Mandragora','VOL',28,77],['Hans Nicolussi Caviglia','VOL',25,75],['Albert Gudmundsson','MEI',28,79],['Jacopo Fazzini','MEI',22,75],
+  ['Moise Kean','ATA',25,83],['Roberto Piccoli','ATA',24,76],['Edin Džeko','ATA',39,75]] },
+{ n:'Lazio', cid:'Roma', lvl:77, c1:'#87D8F7', c2:'#0A2240', p:[
+  ['Ivan Provedel','GOL',31,79],['Alessio Romagnoli','ZAG',30,79],['Mario Gila','ZAG',25,80],['Patric','ZAG',32,75],
+  ['Adam Marušić','LAT',33,76],['Manuel Lazzari','LAT',32,75],['Nuno Tavares','LAT',25,78],['Matteo Guendouzi','VOL',26,80],
+  ['Nicolò Rovella','VOL',23,79],['Danilo Cataldi','VOL',31,76],['Mattia Zaccagni','PON',30,80],['Gustav Isaksen','PON',24,77],
+  ['Boulaye Dia','ATA',29,77],['Valentín Castellanos','ATA',27,78],['Pedro','ATA',38,76]] },
+{ n:'Milan', cid:'Milão', lvl:80, c1:'#FB090B', c2:'#0A0A0A', p:[
+  ['Mike Maignan','GOL',30,85],['Fikayo Tomori','ZAG',27,80],['Matteo Gabbia','ZAG',26,78],['Strahinja Pavlović','ZAG',24,79],
+  ['Koni De Winter','ZAG',23,77],['Davide Bartesaghi','LAT',20,75],['Alexis Saelemaekers','LAT',26,79],['Pervis Estupiñán','LAT',27,78],
+  ['Luka Modrić','VOL',40,81],['Youssouf Fofana','VOL',26,81],['Samuele Ricci','VOL',24,79],['Ruben Loftus-Cheek','MEI',29,77],
+  ['Christian Pulisic','PON',27,84],['Rafael Leão','PON',26,84],['Christopher Nkunku','ATA',28,80],['Santiago Gimenez','ATA',24,79]] },
+{ n:'Bologna', cid:'Bolonha', lvl:77, c1:'#A21C24', c2:'#1A2F5E', p:[
+  ['Łukasz Skorupski','GOL',34,78],['Jhon Lucumí','ZAG',27,79],['Torbjørn Heggem','ZAG',26,76],['Nicolò Casale','ZAG',27,76],
+  ['Juan Miranda','LAT',26,76],['Emil Holm','LAT',25,76],['Charalampos Lykogiannis','LAT',32,74],['Remo Freuler','VOL',33,78],
+  ['Lewis Ferguson','VOL',26,79],['Tommaso Pobega','VOL',26,75],['Jens Odgaard','MEI',26,77],['Riccardo Orsolini','PON',28,80],
+  ['Nicolò Cambiaghi','PON',25,76],['Santiago Castro','ATA',21,78],['Thijs Dallinga','ATA',25,75],['Ciro Immobile','ATA',35,76]] },
+{ n:'Como', cid:'Como', lvl:76, c1:'#003C82', c2:'#FFFFFF', p:[
+  ['Jean Butez','GOL',30,76],['Marc Kempf','ZAG',30,74],['Diego Carlos','ZAG',32,77],['Edoardo Goldaniga','ZAG',32,73],
+  ['Álex Valle','LAT',22,75],['Ivan Smolčić','LAT',25,73],['Máximo Perrone','VOL',22,77],['Lucas Da Cunha','VOL',24,76],
+  ['Maxence Caqueret','VOL',25,78],['Nico Paz','MEI',21,82],['Jesús Rodríguez','PON',20,76],['Jayden Addai','PON',20,75],
+  ['Anastasios Douvikas','ATA',26,75],['Álvaro Morata','ATA',33,78]] },
+{ n:'Torino', cid:'Turim', lvl:73, c1:'#8A1538', c2:'#FFFFFF', p:[
+  ['Alberto Paleari','GOL',33,74],['Saúl Coco','ZAG',26,76],['Guillermo Maripán','ZAG',31,76],['Adam Masina','ZAG',31,73],
+  ['Marcus Pedersen','LAT',25,75],['Cristiano Biraghi','LAT',33,74],['Cesare Casadei','VOL',22,77],['Ivan Ilić','VOL',24,76],
+  ['Kristjan Asllani','VOL',23,76],['Nikola Vlašić','MEI',28,76],['Cyril Ngonge','PON',25,75],['Giovanni Simeone','ATA',30,77],
+  ['Che Adams','ATA',29,78],['Duván Zapata','ATA',34,76]] },
+{ n:'Udinese', cid:'Udine', lvl:73, c1:'#0A0A0A', c2:'#FFFFFF', p:[
+  ['Maduka Okoye','GOL',26,76],['Oumar Solet','ZAG',25,78],['Thomas Kristensen','ZAG',28,75],['Nicolò Bertola','ZAG',22,74],
+  ['Kingsley Ehizibue','LAT',30,73],['Hassane Kamara','LAT',31,74],['Oier Zarraga','VOL',26,74],['Jesper Karlström','VOL',30,74],
+  ['Arthur Atta','VOL',22,77],['Nicolò Zaniolo','MEI',26,77],['Iker Bravo','PON',20,74],['Keinan Davis','ATA',27,76],
+  ['Adam Buksa','ATA',29,75]] },
+{ n:'Genoa', cid:'Gênova', lvl:71, c1:'#B4192C', c2:'#032C5A', p:[
+  ['Nicola Leali','GOL',32,75],['Johan Vásquez','ZAG',27,76],['Leo Østigård','ZAG',26,76],['Alessandro Marcandalli','ZAG',23,73],
+  ['Stefano Sabelli','LAT',32,73],['Aarón Martín','LAT',28,74],['Morten Frendrup','VOL',24,77],['Patrizio Masini','VOL',22,73],
+  ['Ruslan Malinovskyi','MEI',32,77],['Vitinha','ATA',25,75],['Caleb Ekuban','ATA',31,73],['Lorenzo Colombo','ATA',23,74]] },
+{ n:'Hellas Verona', cid:'Verona', lvl:69, c1:'#F8D000', c2:'#003399', p:[
+  ['Lorenzo Montipò','GOL',29,74],['Unai Núñez','ZAG',28,72],['Armel Bella-Kotchap','ZAG',23,74],['Nicolás Valentini','ZAG',24,72],
+  ['Victor Nelsson','ZAG',27,73],['Martin Frese','LAT',24,71],['Antoine Bernede','VOL',26,71],['Suat Serdar','VOL',28,72],
+  ['Domagoj Bradarić','LAT',25,72],['Giovane','ATA',22,74],['Amin Sarr','ATA',24,72],['Gift Orban','ATA',23,74]] },
+{ n:'Cagliari', cid:'Cagliari', lvl:70, c1:'#B01C2E', c2:'#00204E', p:[
+  ['Elia Caprile','GOL',24,76],['Yerry Mina','ZAG',31,76],['Sebastiano Luperto','ZAG',29,74],['Adam Obert','ZAG',23,72],
+  ['Gabriele Zappa','LAT',26,73],['Marco Palestra','LAT',20,73],['Alessandro Deiola','VOL',30,73],['Michel Adopo','VOL',25,73],
+  ['Matteo Prati','VOL',22,74],['Michael Folorunsho','MEI',27,75],['Sebastiano Esposito','ATA',23,76],['Gennaro Borrelli','ATA',25,72],
+  ['Mattia Felici','PON',24,73]] },
+{ n:'Parma', cid:'Parma', lvl:70, c1:'#F7C33C', c2:'#003C82', p:[
+  ['Zion Suzuki','GOL',23,77],['Enrico Delprato','ZAG',26,74],['Alessandro Circati','ZAG',22,74],['Lautaro Valenti','ZAG',27,73],
+  ['Emanuele Valeri','LAT',27,73],['Nahuel Estévez','VOL',29,73],['Adrián Bernabé','MEI',24,76],['Mandela Keita','VOL',23,74],
+  ['Oliver Sørensen','VOL',24,73],['Mateo Pellegrino','ATA',24,75],['Patrick Cutrone','ATA',28,73],['Adrian Benedyczak','ATA',25,72]] },
+{ n:'Lecce', cid:'Lecce', lvl:68, c1:'#F2C300', c2:'#D2232A', p:[
+  ['Wladimiro Falcone','GOL',30,76],['Kialonda Gaspar','ZAG',26,73],['Tiago Gabriel','ZAG',21,72],['Jamil Siebert','ZAG',23,72],
+  ['Antonino Gallo','LAT',26,73],['Danilo Veiga','LAT',23,72],['Lassana Coulibaly','VOL',29,73],['Ylber Ramadani','VOL',29,74],
+  ['Medon Berisha','MEI',22,72],['Lameck Banda','PON',24,73],['Francesco Camarda','ATA',17,74],['Nikola Štulić','ATA',24,72]] },
+{ n:'Sassuolo', cid:'Sassuolo', lvl:70, c1:'#00A752', c2:'#0A0A0A', p:[
+  ['Arijanet Murić','GOL',27,75],['Tarik Muharemović','ZAG',22,73],['Jay Idzes','ZAG',25,75],['Josh Doig','LAT',23,73],
+  ['Marcin Walukiewicz','LAT',25,72],['Nemanja Matić','VOL',37,74],['Kristian Thorstvedt','VOL',26,75],['Luca Lipani','VOL',20,72],
+  ['Domenico Berardi','PON',31,79],['Armand Laurienté','PON',27,76],['Andrea Pinamonti','ATA',26,76],['Cristian Volpato','MEI',22,74]] },
+{ n:'Pisa', cid:'Pisa', lvl:66, c1:'#0B3B8C', c2:'#FFFFFF', p:[
+  ['Adrian Semper','GOL',30,71],['Antonio Caracciolo','ZAG',24,71],['Simone Canestrelli','ZAG',25,73],['Arturo Calabresi','ZAG',29,70],
+  ['Idrissa Touré','LAT',27,71],['Samuele Angori','LAT',22,70],['Marius Marin','VOL',27,72],['Michel Aebischer','VOL',28,74],
+  ['Matteo Tramoni','MEI',25,73],['M\'Bala Nzola','ATA',29,73],['Stefano Moreo','ATA',32,72]] },
+{ n:'Cremonese', cid:'Cremona', lvl:67, c1:'#B4192C', c2:'#7B7B7B', p:[
+  ['Emil Audero','GOL',28,73],['Federico Baschirotto','ZAG',29,73],['Matteo Bianchetti','ZAG',32,71],['Filippo Terracciano','LAT',22,72],
+  ['Giuseppe Pezzella','LAT',28,71],['Michele Collocolo','VOL',25,72],['Alberto Grassi','VOL',30,71],['Warren Bondo','VOL',22,72],
+  ['Franco Vázquez','MEI',36,72],['Jamie Vardy','ATA',38,74],['Federico Bonazzoli','ATA',28,73],['Antonio Sanabria','ATA',29,73]] }
+]});
+
+/* Ligue 1 — temporada 2025/26 (aproximação) */
+(window.LIGAS = window.LIGAS || []).push({
+id: 'FRA', nome: 'Ligue 1', pais: 'França', nomes: 'FRA', forca: 4,
+clubes: [
+{ n:'Paris Saint-Germain', cid:'Paris', lvl:87, c1:'#004170', c2:'#DA291C', p:[
+  ['Lucas Chevalier','GOL',24,82],['Matvey Safonov','GOL',26,78],['Marquinhos','ZAG',31,84],['Willian Pacho','ZAG',24,84],
+  ['Lucas Beraldo','ZAG',22,78],['Lucas Hernández','ZAG',29,80],['Nuno Mendes','LAT',24,86],['Achraf Hakimi','LAT',27,87],
+  ['Warren Zaïre-Emery','VOL',19,82],['Vitinha','VOL',25,88],['João Neves','VOL',21,85],['Fabián Ruiz','MEI',29,85],
+  ['Senny Mayulu','MEI',19,77],['Désiré Doué','PON',20,84],['Khvicha Kvaratskhelia','PON',24,87],['Bradley Barcola','PON',23,84],
+  ['Ousmane Dembélé','ATA',28,89],['Gonçalo Ramos','ATA',24,81]] },
+{ n:'Olympique de Marseille', cid:'Marselha', lvl:79, c1:'#2FAEE0', c2:'#FFFFFF', p:[
+  ['Gerónimo Rulli','GOL',33,79],['Leonardo Balerdi','ZAG',26,79],['Nayef Aguerd','ZAG',29,79],['Benjamin Pavard','ZAG',29,80],
+  ['Facundo Medina','LAT',26,78],['Timothy Weah','LAT',25,78],['Emerson','LAT',31,76],['Pierre-Emile Højbjerg','VOL',30,80],
+  ['Geoffrey Kondogbia','VOL',32,77],['Arthur Vermeeren','VOL',20,77],['Matt O\'Riley','MEI',25,79],['Mason Greenwood','PON',24,83],
+  ['Igor Paixão','PON',25,80],['Amine Gouiri','ATA',25,79],['Pierre-Emerick Aubameyang','ATA',36,79]] },
+{ n:'AS Monaco', cid:'Mônaco', lvl:78, c1:'#E51B22', c2:'#FFFFFF', p:[
+  ['Philipp Köhn','GOL',28,77],['Mohammed Salisu','ZAG',26,77],['Thilo Kehrer','ZAG',29,77],['Eric Dier','ZAG',31,78],
+  ['Vanderson','LAT',24,79],['Caio Henrique','LAT',28,76],['Jordan Teze','LAT',26,76],['Lamine Camara','VOL',22,78],
+  ['Denis Zakaria','VOL',28,81],['Aleksandr Golovin','MEI',29,80],['Takumi Minamino','MEI',30,77],['Maghnes Akliouche','PON',23,81],
+  ['Ansu Fati','PON',23,77],['Folarin Balogun','ATA',24,78],['Mika Biereth','ATA',23,78]] },
+{ n:'OGC Nice', cid:'Nice', lvl:75, c1:'#D3122A', c2:'#0A0A0A', p:[
+  ['Yehvann Diouf','GOL',26,76],['Moïse Bombito','ZAG',25,76],['Dante','ZAG',42,74],['Antoine Mendy','ZAG',22,74],
+  ['Melvin Bard','LAT',25,75],['Jonathan Clauss','LAT',33,77],['Morgan Sanson','VOL',31,75],['Tanguy Ndombele','VOL',28,76],
+  ['Hicham Boudaoui','VOL',26,75],['Sofiane Diop','MEI',25,76],['Jérémie Boga','PON',28,77],['Terem Moffi','ATA',26,78],
+  ['Mohamed-Ali Cho','PON',21,75]] },
+{ n:'Lille OSC', cid:'Lille', lvl:77, c1:'#E01E13', c2:'#0A0A0A', p:[
+  ['Berke Özer','GOL',25,78],['Aïssa Mandi','ZAG',33,77],['Ngal\'ayel Mukau','VOL',21,76],['Alexsandro','ZAG',26,78],
+  ['Thomas Meunier','LAT',34,75],['Romain Perraud','LAT',27,75],['Ayyoub Bouaddi','VOL',18,78],['Nabil Bentaleb','VOL',30,76],
+  ['Benjamin André','VOL',35,76],['Hákon Haraldsson','MEI',22,77],['Matias Fernández-Pardo','PON',20,77],['Félix Correia','PON',24,75],
+  ['Olivier Giroud','ATA',39,76],['Hamza Igamane','ATA',22,77]] },
+{ n:'Olympique Lyonnais', cid:'Lyon', lvl:77, c1:'#E4002B', c2:'#004B87', p:[
+  ['Dominik Greif','GOL',28,78],['Moussa Niakhaté','ZAG',29,78],['Clinton Mata','ZAG',33,76],['Ruben Kluivert','ZAG',24,76],
+  ['Nicolás Tagliafico','LAT',33,77],['Ainsley Maitland-Niles','LAT',28,76],['Tanner Tessmann','VOL',24,76],['Tyler Morton','VOL',23,77],
+  ['Corentin Tolisso','MEI',31,78],['Pavel Šulc','MEI',25,78],['Malick Fofana','PON',20,80],['Afonso Moreira','PON',20,75],
+  ['Martín Satriano','ATA',24,75],['Adam Karabec','MEI',22,75]] },
+{ n:'RC Strasbourg', cid:'Estrasburgo', lvl:75, c1:'#005AAB', c2:'#FFFFFF', p:[
+  ['Mike Penders','GOL',20,75],['Ismaël Doukouré','ZAG',22,75],['Mamadou Sarr','ZAG',20,75],['Abakar Sylla','ZAG',23,74],
+  ['Guéla Doué','LAT',23,76],['Marvin Senaya','LAT',24,74],['Habib Diarra','VOL',21,78],['Valentín Barco','MEI',21,78],
+  ['Kendry Páez','MEI',18,76],['Julio Enciso','PON',21,77],['Joaquín Panichelli','ATA',23,77],['Emanuel Emegha','ATA',22,78]] },
+{ n:'RC Lens', cid:'Lens', lvl:74, c1:'#FFD700', c2:'#D3122A', p:[
+  ['Robin Risser','GOL',22,74],['Jonathan Gradit','ZAG',33,75],['Malang Sarr','ZAG',26,74],['Jhoanner Chávez','LAT',23,73],
+  ['Ruben Aguilar','LAT',32,74],['Deiver Machado','LAT',32,75],['Adrien Thomasson','VOL',32,75],['Andy Diouf','VOL',22,77],
+  ['Fodé Sylla','VOL',22,73],['Wesley Saïd','PON',30,75],['Odsonne Édouard','ATA',27,76],['Rayan Fofana','ATA',20,74]] },
+{ n:'Stade Brestois', cid:'Brest', lvl:72, c1:'#E30613', c2:'#FFFFFF', p:[
+  ['Radosław Majecki','GOL',26,75],['Brendan Chardonnet','ZAG',30,74],['Soumaïla Coulibaly','ZAG',22,73],['Kenny Lala','LAT',34,72],
+  ['Bradley Locko','LAT',23,73],['Hugo Magnetti','VOL',27,73],['Mahdi Camara','VOL',27,74],['Pierre Lees-Melou','VOL',32,75],
+  ['Romain Del Castillo','PON',29,76],['Abdallah Sima','PON',24,74],['Ludovic Ajorque','ATA',31,75],['Kamory Doumbia','MEI',22,73]] },
+{ n:'Toulouse FC', cid:'Toulouse', lvl:72, c1:'#6B2C91', c2:'#FFFFFF', p:[
+  ['Guillaume Restes','GOL',20,77],['Mark McKenzie','ZAG',26,74],['Charlie Cresswell','ZAG',23,76],['Kevin Keben','ZAG',22,73],
+  ['Warren Kamanzi','LAT',24,73],['Jaydee Canvot','ZAG',18,74],['Vincent Sierro','VOL',30,75],['Cristian Cásseres','VOL',26,73],
+  ['Aron Dønnum','PON',27,75],['Yann Gboho','PON',24,74],['Frank Magri','ATA',25,74],['Joshua King','ATA',33,73]] },
+{ n:'AJ Auxerre', cid:'Auxerre', lvl:69, c1:'#005CA9', c2:'#FFFFFF', p:[
+  ['Donovan Léon','GOL',32,72],['Jubal','ZAG',33,71],['Sinaly Diomandé','ZAG',24,71],['Clément Akpa','ZAG',26,71],
+  ['Gideon Mensah','LAT',27,71],['Kevin Danois','PON',24,72],['Elisha Owusu','VOL',27,72],['Gauthier Hein','MEI',29,72],
+  ['Lassine Sinayoko','ATA',25,74],['Théo Bair','ATA',26,72]] },
+{ n:'Stade Rennais', cid:'Rennes', lvl:74, c1:'#E4002B', c2:'#0A0A0A', p:[
+  ['Brice Samba','GOL',31,78],['Anthony Rouault','ZAG',24,74],['Jérémy Jacquet','ZAG',20,75],['Alidu Seidu','LAT',25,74],
+  ['Przemysław Frankowski','LAT',30,75],['Djaoui Cissé','VOL',21,74],['Valentin Rongier','VOL',31,77],['Seko Fofana','MEI',30,77],
+  ['Ludovic Blas','MEI',28,77],['Estéban Lepaul','ATA',25,76],['Breel Embolo','ATA',28,77],['Musa Al-Tamari','PON',28,74]] },
+{ n:'FC Nantes', cid:'Nantes', lvl:70, c1:'#F8D000', c2:'#0A0A0A', p:[
+  ['Anthony Lopes','GOL',35,74],['Chidozie Awaziem','ZAG',28,71],['Nicolas Cozza','LAT',26,72],['Kelvin Amian','LAT',27,72],
+  ['Johann Lepenant','VOL',23,73],['Louis Leroux','VOL',20,71],['Mostafa Mohamed','ATA',27,74],['Matthis Abline','ATA',22,76],
+  ['Herba Guirassy','MEI',22,72],['Tylel Tati','ZAG',18,72]] },
+{ n:'Angers SCO', cid:'Angers', lvl:68, c1:'#FFFFFF', c2:'#0A0A0A', p:[
+  ['Yahia Fofana','GOL',25,72],['Cédric Hountondji','ZAG',31,70],['Ibrahima Niane','ATA',26,71],['Jean-Eudes Aholou','VOL',31,71],
+  ['Himad Abdelli','MEI',26,74],['Sidiki Cherif','ATA',24,71],['Zinedine Ferhat','PON',32,71],['Jim Allevinah','PON',30,70],
+  ['Florent Hanin','LAT',31,69],['Emmanuel Biumla','ZAG',24,70]] },
+{ n:'Le Havre AC', cid:'Le Havre', lvl:68, c1:'#87CEEB', c2:'#0A0A0A', p:[
+  ['Mory Diaw','GOL',31,71],['Arouna Sangante','ZAG',23,72],['Yassine Kechta','MEI',23,72],['Loïc Nego','LAT',34,70],
+  ['Gautier Lloris','ZAG',27,70],['Antoine Joujou','PON',22,70],['Rassoul Ndiaye','VOL',24,71],['Issa Soumaré','ATA',25,71],
+  ['Ahmed Hassan','ATA',26,71],['Simon Ebonog','LAT',22,69]] },
+{ n:'Paris FC', cid:'Paris', lvl:71, c1:'#0055A4', c2:'#FFFFFF', p:[
+  ['Kevin Trapp','GOL',35,76],['Otávio','ZAG',30,73],['Maxime Lopez','VOL',27,75],['Thibault De Smet','LAT',27,72],
+  ['Samir Chergui','ZAG',22,73],['Vincent Marchetti','MEI',24,73],['Ilan Kebbal','MEI',27,77],['Moses Simon','PON',30,75],
+  ['Jean-Philippe Krasso','ATA',28,75],['Adama Camara','VOL',25,73]] },
+{ n:'FC Lorient', cid:'Lorient', lvl:68, c1:'#F26522', c2:'#0A0A0A', p:[
+  ['Yvon Mvogo','GOL',31,72],['Montassar Talbi','ZAG',27,72],['Formose Mendy','LAT',25,71],['Théo Le Bris','MEI',23,72],
+  ['Laurent Abergel','VOL',32,72],['Arsène Kouassi','VOL',22,70],['Aiyegun Tosin','ATA',27,73],['Pablo Pagis','ATA',22,70],
+  ['Sambou Soumano','ATA',26,72],['Bamo Meïté','ZAG',23,71]] },
+{ n:'FC Metz', cid:'Metz', lvl:66, c1:'#6C1D45', c2:'#FFFFFF', p:[
+  ['Jonathan Fischer','GOL',24,70],['Sadibou Sané','ZAG',25,70],['Maxime Colin','LAT',34,69],['Benjamin Stambouli','VOL',35,70],
+  ['Jessy Deminguet','VOL',28,70],['Ibrahima Sissoko','VOL',28,71],['Habib Diallo','ATA',30,73],['Cheikh Sabaly','PON',24,70],
+  ['Gaetan Robail','PON',31,69],['Koffi Kouao','LAT',25,69]] }
+]});
+
+/* Brasileirão Série A — temporada 2025 (aproximação) */
+(window.LIGAS = window.LIGAS || []).push({
+id: 'BRA', nome: 'Brasileirão', pais: 'Brasil', nomes: 'BRA', forca: 3,
+clubes: [
+{ n:'Flamengo', cid:'Rio de Janeiro', lvl:79, c1:'#E30613', c2:'#0A0A0A', p:[
+  ['Agustín Rossi','GOL',30,80],['Matheus Cunha','GOL',26,75],['Léo Ortiz','ZAG',29,79],['Léo Pereira','ZAG',29,78],
+  ['Danilo','ZAG',34,78],['Guillermo Varela','LAT',32,76],['Ayrton Lucas','LAT',28,77],['Emerson Royal','LAT',26,77],
+  ['Erick Pulgar','VOL',31,77],['Jorginho','VOL',33,79],['Saúl Ñíguez','VOL',30,77],['Nicolás de la Cruz','MEI',28,79],
+  ['Giorgian de Arrascaeta','MEI',31,82],['Jorge Carrascal','MEI',27,77],['Luiz Araújo','PON',29,77],['Bruno Henrique','PON',34,76],
+  ['Samuel Lino','PON',25,78],['Everton Cebolinha','PON',29,76],['Pedro','ATA',28,80]] },
+{ n:'Palmeiras', cid:'São Paulo', lvl:79, c1:'#006437', c2:'#FFFFFF', p:[
+  ['Weverton','GOL',37,78],['Gustavo Gómez','ZAG',32,80],['Murilo','ZAG',28,78],['Bruno Fuchs','ZAG',26,76],
+  ['Agustín Giay','LAT',21,76],['Joaquín Piquerez','LAT',27,78],['Mayke','LAT',32,74],['Marcos Rocha','LAT',36,72],
+  ['Aníbal Moreno','VOL',26,78],['Emiliano Martínez','VOL',26,76],['Lucas Evangelista','VOL',30,75],['Andreas Pereira','MEI',29,78],
+  ['Maurício','MEI',28,77],['Felipe Anderson','PON',32,78],['Facundo Torres','PON',25,78],['Vitor Roque','ATA',20,79],
+  ['José Manuel López','ATA',24,78]] },
+{ n:'Cruzeiro', cid:'Belo Horizonte', lvl:76, c1:'#003399', c2:'#FFFFFF', p:[
+  ['Cássio','GOL',38,78],['Fabrício Bruno','ZAG',29,78],['Villalba','ZAG',27,76],['João Marcelo','ZAG',25,74],
+  ['Fagner','LAT',36,74],['William','LAT',30,75],['Kaiki','LAT',24,73],['Lucas Romero','VOL',31,76],
+  ['Lucas Silva','VOL',32,75],['Christian','VOL',25,76],['Matheus Pereira','MEI',29,80],['Wanderson','PON',30,76],
+  ['Kaio Jorge','ATA',23,78],['Gabriel Barbosa','ATA',29,77]] },
+{ n:'Botafogo', cid:'Rio de Janeiro', lvl:76, c1:'#0A0A0A', c2:'#FFFFFF', p:[
+  ['Neto','GOL',25,74],['Alexander Barboza','ZAG',30,77],['Bastos','ZAG',26,76],['Kaio Pantaleão','ZAG',26,73],
+  ['Cuiabano','LAT',23,75],['Vitinho','LAT',31,74],['Alex Telles','LAT',33,76],['Marlon Freitas','VOL',30,76],
+  ['Gregore','VOL',31,75],['Danilo Barbosa','VOL',29,74],['Jefferson Savarino','MEI',28,78],['Artur','PON',28,76],
+  ['Matheus Martins','PON',22,74],['Arthur Cabral','ATA',27,76],['Montoro','MEI',20,74]] },
+{ n:'Bahia', cid:'Salvador', lvl:74, c1:'#003399', c2:'#E30613', p:[
+  ['Marcos Felipe','GOL',29,75],['Ramos Mingo','ZAG',24,74],['Kanu','ZAG',28,74],['Gabriel Xavier','ZAG',29,73],
+  ['Santiago Arias','LAT',33,73],['Luciano Juba','LAT',26,76],['Gilberto','LAT',31,72],['Caio Alexandre','VOL',26,77],
+  ['Rezende','VOL',27,74],['Erick','VOL',26,74],['Everton Ribeiro','MEI',36,76],['Cauly','MEI',30,75],
+  ['Ademir','PON',30,74],['Willian José','ATA',33,75],['Tiago','ATA',25,74]] },
+{ n:'Mirassol', cid:'Mirassol', lvl:71, c1:'#F8D000', c2:'#008751', p:[
+  ['Alex Muralha','GOL',35,72],['João Victor','ZAG',27,72],['Lucão','ZAG',30,71],['Reinaldo','LAT',35,72],
+  ['Lucas Ramon','LAT',30,71],['Neto Moura','VOL',28,72],['Chico Kim','VOL',26,71],['Danielzinho','MEI',30,73],
+  ['Edson Carioca','PON',28,72],['Alesson','PON',24,72],['Cristian','ATA',27,73],['Negueba','PON',31,71]] },
+{ n:'Fluminense', cid:'Rio de Janeiro', lvl:74, c1:'#7A1F3D', c2:'#006437', p:[
+  ['Fábio','GOL',45,78],['Thiago Silva','ZAG',41,78],['Juan Freytes','ZAG',25,74],['Ignácio','ZAG',28,73],
+  ['Samuel Xavier','LAT',35,73],['Renê','LAT',33,73],['Guga','LAT',28,73],['Hércules','VOL',24,76],
+  ['Martinelli','VOL',24,75],['Nonato','VOL',28,74],['Paulo Henrique Ganso','MEI',36,77],['Jhon Arias','PON',28,78],
+  ['Agustín Canobbio','PON',27,75],['Germán Cano','ATA',37,76],['Everaldo','ATA',32,73]] },
+{ n:'São Paulo', cid:'São Paulo', lvl:75, c1:'#E30613', c2:'#0A0A0A', p:[
+  ['Rafael','GOL',36,77],['Robert Arboleda','ZAG',34,76],['Alan Franco','ZAG',26,75],['Ferraresi','ZAG',27,74],
+  ['Cédric Soares','LAT',34,74],['Wendell','LAT',32,75],['Enzo Díaz','LAT',29,74],['Damián Bobadilla','VOL',22,75],
+  ['Alisson','VOL',32,75],['Marcos Antônio','VOL',25,74],['Oscar','MEI',34,77],['Lucas Moura','PON',33,78],
+  ['Ferreirinha','PON',27,75],['Luciano','ATA',32,76],['André Silva','ATA',30,74]] },
+{ n:'Internacional', cid:'Porto Alegre', lvl:73, c1:'#E30613', c2:'#FFFFFF', p:[
+  ['Sergio Rochet','GOL',32,77],['Vitão','ZAG',25,76],['Victor Gabriel','ZAG',22,73],['Juninho','ZAG',26,73],
+  ['Bruno Gomes','LAT',25,73],['Bernabei','LAT',24,74],['Aguirre','LAT',27,73],['Fernando','VOL',38,74],
+  ['Thiago Maia','VOL',28,75],['Bruno Henrique','VOL',30,74],['Alan Patrick','MEI',34,78],['Vitinho','PON',26,73],
+  ['Rafael Borré','ATA',30,76],['Enner Valencia','ATA',36,75]] },
+{ n:'Grêmio', cid:'Porto Alegre', lvl:73, c1:'#0091D2', c2:'#0A0A0A', p:[
+  ['Tiago Volpi','GOL',34,74],['Walter Kannemann','ZAG',34,74],['Wagner Leonardo','ZAG',26,73],['Gustavo Martins','ZAG',22,72],
+  ['João Pedro','LAT',24,72],['Marlon','LAT',30,73],['Mathías Villasanti','VOL',28,76],['Dodi','VOL',30,73],
+  ['Cristaldo','MEI',28,75],['Edenilson','MEI',36,73],['Alysson','PON',21,74],['Pavón','PON',29,74],
+  ['Martin Braithwaite','ATA',34,76],['Aravena','PON',23,74]] },
+{ n:'Corinthians', cid:'São Paulo', lvl:73, c1:'#0A0A0A', c2:'#FFFFFF', p:[
+  ['Hugo Souza','GOL',26,77],['Cacá','ZAG',26,73],['André Ramalho','ZAG',33,74],['Gustavo Henrique','ZAG',32,73],
+  ['Matheuzinho','LAT',25,74],['Matheus Bidu','LAT',26,73],['Hugo','LAT',28,73],['José Martínez','VOL',31,74],
+  ['Raniele','VOL',28,73],['Maycon','VOL',28,73],['Rodrigo Garro','MEI',27,77],['Talles Magno','PON',23,74],
+  ['Memphis Depay','ATA',31,80],['Yuri Alberto','ATA',24,77]] },
+{ n:'Ceará', cid:'Fortaleza', lvl:70, c1:'#0A0A0A', c2:'#FFFFFF', p:[
+  ['Bruno Ferreira','GOL',27,71],['Marllon','ZAG',33,71],['Willian Machado','ZAG',29,71],['Rafael Ramos','LAT',30,71],
+  ['Nicolas','LAT',25,70],['Dieguinho','VOL',30,71],['Richardson','VOL',33,70],['Lourenço','MEI',27,72],
+  ['Fernandinho','PON',29,72],['Pedro Raul','ATA',28,74],['Aylon','ATA',32,71]] },
+{ n:'Atlético Mineiro', cid:'Belo Horizonte', lvl:74, c1:'#0A0A0A', c2:'#FFFFFF', p:[
+  ['Everson','GOL',35,76],['Lyanco','ZAG',28,74],['Junior Alonso','ZAG',32,75],['Ruan Tressoldi','ZAG',26,73],
+  ['Guilherme Arana','LAT',28,78],['Natanael','LAT',24,73],['Saravia','LAT',32,72],['Alan Franco','VOL',27,74],
+  ['Fausto Vera','VOL',25,74],['Gustavo Scarpa','MEI',31,78],['Bernard','MEI',32,75],['Cuello','PON',24,74],
+  ['Hulk','ATA',39,79],['Rony','ATA',30,75]] },
+{ n:'Vasco da Gama', cid:'Rio de Janeiro', lvl:72, c1:'#0A0A0A', c2:'#FFFFFF', p:[
+  ['Léo Jardim','GOL',30,77],['João Victor','ZAG',27,74],['Robert Renan','ZAG',22,73],['Lucas Freitas','ZAG',24,72],
+  ['Paulo Henrique','LAT',29,73],['Lucas Piton','LAT',25,75],['Hugo Moura','VOL',27,73],['Tchê Tchê','VOL',32,72],
+  ['Philippe Coutinho','MEI',33,77],['Rayan','PON',19,76],['Nuno Moreira','PON',26,74],['David','PON',27,73],
+  ['Pablo Vegetti','ATA',32,76]] },
+{ n:'Santos', cid:'Santos', lvl:71, c1:'#FFFFFF', c2:'#0A0A0A', p:[
+  ['Gabriel Brazão','GOL',24,74],['Zé Ivaldo','ZAG',28,72],['Luan Peres','ZAG',31,72],['Adonis Frías','ZAG',27,73],
+  ['Escobar','LAT',29,72],['Souza','LAT',26,71],['Zé Rafael','VOL',32,74],['João Schmidt','VOL',32,72],
+  ['Benjamín Rollheiser','MEI',25,75],['Guilherme','PON',24,74],['Barreal','PON',24,73],['Neymar','ATA',33,82],
+  ['Lautaro Díaz','ATA',27,72]] },
+{ n:'Vitória', cid:'Salvador', lvl:69, c1:'#E30613', c2:'#0A0A0A', p:[
+  ['Lucas Arcanjo','GOL',27,71],['Camutanga','ZAG',30,71],['Neris','ZAG',32,70],['Raúl Cáceres','LAT',33,70],
+  ['Jamerson','LAT',28,70],['Ronald','VOL',26,71],['Baralhas','VOL',26,71],['Matheusinho','MEI',29,72],
+  ['Renato Kayzer','ATA',29,72],['Erick','ATA',26,71]] },
+{ n:'Fortaleza', cid:'Fortaleza', lvl:70, c1:'#003399', c2:'#E30613', p:[
+  ['João Ricardo','GOL',33,73],['Benjamín Kuscevic','ZAG',29,72],['Brítez','ZAG',32,71],['Gastón Ávila','ZAG',24,72],
+  ['Tinga','LAT',34,70],['Bruno Pacheco','LAT',33,71],['Matheus Rossetto','VOL',28,71],['Pierre','VOL',34,70],
+  ['Pochettino','MEI',23,73],['Moisés','PON',28,73],['Breno Lopes','PON',29,72],['Juan Martín Lucero','ATA',32,74]] },
+{ n:'Juventude', cid:'Caxias do Sul', lvl:66, c1:'#008751', c2:'#FFFFFF', p:[
+  ['Gabriel','GOL',31,70],['Rodrigo Sam','ZAG',32,69],['Marcos Paulo','ZAG',26,69],['Alan Ruschel','LAT',36,68],
+  ['Nathan','LAT',27,68],['Jadson','VOL',31,69],['Caíque','VOL',27,69],['Nenê','MEI',43,70],
+  ['Batalla','MEI',29,70],['Gabriel Taliari','ATA',32,70]] },
+{ n:'Red Bull Bragantino', cid:'Bragança Paulista', lvl:71, c1:'#FFFFFF', c2:'#E30613', p:[
+  ['Cleiton','GOL',28,75],['Léo Realpe','ZAG',27,72],['Pedro Henrique','ZAG',27,72],['Juninho Capixaba','LAT',28,72],
+  ['Nathan Mendes','LAT',25,71],['Jadsom','VOL',26,72],['Matheus Fernandes','VOL',27,72],['Gustavinho','MEI',22,72],
+  ['Vitinho','PON',26,73],['Eduardo Sasha','ATA',33,73],['Isidro Pitta','ATA',25,74]] },
+{ n:'Sport Recife', cid:'Recife', lvl:65, c1:'#E30613', c2:'#0A0A0A', p:[
+  ['Gabriel','GOL',24,69],['Rafael Thyere','ZAG',32,69],['Chico','ZAG',25,68],['Igor Cariús','LAT',29,68],
+  ['Hereda','LAT',30,68],['Zé Lucas','VOL',19,70],['Lucas Lima','MEI',35,70],['Barletta','PON',26,69],
+  ['Pablo','ATA',33,69],['Derik Lacerda','ATA',26,69]] }
+]});
+
+/* Pro League — temporada 2025/26 (aproximação) */
+(window.LIGAS = window.LIGAS || []).push({
+id: 'BEL', nome: 'Pro League', pais: 'Bélgica', nomes: 'BEL', forca: 2,
+clubes: [
+{ n:'Club Brugge', cid:'Bruges', lvl:76, c1:'#0080C8', c2:'#0A0A0A', p:[
+  ['Simon Mignolet','GOL',37,78],['Joel Ordóñez','ZAG',22,78],['Brandon Mechele','ZAG',33,76],['Zaid Romero','ZAG',24,74],
+  ['Joaquin Seys','LAT',21,75],['Bjorn Meijer','LAT',29,74],['Kyriani Sabbe','LAT',22,74],['Raphael Onyedika','VOL',24,78],
+  ['Hans Vanaken','MEI',33,78],['Romeo Vermant','ATA',20,75],['Christos Tzolis','PON',23,80],['Carlos Forbs','PON',22,76],
+  ['Hugo Vetlesen','VOL',25,75],['Nicolò Tresoldi','ATA',21,76]] },
+{ n:'Union Saint-Gilloise', cid:'Bruxelas', lvl:74, c1:'#FFD700', c2:'#0A2240', p:[
+  ['Kjell Scherpen','GOL',25,76],['Christian Burgess','ZAG',34,74],['Kevin Mac Allister','ZAG',26,74],['Ross Sykes','ZAG',26,74],
+  ['Kamiel Van de Perre','LAT',21,72],['Adem Zorgane','VOL',25,75],['Cameron Puertas','MEI',27,76],['Anouar Ait El Hadj','MEI',23,75],
+  ['Anan Khalaili','PON',23,74],['Raul Florucz','PON',24,76],['Promise David','ATA',24,76],['Mohammed Fuseini','PON',22,73]] },
+{ n:'Anderlecht', cid:'Bruxelas', lvl:73, c1:'#7A1F3D', c2:'#FFFFFF', p:[
+  ['Colin Coosemans','GOL',33,74],['Jan-Carlo Simić','ZAG',22,75],['Killian Sardella','LAT',24,74],['Ludwig Augustinsson','LAT',31,73],
+  ['Lucas Hey','ZAG',21,73],['Nilson Angulo','PON',23,74],['Mario Stroeykens','MEI',21,75],['Théo Leoni','VOL',23,73],
+  ['Yari Verschaeren','MEI',24,75],['Kasper Dolberg','ATA',28,77],['Luis Vázquez','ATA',27,74],['Thorgan Hazard','PON',32,75]] },
+{ n:'KRC Genk', cid:'Genk', lvl:73, c1:'#0080C8', c2:'#FFFFFF', p:[
+  ['Hendrik Van Crombrugge','GOL',32,75],['Mujaid Sadick','ZAG',27,73],['Matte Smets','ZAG',22,74],['Ken Nkuba','LAT',23,72],
+  ['Bryan Heynen','VOL',28,76],['Patrik Hrošovský','VOL',33,73],['Konstantinos Karetsas','MEI',18,76],['Yira Sor','PON',24,75],
+  ['Jarne Steuckers','MEI',23,75],['Christopher Bonsu Baah','PON',21,75],['Oh Hyeon-gyu','ATA',24,74],
+  ['Tolu Arokodare','ATA',25,76]] },
+{ n:'Royal Antwerp', cid:'Antuérpia', lvl:71, c1:'#E30613', c2:'#FFFFFF', p:[
+  ['Sinan Bolat','GOL',37,71],['Toby Alderweireld','ZAG',36,75],['Jelle Bataille','LAT',26,73],['Zeno Van den Bosch','ZAG',22,72],
+  ['Mahamadou Doumbia','VOL',24,72],['Michel-Ange Balikwisha','PON',24,76],['Vincent Janssen','ATA',31,74],['Chidera Ejuke','PON',27,74],
+  ['Tjaronn Chery','MEI',37,73],['Owen Wijndal','LAT',26,73]] },
+{ n:'KAA Gent', cid:'Gante', lvl:72, c1:'#0080C8', c2:'#FFFFFF', p:[
+  ['Davy Roef','GOL',31,73],['Ibrahim Kandouss','ZAG',27,73],['Matisse Samoise','LAT',25,72],['Archie Brown','LAT',23,74],
+  ['Julien De Sart','VOL',30,73],['Andri Gudjohnsen','MEI',24,75],['Omri Gandelman','VOL',25,73],['Franck Surdez','ATA',22,72],
+  ['Dimitri Lavalée','ZAG',28,73],['Max Dean','ATA',24,72]] },
+{ n:'Standard Liège', cid:'Liège', lvl:70, c1:'#E30613', c2:'#FFFFFF', p:[
+  ['Matthieu Epolo','GOL',20,72],['Marlon Fossey','LAT',26,72],['Ibe Hautekiet','ZAG',24,72],['Nayel Mehssatou','LAT',23,71],
+  ['Casper Nielsen','VOL',31,72],['Aleksandar Cvetković','VOL',24,71],['Adnane Abid','PON',22,72],['Dennis Ayensa','ATA',28,72],
+  ['Rafiki Saïd','PON',26,71],['Timothé Nkada','ATA',26,71]] },
+{ n:'Cercle Brugge', cid:'Bruges', lvl:69, c1:'#008751', c2:'#0A0A0A', p:[
+  ['Warleson','GOL',26,71],['Flávio Nazinho','LAT',23,72],['Jesper Daland','ZAG',25,72],['Ibrahim Diakité','ZAG',24,71],
+  ['Hannes Van der Bruggen','VOL',32,71],['Lawrence Agyekum','PON',21,72],['Christiaan Ravych','ZAG',22,70],['Felix Lemarechal','MEI',24,72],
+  ['Kazeem Olaigbe','PON',22,72],['Dino Hotić','MEI',30,71]] },
+{ n:'Sporting Charleroi', cid:'Charleroi', lvl:69, c1:'#0A0A0A', c2:'#FFFFFF', p:[
+  ['Martin Delavallée','GOL',24,70],['Nikolas Andreou','ZAG',26,70],['Jules Van Cleemput','LAT',28,70],['Damien Marcq','VOL',36,70],
+  ['Aurélien Scheidler','ATA',27,71],['Antoine Bernier','PON',28,71],['Parfait Guiagon','PON',24,70],['Nathan Kabasele','ATA',22,70],
+  ['Mardochée Nzita','LAT',25,70],['Daan Heymans','MEI',26,71]] },
+{ n:'KV Mechelen', cid:'Mechelen', lvl:68, c1:'#E30613', c2:'#FFD700', p:[
+  ['Gaëtan Coucke','GOL',28,71],['Bill Antonio','LAT',23,70],['Rob Schoofs','MEI',32,71],['Lion Lauberbach','ATA',26,71],
+  ['Nikola Storm','PON',30,72],['Sandy Walsh','ZAG',30,71],['Geoffry Hairemans','MEI',33,70],['Mory Konaté','VOL',25,70]] },
+{ n:'OH Leuven', cid:'Leuven', lvl:67, c1:'#FFFFFF', c2:'#0A0A0A', p:[
+  ['Rúnar Alex Rúnarsson','GOL',30,71],['Diego Ricca','ZAG',30,70],['Hamza Mendyl','LAT',28,70],['Jérémy Patris','VOL',27,70],
+  ['Ezechiel Banzuzi','VOL',21,72],['Jarne Vaesen','ATA',22,70],['Youssef Maziz','MEI',27,70],['Nachon Nsingi','ATA',25,70]] },
+{ n:'Westerlo', cid:'Westerlo', lvl:67, c1:'#FFD700', c2:'#0A0A0A', p:[
+  ['Andreas Jungdal','GOL',24,70],['Bryan Reynolds','LAT',24,71],['Maxime Biset','VOL',25,69],['Kyan Vaesen','ATA',22,70],
+  ['Nene Dorgeles','PON',22,71],['Jonas Van der Heyden','LAT',28,69],['Griffin Yow','PON',23,70],['Mathias Fixelles','VOL',26,69]] },
+{ n:'Sint-Truiden', cid:'Sint-Truiden', lvl:66, c1:'#FFD700', c2:'#0A0A0A', p:[
+  ['Alexander Schmidt','GOL',29,69],['Toni Leistner','ZAG',35,69],['Matthias Verreth','MEI',27,71],['Fatih Kaya','ATA',26,70],
+  ['Aboubakary Koita','PON',27,70],['Ilias Sebaoui','MEI',24,70],['Adriano Bertaccini','ATA',24,72]] },
+{ n:'FCV Dender', cid:'Denderleeuw', lvl:64, c1:'#E30613', c2:'#0A0A0A', p:[
+  ['Nordin Jackers','GOL',28,68],['Elton Kabangu','ATA',27,69],['Nathan Rodes','VOL',25,68],['Guillaume François','LAT',34,67],
+  ['Souleymane Anne','ZAG',25,68],['Yannick Aguemon','PON',25,68]] },
+{ n:'Zulte Waregem', cid:'Waregem', lvl:65, c1:'#E30613', c2:'#FFFFFF', p:[
+  ['Louis Bostyn','GOL',26,68],['Jelle Vossen','ATA',39,69],['Ewoud Pletinckx','ZAG',25,69],['Mohamed Berte','ATA',24,68],
+  ['Théo Ndicka','LAT',25,68],['Zinho Gano','ATA',32,68]] },
+{ n:'RAAL La Louvière', cid:'La Louvière', lvl:63, c1:'#E30613', c2:'#FFFFFF', p:[
+  ['Sébastien Defourny','GOL',28,67],['Antoine Lallemand','VOL',25,67],['Fabrice Olinga','ATA',29,68],['Théo Bongonda','PON',29,69],
+  ['Mohamed Bouchouari','MEI',26,67],['Anthony Sadin','ZAG',27,67]] }
+]});
+
+/* Liga Portugal — temporada 2025/26 (aproximação) */
+(window.LIGAS = window.LIGAS || []).push({
+id: 'POR', nome: 'Liga Portugal', pais: 'Portugal', nomes: 'POR', forca: 3,
+clubes: [
+{ n:'Benfica', cid:'Lisboa', lvl:79, c1:'#E30613', c2:'#FFFFFF', p:[
+  ['Anatoliy Trubin','GOL',24,81],['António Silva','ZAG',22,79],['Nicolás Otamendi','ZAG',37,78],['Tomás Araújo','ZAG',23,77],
+  ['Samuel Dahl','LAT',22,75],['Sávio Dedić','LAT',23,75],['Enzo Barrenechea','VOL',24,77],['Fredrik Aursnes','VOL',30,79],
+  ['Richard Ríos','VOL',25,78],['Georgiy Sudakov','MEI',23,80],['Andreas Schjelderup','PON',21,77],['Kerem Aktürkoğlu','PON',27,78],
+  ['Vangelis Pavlidis','ATA',27,80],['Petar Ivanović','ATA',19,76]] },
+{ n:'Sporting CP', cid:'Lisboa', lvl:79, c1:'#008751', c2:'#FFFFFF', p:[
+  ['Rui Silva','GOL',31,78],['Ousmane Diomande','ZAG',21,80],['Gonçalo Inácio','ZAG',24,80],['Zeno Debast','ZAG',22,77],
+  ['Iván Fresneda','LAT',21,76],['Matheus Reis','LAT',30,75],['Geovany Quenda','PON',18,78],['Morten Hjulmand','VOL',26,82],
+  ['Hidemasa Morita','VOL',30,78],['João Simões','MEI',20,76],['Francisco Trincão','PON',25,80],['Pedro Gonçalves','MEI',27,80],
+  ['Luis Suárez','ATA',24,79],['Fotis Ioannidis','ATA',25,78]] },
+{ n:'FC Porto', cid:'Porto', lvl:78, c1:'#003399', c2:'#FFFFFF', p:[
+  ['Diogo Costa','GOL',26,84],['Nehuén Pérez','ZAG',24,78],['Jan Bednarek','ZAG',29,77],['Jakub Kiwior','ZAG',25,78],
+  ['Francisco Moura','LAT',26,75],['Zaidu Sanusi','LAT',28,74],['Alan Varela','VOL',24,80],['Stephen Eustáquio','VOL',29,77],
+  ['Victor Froholdt','VOL',19,77],['Rodrigo Mora','MEI',18,80],['Pepê','PON',28,79],['Gabri Veiga','MEI',23,78],
+  ['Samu Aghehowa','ATA',21,81],['Deniz Gül','ATA',20,75]] },
+{ n:'SC Braga', cid:'Braga', lvl:74, c1:'#E30613', c2:'#FFFFFF', p:[
+  ['Lukáš Horníček','GOL',23,75],['Sikou Niakaté','ZAG',26,75],['Paulo Oliveira','ZAG',33,74],['Arrey-Mbi','ZAG',22,74],
+  ['Víctor Gómez','LAT',25,74],['Adrián Marín','LAT',28,73],['João Moutinho','VOL',39,74],['Joe Gorby','VOL',22,73],
+  ['Rodrigo Zalazar','MEI',26,75],['Ricardo Horta','MEI',31,77],['Gabri Martínez','PON',21,75],['Fran Navarro','ATA',27,75],
+  ['Pau Víctor','ATA',24,75]] },
+{ n:'Vitória SC', cid:'Guimarães', lvl:71, c1:'#FFFFFF', c2:'#0A0A0A', p:[
+  ['Bruno Varela','GOL',31,73],['Zé Carlos','ZAG',26,72],['Ntonga','ZAG',23,71],['Miguel Maga','LAT',24,71],
+  ['Manu Silva','VOL',25,73],['Tomás Händel','VOL',24,73],['Nuno Santos','PON',25,72],['Gustavo Silva','PON',24,72],
+  ['Kaio César','ATA',25,73],['Samu','ATA',24,72]] },
+{ n:'Santa Clara', cid:'Ponta Delgada', lvl:68, c1:'#E30613', c2:'#FFFFFF', p:[
+  ['Gabriel Batista','GOL',28,70],['Diogo Calila','ZAG',26,69],['Paulo Vitor','ZAG',28,69],['Rocha','LAT',25,69],
+  ['Adriano Castanheira','MEI',24,71],['Lucas Soares','VOL',27,69],['Vinicius Lopes','ATA',30,71],['Serginho','PON',27,70]] },
+{ n:'Famalicão', cid:'Vila Nova de Famalicão', lvl:70, c1:'#FFFFFF', c2:'#0A0A0A', p:[
+  ['Zlobin','GOL',26,71],['Riccieli','ZAG',27,71],['Justin de Haas','LAT',23,70],['Youssouf Sylla','VOL',25,71],
+  ['Cadu','MEI',22,72],['Gustavo Sá','MEI',21,73],['Sorriso','PON',23,72],['Elves Baldé','PON',22,71],
+  ['Zabala','ATA',22,71],['Mathias de Amorim','ATA',24,71]] },
+{ n:'Moreirense', cid:'Moreira de Cónegos', lvl:68, c1:'#008751', c2:'#FFFFFF', p:[
+  ['Kewin','GOL',25,70],['Marcelo','ZAG',30,69],['Rafael Brito','LAT',23,69],['Ofori','VOL',25,69],
+  ['Alanzinho','MEI',32,70],['Kiko Bondoso','PON',27,70],['Rodrigo Martins','ATA',24,70],['Gonçalo Franco','VOL',25,71]] },
+{ n:'Estoril Praia', cid:'Estoril', lvl:68, c1:'#0080C8', c2:'#FFD700', p:[
+  ['Dani Figueira','GOL',27,70],['Bernardo Vital','ZAG',26,69],['Chiquinho','VOL',30,70],['Ferro','ZAG',28,70],
+  ['Marcos Paulo','ATA',27,71],['Cassiano','ATA',31,70],['João Carvalho','MEI',28,71],['Rúben Fernandes','LAT',24,69]] },
+{ n:'Casa Pia', cid:'Lisboa', lvl:67, c1:'#0A0A0A', c2:'#FFFFFF', p:[
+  ['Ricardo Batista','GOL',28,69],['Vasco Fernandes','ZAG',34,68],['Neto Borges','LAT',28,69],['Diogo Pinto','VOL',24,69],
+  ['Rúben Gomes','MEI',24,69],['Clayton','ATA',26,69],['Sandro Lima','ATA',28,69]] },
+{ n:'Rio Ave', cid:'Vila do Conde', lvl:67, c1:'#008751', c2:'#FFFFFF', p:[
+  ['Jhonatan','GOL',32,69],['Costinha','ZAG',28,69],['Athos','LAT',25,68],['Fábio Ronaldo','MEI',27,69],
+  ['Vrousai','PON',25,69],['Aziz Yakubu','ATA',27,71],['Petrasso','PON',30,69]] },
+{ n:'Gil Vicente', cid:'Barcelos', lvl:69, c1:'#E30613', c2:'#0A0A0A', p:[
+  ['Andrew','GOL',24,70],['Rúben Fernandes','ZAG',38,69],['Bruno Gaspar','LAT',32,69],['Fujimoto','MEI',25,70],
+  ['Nuno Fernandes','VOL',26,70],['Murilo','PON',25,70],['Pedro Marques','ATA',27,71],['Santi','MEI',24,70]] },
+{ n:'Estrela da Amadora', cid:'Amadora', lvl:66, c1:'#008751', c2:'#E30613', p:[
+  ['Bruno Brígido','GOL',32,68],['Kikas','ZAG',25,68],['Ronald','VOL',24,68],['Régis','ATA',27,68],
+  ['Leonardo Lopes','MEI',24,68],['Alfa Semedo','VOL',28,69]] },
+{ n:'Arouca', cid:'Arouca', lvl:67, c1:'#FFD700', c2:'#0A0A0A', p:[
+  ['Ricardo Silva','GOL',29,69],['Miguel Nóbrega','ZAG',24,68],['Zé Ricardo','MEI',25,69],['Sylla','ATA',27,69],
+  ['Rafa Mújica','ATA',26,70],['David Simão','VOL',31,68]] },
+{ n:'Nacional', cid:'Funchal', lvl:66, c1:'#0A0A0A', c2:'#FFFFFF', p:[
+  ['Lucas França','GOL',26,68],['Zé Vitor','ZAG',27,68],['Rodrigo Borges','ZAG',26,68],['Ulisses','MEI',25,68],
+  ['Witi','PON',24,69],['Jesús Ramírez','ATA',25,68]] },
+{ n:'AVS', cid:'Vila das Aves', lvl:64, c1:'#E30613', c2:'#FFD700', p:[
+  ['Simão','GOL',27,67],['Mangas','ZAG',26,67],['Diego Medeiros','VOL',25,67],['Nsimba','ATA',26,68],
+  ['Bruno Lourenço','PON',26,67]] },
+{ n:'Tondela', cid:'Tondela', lvl:65, c1:'#FFD700', c2:'#0A0A0A', p:[
+  ['Bernardo Fontes','GOL',24,67],['Tiago Manso','LAT',24,67],['Miguel Silva','MEI',26,67],['Ceitil','PON',25,67],
+  ['Bebeto','ATA',27,68]] },
+{ n:'Alverca', cid:'Alverca', lvl:64, c1:'#E30613', c2:'#FFFFFF', p:[
+  ['Marafona','GOL',38,68],['Rodrigo Pinheiro','ZAG',24,67],['Gonçalo Esteves','LAT',22,68],['Meshino','MEI',27,68],
+  ['Lincoln','ATA',25,68]] }
+]});
+
+/* Balcão de Negócios — lógica do jogo.
+   Depende dos arquivos de data/ (window.LIGAS e window.NOMES) carregados antes. */
+
+const $ = (s, r = document) => r.querySelector(s);
+const rnd = (a, b) => a + Math.random() * (b - a);
+const ri = (a, b) => Math.floor(rnd(a, b + 1));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------------- posições e táticas ---------------- */
+const POS = [
+  {id:'GOL', name:'Goleiro',   depth:2},
+  {id:'ZAG', name:'Zagueiro',  depth:4},
+  {id:'LAT', name:'Lateral',   depth:4},
+  {id:'VOL', name:'Volante',   depth:4},
+  {id:'MEI', name:'Meia',      depth:2},
+  {id:'PON', name:'Ponta',     depth:3},
+  {id:'ATA', name:'Atacante',  depth:2}
+];
+const POSMAP = Object.fromEntries(POS.map(p => [p.id, p]));
+
+/* x/y em % do campo: y=92 é a própria área, y=15 é a área adversária */
+const FORMS = {
+  '4-3-3': [
+    {p:'GOL',x:50,y:91},
+    {p:'LAT',x:13,y:72},{p:'ZAG',x:35,y:79},{p:'ZAG',x:65,y:79},{p:'LAT',x:87,y:72},
+    {p:'VOL',x:31,y:55},{p:'VOL',x:69,y:55},{p:'MEI',x:50,y:44},
+    {p:'PON',x:14,y:25},{p:'ATA',x:50,y:15},{p:'PON',x:86,y:25}
+  ],
+  '4-4-2': [
+    {p:'GOL',x:50,y:91},
+    {p:'LAT',x:13,y:72},{p:'ZAG',x:35,y:79},{p:'ZAG',x:65,y:79},{p:'LAT',x:87,y:72},
+    {p:'PON',x:12,y:46},{p:'VOL',x:37,y:52},{p:'VOL',x:63,y:52},{p:'PON',x:88,y:46},
+    {p:'ATA',x:36,y:18},{p:'ATA',x:64,y:18}
+  ],
+  '4-2-3-1': [
+    {p:'GOL',x:50,y:91},
+    {p:'LAT',x:13,y:72},{p:'ZAG',x:35,y:79},{p:'ZAG',x:65,y:79},{p:'LAT',x:87,y:72},
+    {p:'VOL',x:36,y:58},{p:'VOL',x:64,y:58},
+    {p:'PON',x:14,y:34},{p:'MEI',x:50,y:37},{p:'MEI',x:86,y:34},
+    {p:'ATA',x:50,y:14}
+  ],
+  '3-5-2': [
+    {p:'GOL',x:50,y:91},
+    {p:'ZAG',x:28,y:80},{p:'ZAG',x:50,y:82},{p:'ZAG',x:72,y:80},
+    {p:'LAT',x:9,y:52},{p:'VOL',x:35,y:57},{p:'VOL',x:65,y:57},{p:'LAT',x:91,y:52},
+    {p:'MEI',x:50,y:38},
+    {p:'ATA',x:36,y:17},{p:'ATA',x:64,y:17}
+  ],
+  '3-4-3': [
+    {p:'GOL',x:50,y:91},
+    {p:'ZAG',x:28,y:80},{p:'ZAG',x:50,y:82},{p:'ZAG',x:72,y:80},
+    {p:'LAT',x:9,y:55},{p:'VOL',x:38,y:57},{p:'VOL',x:62,y:57},{p:'LAT',x:91,y:55},
+    {p:'PON',x:16,y:26},{p:'ATA',x:50,y:16},{p:'PON',x:84,y:26}
+  ]
+};
+/* quanto o jogador perde de overall jogando fora da posição de origem */
+const COMPAT = {
+  GOL:{GOL:0},
+  ZAG:{ZAG:0, LAT:4, VOL:5},
+  LAT:{LAT:0, ZAG:4, PON:5, VOL:6},
+  VOL:{VOL:0, MEI:3, ZAG:5, LAT:6},
+  MEI:{MEI:0, VOL:3, PON:4, ATA:5},
+  PON:{PON:0, MEI:4, ATA:4, LAT:6},
+  ATA:{ATA:0, PON:4, MEI:5}
+};
+function slotsOf(pos){ return (FORMS[G.form] || FORMS['4-3-3']).filter(s => s.p === pos).length; }
+function formSlots(){ return FORMS[G.form] || FORMS['4-3-3']; }
+function penalty(slotPos, playerPos){
+  const v = (COMPAT[slotPos] || {})[playerPos];
+  if (v !== undefined) return v;
+  return (slotPos === 'GOL' || playerPos === 'GOL') ? 15 : 9;
+}
+function effOvr(p, slotPos){ return p ? p.ovr - penalty(slotPos, p.pos) : 42; }
+
+const LIGAS = window.LIGAS || [];
+const ALL_CLUBS = [];
+LIGAS.forEach(l => l.clubes.forEach(c => { c.liga = l; ALL_CLUBS.push(c); }));
+
+/* ---------------- valores ---------------- */
+function valueOf(ovr, age, pot){
+  let v = 0.34e6 * Math.pow(1.163, ovr - 50);
+  const af = age <= 20 ? 1.55 : age <= 23 ? 1.35 : age <= 26 ? 1.15 : age <= 29 ? .95 : age <= 32 ? .62 : .35;
+  v *= af * (1 + (pot - ovr) * .035);
+  return Math.max(2e5, Math.round(v / 1e5) * 1e5);
+}
+function wageOf(ovr, age){
+  const w = 3200 * Math.pow(1.125, ovr - 55) * (age >= 31 ? 1.12 : 1);
+  return Math.max(4000, Math.round(w / 1000) * 1000);
+}
+function potOf(ovr, age){
+  return clamp(ovr + (age <= 20 ? ri(5, 13) : age <= 23 ? ri(2, 9) : age <= 26 ? ri(0, 4) : 0), ovr, 94);
+}
+function money(v){
+  v = Math.round(v);
+  if (v <= 0) return '€ 0';
+  if (v >= 1e6) return '€ ' + (v / 1e6).toFixed(v >= 1e7 ? 1 : 2).replace('.', ',') + ' mi';
+  return '€ ' + Math.round(v / 1e3) + ' mil';
+}
+function wageFmt(v){ return '€ ' + Math.round(v / 1e3) + ' mil/sem'; }
+
+/* ---------------- jogadores ---------------- */
+let UID = 1;
+function realPlayer(row, club){
+  const [name, pos, age, ovr] = row;
+  const pot = potOf(ovr, age);
+  return { id:UID++, pos, name, age, ovr, pot, value:valueOf(ovr, age, pot), wage:wageOf(ovr, age),
+    club:club.n, liga:club.liga.nome, real:true, attempts:0, gone:false };
+}
+function fakePlayer(posId, ovr, opts = {}){
+  ovr = clamp(Math.round(ovr), 52, 90);
+  const age = opts.age ?? (Math.random() < .35 ? ri(18, 22) : Math.random() < .7 ? ri(23, 28) : ri(29, 34));
+  const pot = potOf(ovr, age);
+  const pool = window.NOMES[opts.pool] || window.NOMES.BRA;
+  return { id:UID++, pos:posId, name:pick(pool.f) + ' ' + pick(pool.s), age, ovr, pot,
+    value:valueOf(ovr, age, pot), wage:wageOf(ovr, age),
+    club:opts.club ?? 'Sem clube', liga:opts.liga ?? '—', attempts:0, gone:false };
+}
+function tagsOf(p, lvl){
+  const t = [];
+  if (p.free) t.push(['free','livre']);
+  if (p.age <= 21 && p.pot - p.ovr >= 7) t.push(['gem','joia']);
+  if (p.ovr >= lvl + 6) t.push(['star','estrela']);
+  if (p.age >= 33) t.push(['vet','veterano']);
+  return t;
+}
+
+/* ---------------- escalação ---------------- */
+function bestXI(squad){
+  const slots = formSlots();
+  const used = new Set();
+  const line = new Array(slots.length).fill(null);
+  const order = slots.map((s, i) => ({ i, s, cnt: squad.filter(p => p.pos === s.p).length }))
+                     .sort((a, b) => a.cnt - b.cnt);
+  for (const { i, s } of order){
+    let best = null, bv = -1;
+    for (const p of squad){
+      if (used.has(p.id)) continue;
+      const v = effOvr(p, s.p);
+      if (v > bv){ bv = v; best = p; }
+    }
+    if (best){ line[i] = best.id; used.add(best.id); }
+  }
+  return line;
+}
+function lineupRating(line, squad){
+  const sq = squad || G.squad, slots = formSlots();
+  let sum = 0;
+  for (let i = 0; i < slots.length; i++){
+    const p = sq.find(x => x.id === line[i]);
+    sum += p ? effOvr(p, slots[i].p) : 42;
+  }
+  return sum / slots.length;
+}
+function cleanLineup(){
+  G.lineup = G.lineup.map(id => (id && G.squad.some(p => p.id === id)) ? id : null);
+}
+function fillEmpty(){
+  const slots = formSlots();
+  for (let i = 0; i < slots.length; i++){
+    if (G.lineup[i]) continue;
+    const used = new Set(G.lineup.filter(Boolean));
+    let best = null, bv = -1;
+    for (const p of G.squad){
+      if (used.has(p.id)) continue;
+      const v = effOvr(p, slots[i].p);
+      if (v > bv){ bv = v; best = p; }
+    }
+    G.lineup[i] = best ? best.id : null;
+  }
+}
+function autoPlace(p){
+  const slots = formSlots();
+  let bi = -1, gain = 0.5;
+  for (let i = 0; i < slots.length; i++){
+    const cur = G.squad.find(x => x.id === G.lineup[i]);
+    const g = effOvr(p, slots[i].p) - effOvr(cur, slots[i].p);
+    if (g > gain){ gain = g; bi = i; }
+  }
+  if (bi < 0) return null;
+  G.lineup[bi] = p.id;
+  return slots[bi].p;
+}
+function benchList(){
+  const inXI = new Set(G.lineup.filter(Boolean));
+  const ord = POS.map(p => p.id);
+  return G.squad.filter(p => !inXI.has(p.id))
+    .sort((a, b) => ord.indexOf(a.pos) - ord.indexOf(b.pos) || b.ovr - a.ovr);
+}
+
+/* quanto a posição melhorou desde a abertura da janela (5.0 = crédito cheio na nota) */
+function needProgress(pos){
+  return clamp((posStrength(G.squad, pos) - G.baseStrength[pos]) / 5, 0, 1);
+}
+function needState(pos){
+  const n = G.needs[pos];
+  if (n === 'ok') return 'ok';
+  return needProgress(pos) >= 1 ? 'done' : n;
+}
+function posStrength(squad, posId){
+  const n = Math.max(1, slotsOf(posId));
+  const list = squad.filter(x => x.pos === posId).sort((a, b) => b.ovr - a.ovr);
+  let s = 0;
+  for (let i = 0; i < n; i++) s += list[i] ? list[i].ovr : 42;
+  return s / n;
+}
+function buildSquad(club){
+  const squad = (club.p || []).map(r => realPlayer(r, club));
+  for (const pos of POS){
+    let have = squad.filter(x => x.pos === pos.id).length;
+    while (have < pos.depth){
+      const base = have < 2 ? club.lvl - ri(1, 5) : club.lvl - ri(5, 11);
+      squad.push(fakePlayer(pos.id, base, { club:club.n, liga:club.liga.nome, pool:club.liga.nomes }));
+      have++;
+    }
+  }
+  return squad;
+}
+function buildMarket(my){
+  const porPos = { GOL:6, ZAG:12, LAT:10, VOL:12, MEI:8, PON:12, ATA:10 };
+  const market = [];
+  for (const [pid, n] of Object.entries(porPos)){
+    const cand = [];
+    for (const c of ALL_CLUBS){
+      if (c === my) continue;
+      for (const r of (c.p || [])) if (r[1] === pid) cand.push({ r, c });
+    }
+    cand.forEach(x => {
+      const gap = Math.max(0, x.r[3] - (my.lvl + 3));
+      x.w = Math.random() / (1 + Math.pow(gap, 1.7) * 0.3);
+    });
+    cand.sort((a, b) => b.w - a.w).slice(0, n).forEach(x => market.push(realPlayer(x.r, x.c)));
+  }
+  for (let i = 0; i < 5; i++){
+    const p = fakePlayer(pick(POS).id, my.lvl - ri(0, 7), { age:ri(29, 35), pool:my.liga.nomes });
+    p.free = true; p.value = Math.round(p.value * .6 / 1e5) * 1e5;
+    market.push(p);
+  }
+  for (const p of market){
+    p.demand = p.free ? 0 : rnd(.95, 1.32);
+    p.feeAsk = p.free ? 0 : Math.round(p.value * p.demand / 1e5) * 1e5;
+    p.wageAsk = Math.round(p.wage * (1 + Math.max(0, p.ovr - my.lvl) * .04) * (p.free ? 1.3 : 1) / 1000) * 1000;
+  }
+  return market;
+}
+
+/* ---------------- estado ---------------- */
+let G = null;
+function recomputeBaseline(){
+  G.baseXI = lineupRating(bestXI(G.squad0), G.squad0);
+  G.baseStrength = Object.fromEntries(POS.map(p => [p.id, posStrength(G.squad0, p.id)]));
+  const needs = {};
+  for (const p of POS){
+    if (!slotsOf(p.id)){ needs[p.id] = 'ok'; continue; }
+    const gap = G.lvl - posStrength(G.squad0, p.id);
+    needs[p.id] = gap >= 4 ? 'crit' : gap >= 1.8 ? 'soft' : 'ok';
+  }
+  if (!POS.some(p => needs[p.id] !== 'ok')){
+    POS.filter(p => slotsOf(p.id)).map(p => ({ id:p.id, g:posStrength(G.squad0, p.id) }))
+      .sort((a, b) => a.g - b.g).slice(0, 2).forEach(x => { needs[x.id] = 'soft'; });
+  }
+  G.needs = needs;
+}
+function newGame(ligaId){
+  const pool = ligaId ? ALL_CLUBS.filter(c => c.liga.id === ligaId) : ALL_CLUBS;
+  const c = pick(pool);
+  const squad = buildSquad(c);
+  const wages = squad.reduce((s, p) => s + p.wage, 0);
+  const budget = Math.round(clamp(0.5e6 * Math.pow(1.27, c.lvl - 60), 8e5, 2e8) / 1e5) * 1e5;
+
+  G = {
+    club: c, lvl: c.lvl, squad, squad0: squad.slice(), market: buildMarket(c),
+    form: '4-3-3', lineup: [],
+    money: budget, budget0: budget,
+    wageCap: Math.round(wages * rnd(1.14, 1.32) / 1000) * 1000,
+    wages, day: 1, maxDays: 14,
+    signings: [], sales: [], feed: [], over: false
+  };
+  G.lineup = bestXI(squad);
+  recomputeBaseline();
+  news('Janela aberta. O ' + c.n + ' tem ' + money(G.money) + ' em caixa e 14 dias para se resolver.', '');
+  return G;
+}
+function dificuldade(){
+  return G.lvl >= 83 ? ['Alta', 'elenco de elite: quase todo reforço custa fortuna e o teto salarial aperta']
+       : G.lvl >= 76 ? ['Média', 'há upgrades no mercado, mas o caixa não cobre todos']
+       : ['Acessível', 'elenco com muito o que melhorar e mercado cheio de alvos no seu alcance'];
+}
+
+/* ---------------- notícias ---------------- */
+function news(text, kind){
+  G.feed.unshift({ d:'D' + G.day, text, kind: kind || '' });
+  if (G.feed.length > 40) G.feed.pop();
+}
+function tickDay(){
+  if (G.over) return;
+  G.day++;
+  if (G.day > G.maxDays){
+    G.day = G.maxDays;
+    news('<b>Gongo.</b> A janela fechou — vale o que está assinado.', 'rival');
+    closeWindow();
+    return;
+  }
+  if (Math.random() < .42){
+    const live = G.market.filter(p => !p.gone).sort((a, b) => b.ovr - a.ovr).slice(0, 16);
+    if (live.length){
+      const t = pick(live);
+      t.gone = true;
+      let rival = pick(ALL_CLUBS);
+      if (rival === G.club) rival = pick(ALL_CLUBS);
+      news('<b>' + esc(t.name) + '</b> (' + t.pos + ' ' + t.ovr + ') fechou com o ' + esc(rival.n) + '. Fora do mercado.', 'rival');
+    }
+  }
+  if (G.day === G.maxDays) news('<b>Último dia de janela.</b> Depois disso, só o que estiver assinado conta.', 'rival');
+  renderAll();
+}
+
+/* ---------------- avaliação ---------------- */
+function evaluate(){
+  const s = G.signings;
+  const xi = lineupRating(G.lineup);
+  const delta = xi - G.baseXI;
+  const spend = s.reduce((a, x) => a + x.fee, 0);
+  const valueIn = s.reduce((a, x) => a + x.value, 0);
+  const comps = [];
+
+  const c1 = clamp(delta / 2.4, 0, 1) * 30;
+  comps.push({ k:'Impacto na escalação', v:c1, max:30,
+    note:(delta >= 0 ? '+' : '') + delta.toFixed(2) + ' de força no XI · ' + G.form });
+
+  let wSum = 0, wGot = 0;
+  for (const p of POS){
+    const w = G.needs[p.id] === 'crit' ? 1 : G.needs[p.id] === 'soft' ? .5 : 0;
+    if (!w) continue;
+    wSum += w;
+    wGot += w * clamp((posStrength(G.squad, p.id) - G.baseStrength[p.id]) / 5, 0, 1);
+  }
+  const c2 = wSum ? (wGot / wSum) * 25 : 25;
+  comps.push({ k:'Carências resolvidas', v:c2, max:25,
+    note: wSum ? Math.round((wGot / wSum) * 100) + '% dos buracos cobertos' : 'elenco já estava equilibrado' });
+
+  let c3;
+  if (!s.length) c3 = 3;
+  else { const ratio = valueIn / Math.max(spend, 1e5); c3 = clamp((ratio - .62) / .68, 0, 1) * 20; }
+  comps.push({ k:'Custo-benefício', v:c3, max:20,
+    note: s.length ? money(spend) + ' gastos por ' + money(valueIn) + ' de mercado' : 'nenhuma contratação' });
+
+  let c4 = 0;
+  if (s.length){
+    const avg = s.reduce((a, x) => a + clamp((x.pot - x.ovr) / 8, 0, 1) * .55 + clamp((31 - x.age) / 12, 0, 1) * .45, 0) / s.length;
+    c4 = avg * 15;
+  }
+  comps.push({ k:'Projeto de futuro', v:c4, max:15,
+    note: s.length ? 'média de ' + (s.reduce((a, x) => a + x.age, 0) / s.length).toFixed(1) + ' anos' : 'sem novos nomes' });
+
+  let c5 = 0;
+  if (G.wages <= G.wageCap) c5 += 6;
+  const usage = 1 - G.money / Math.max(G.budget0, 1);
+  c5 += clamp(1 - Math.abs(usage - .78) / .78, 0, 1) * 4;
+  comps.push({ k:'Saúde financeira', v:c5, max:10,
+    note:(G.wages <= G.wageCap ? 'folha dentro do teto' : 'FOLHA ESTOURADA') + ' · ' + Math.round(usage * 100) + '% do caixa usado' });
+
+  const pen = [];
+  const vagas = G.lineup.filter(x => !x).length;
+  if (vagas) pen.push({ k:'Escalação incompleta (' + vagas + (vagas > 1 ? ' vagas' : ' vaga') + ')', v:-7 * vagas });
+  const fora = G.lineup.reduce((a, id, i) => {
+    const p = G.squad.find(x => x.id === id);
+    return a + (p && p.pos !== formSlots()[i].p ? 1 : 0);
+  }, 0);
+  if (fora >= 3) pen.push({ k:fora + ' jogadores fora de posição', v:-4 });
+  for (const p of POS){
+    const need = slotsOf(p.id);
+    const have = G.squad.filter(x => x.pos === p.id).length;
+    if (have < need) pen.push({ k:'Sem elenco para a posição: ' + p.name, v:-9 * (need - have) });
+  }
+  if (s.length > 7) pen.push({ k:'Elenco inchado (' + s.length + ' contratações)', v:-6 });
+  if (G.wages > G.wageCap) pen.push({ k:'Teto salarial estourado', v:-12 });
+  if (!s.length && G.day > 1) pen.push({ k:'Janela sem reforço nenhum', v:-8 });
+
+  const total = clamp(comps.reduce((a, c) => a + c.v, 0) + pen.reduce((a, c) => a + c.v, 0), 0, 100);
+  return { comps, pen, total, delta, xi, spend, valueIn };
+}
+function gradeOf(t){
+  return t >= 92 ? 'A+' : t >= 85 ? 'A' : t >= 78 ? 'B+' : t >= 70 ? 'B'
+       : t >= 62 ? 'C+' : t >= 54 ? 'C' : t >= 44 ? 'D' : t >= 32 ? 'E' : 'F';
+}
+function gradeColor(t){ return t >= 70 ? 'var(--pos)' : t >= 54 ? 'var(--amber)' : 'var(--neg)'; }
+
+/* ---------------- render ---------------- */
+function renderIntro(){
+  const c = G.club;
+  $('#fForm').value = G.form;
+  const ini = c.n.replace(/^(FC|AC|AS|SC|RC|AJ|OGC|KV|KAA|KRC|RB|VfB|VfL|TSG|1\.)\s+/, '')
+               .split(/[\s-]/).filter(Boolean).map(w => w[0]).join('').slice(0, 3).toUpperCase();
+  const needList = POS.filter(p => G.needs[p.id] !== 'ok')
+    .map(p => p.name.toLowerCase() + (G.needs[p.id] === 'crit' ? ' (crítica)' : ''));
+  const [dif, difTxt] = dificuldade();
+  const reais = (c.p || []).length;
+  $('#dossier').innerHTML =
+    '<div class="hd"><span class="t">Dossiê do clube</span><span class="t">' + esc(c.liga.nome) + ' · ' + esc(c.liga.pais) + '</span></div>' +
+    '<div class="club-line">' +
+      '<div class="crest" style="background:' + c.c1 + ';color:' + c.c2 + '">' + ini + '</div>' +
+      '<div><h2>' + esc(c.n) + '</h2><div class="sub">' + esc(c.cid) + ' · nível de elenco ' + c.lvl + ' · dificuldade ' + dif.toLowerCase() + '</div></div>' +
+    '</div>' +
+    '<div class="dgrid">' +
+      '<div><div class="k">Caixa para contratar</div><div class="v" style="color:var(--amber)">' + money(G.money) + '</div></div>' +
+      '<div><div class="k">Folga na folha</div><div class="v">' + wageFmt(G.wageCap - G.wages) + '</div></div>' +
+      '<div><div class="k">Força do XI (' + G.form + ')</div><div class="v">' + G.baseXI.toFixed(1) + '</div></div>' +
+      '<div><div class="k">Jogadores no elenco</div><div class="v">' + G.squad.length + '</div></div>' +
+    '</div>' +
+    '<div class="board"><div class="k">Leitura do mercado</div><p>Dificuldade <b>' + dif.toLowerCase() + '</b>: ' + difTxt + '.</p></div>' +
+    '<div class="board" style="background:var(--panel)"><div class="k">Relatório do scouting</div>' +
+      '<p>Posições apontadas como <b>carência</b>: ' + (needList.length ? needList.join(', ') : 'nenhuma') + '.<br>' +
+      '<span style="color:var(--dim);font-size:12px">' + reais + ' jogadores reais em base; a reserva é completada por atletas gerados.</span></p></div>';
+}
+function renderHud(){
+  const ev = evaluate();
+  $('#hud').hidden = false;
+  $('#hud').innerHTML =
+    '<div class="cell"><div class="k">Dia</div><div class="v">' + G.day + '<span style="color:var(--dim);font-size:12px">/' + G.maxDays + '</span></div></div>' +
+    '<div class="cell"><div class="k">Caixa</div><div class="v amber">' + money(G.money) + '</div></div>' +
+    '<div class="cell"><div class="k">Folha livre</div><div class="v ' + (G.wages > G.wageCap ? 'neg' : 'pos') + '">' + wageFmt(G.wageCap - G.wages) + '</div></div>' +
+    '<div class="cell"><div class="k">Nota parcial</div><div class="v" style="color:' + gradeColor(ev.total) + '">' + gradeOf(ev.total) + '</div></div>';
+  $('#topTag').textContent = G.club.n + ' · ' + G.club.liga.nome;
+}
+function renderTicker(){
+  $('#tickerBar').hidden = false;
+  $('#tickerRun').innerHTML = G.feed.slice(0, 8)
+    .map(f => '&nbsp;&nbsp;&nbsp;' + esc(f.text.replace(/<[^>]+>/g, '')) + '&nbsp;&nbsp;&nbsp;•').join('');
+}
+function renderSquad(){
+  const rows = [];
+  for (const p of POS){
+    const list = G.squad.filter(x => x.pos === p.id).sort((a, b) => b.ovr - a.ovr);
+    const now = posStrength(G.squad, p.id), d = now - G.baseStrength[p.id];
+    const cls = G.needs[p.id] === 'crit' ? 'crit' : G.needs[p.id] === 'soft' ? 'soft' : 'ok';
+    const vagas = slotsOf(p.id);
+    rows.push('<div class="srow">' +
+      '<div class="pos ' + cls + '">' + p.id + '</div>' +
+      '<div class="nm"><b>' + (list[0] ? esc(list[0].name) : '<span style="color:var(--neg)">vazio</span>') + '</b>' +
+        '<small>' + list.length + ' no grupo · ' + (vagas ? vagas + ' vaga' + (vagas > 1 ? 's' : '') + ' no XI' : 'fora do esquema') + '</small></div>' +
+      '<div class="ovr">' + now.toFixed(0) +
+        (Math.abs(d) >= .5 ? '<small class="' + (d < 0 ? 'neg' : '') + '">' + (d > 0 ? '+' : '') + d.toFixed(1) + '</small>' : '') +
+      '</div></div>');
+  }
+  $('#squadList').innerHTML = rows.join('');
+  $('#squadCount').textContent = G.squad.length + ' atletas';
+
+  const xi = lineupRating(G.lineup);
+  $('#formLabel').textContent = G.form;
+  $('#xiNow').textContent = xi.toFixed(1);
+  $('#xiBar').style.width = clamp((xi - 50) / 40 * 100, 3, 100) + '%';
+  const spent = 1 - G.money / Math.max(G.budget0, 1);
+  $('#spentPct').textContent = Math.round(spent * 100) + '%';
+  $('#spentBar').style.width = clamp(spent * 100, 0, 100) + '%';
+  const wp = G.wages / G.wageCap;
+  $('#wagePct').textContent = Math.round(wp * 100) + '%';
+  const wb = $('#wageBar');
+  wb.style.width = clamp(wp * 100, 0, 100) + '%';
+  wb.className = wp > 1 ? 'neg' : wp > .92 ? 'amber' : 'pos';
+}
+
+/* ---------------- centro: mercado / elenco / escalação ---------------- */
+let TAB = 'market';
+let SEL = null;
+
+function currentList(){
+  const posF = $('#fPos').value, ligaF = $('#fLiga').value, sort = $('#fSort').value;
+  const q = $('#fName').value.trim().toLowerCase();
+  const onlyNeed = $('#fNeed').checked, onlyAfford = $('#fAfford').checked;
+  let list = TAB === 'market' ? G.market.filter(p => !p.gone) : G.squad.slice();
+  if (posF) list = list.filter(p => p.pos === posF);
+  if (ligaF && TAB === 'market') list = list.filter(p => p.liga === ligaF);
+  if (q) list = list.filter(p => (p.name + ' ' + p.club).toLowerCase().includes(q));
+  if (onlyNeed) list = list.filter(p => G.needs[p.pos] !== 'ok');
+  if (onlyAfford && TAB === 'market') list = list.filter(p => p.feeAsk <= G.money && p.wageAsk <= G.wageCap - G.wages);
+  const cmp = {
+    ovr:(a, b) => b.ovr - a.ovr,
+    fee:(a, b) => (a.feeAsk ?? a.value) - (b.feeAsk ?? b.value),
+    pot:(a, b) => b.pot - a.pot,
+    age:(a, b) => a.age - b.age,
+    wage:(a, b) => a.wage - b.wage
+  }[sort];
+  return list.sort(cmp);
+}
+function renderList(){
+  const list = currentList();
+  $('#listCount').textContent = list.length + (TAB === 'market' ? ' disponíveis' : ' no elenco');
+  if (!list.length){ $('#listWrap').innerHTML = '<div class="empty">Nenhum jogador com esses filtros.</div>'; return; }
+  const isMk = TAB === 'market';
+  const head = '<thead><tr><th>Pos</th><th>Jogador</th><th class="num">Idade</th><th class="num">OVR</th><th class="num">POT</th>' +
+    '<th class="num">' + (isMk ? 'Pedida' : 'Valor') + '</th><th class="num">Salário</th><th></th></tr></thead>';
+  const body = list.map(p => {
+    const tags = isMk ? tagsOf(p, G.lvl).map(t => '<span class="chip ' + t[0] + '">' + t[1] + '</span>').join('')
+                      : (G.lineup.includes(p.id) ? '<span class="chip xi">titular</span>' : '');
+    const fee = isMk ? (p.free ? '<span style="color:var(--blue)">livre</span>' : money(p.feeAsk)) : money(p.value);
+    const btn = isMk
+      ? '<button class="btn sm" data-neg="' + p.id + '"' + (p.attempts >= 3 ? ' disabled' : '') + '>' + (p.attempts >= 3 ? 'encerrado' : 'Negociar') + '</button>'
+      : '<button class="btn sm ghost" data-sell="' + p.id + '">Vender</button>';
+    return '<tr><td><div class="pos ' + (G.needs[p.pos] === 'crit' ? 'crit' : G.needs[p.pos] === 'soft' ? 'soft' : '') + '">' + p.pos + '</div></td>' +
+      '<td><div class="pname">' + esc(p.name) + tags + '</div><div class="pmeta">' + esc(p.club) + (isMk ? ' · ' + esc(p.liga) : '') + '</div></td>' +
+      '<td class="num">' + p.age + '</td><td class="num" style="font-weight:600">' + p.ovr + '</td>' +
+      '<td class="num" style="color:' + (p.pot > p.ovr ? 'var(--amber)' : 'var(--dim)') + '">' + p.pot + '</td>' +
+      '<td class="num">' + fee + '</td><td class="num" style="color:var(--muted)">' + wageFmt(isMk ? p.wageAsk : p.wage) + '</td>' +
+      '<td style="text-align:right">' + btn + '</td></tr>';
+  }).join('');
+  $('#listWrap').innerHTML = '<table>' + head + '<tbody>' + body + '</tbody></table>';
+}
+
+function renderLineup(){
+  cleanLineup();
+  const slots = formSlots();
+  const selSlot = SEL && SEL.t === 'slot' ? SEL.i : -1;
+  const selBench = SEL && SEL.t === 'bench' ? SEL.id : -1;
+
+  $('#pitchSlots').innerHTML = slots.map((s, i) => {
+    const p = G.squad.find(x => x.id === G.lineup[i]);
+    const out = p && p.pos !== s.p;
+    const ns = needState(s.p);
+    const cls = ['slot', selSlot === i ? 'sel' : '', p ? '' : 'vazio',
+      (ns === 'crit' || ns === 'soft') ? 'need ' + ns : ''].filter(Boolean).join(' ');
+    const badge = p
+      ? '<span class="badge b-' + s.p + (out ? ' out' : '') + '">' + effOvr(p, s.p) + '</span>'
+      : '<span class="badge vaga">' + s.p + '</span>';
+    const nome = p
+      ? '<span class="who">' + esc(p.name.split(' ').slice(-1)[0]) + '</span>' +
+        (out ? '<span class="warn">' + p.pos + ' · -' + penalty(s.p, p.pos) + '</span>' : '<span class="mini">' + s.p + '</span>')
+      : '<span class="who" style="color:var(--dim)">vaga</span>';
+    const carencia = ns === 'crit' ? ' · CARÊNCIA CRÍTICA nesta posição' : ns === 'soft' ? ' · posição a reforçar' : ns === 'done' ? ' · carência resolvida' : '';
+    const title = (p ? esc(p.name) + ' — ' + p.ovr + ' de overall' + (out ? ', jogando fora de posição' : '') : 'Vaga de ' + POSMAP[s.p].name) + carencia;
+    return '<button class="' + cls + '" style="left:' + s.x + '%;top:' + s.y + '%" data-slot="' + i + '" title="' + title + '">' +
+      badge + '<span class="nm">' + nome + '</span>' +
+      (p ? '<span class="rm" data-rm="' + i + '" title="Tirar do time">×</span>' : '') + '</button>';
+  }).join('');
+
+  const bench = benchList();
+  $('#bench').innerHTML = bench.length ? bench.map(p => {
+    const fit = selSlot >= 0 ? penalty(slots[selSlot].p, p.pos) : null;
+    const cls = ['brow', selBench === p.id ? 'sel' : '', fit === 0 ? 'fit' : '', fit !== null && fit >= 9 ? 'unfit' : ''].filter(Boolean).join(' ');
+    return '<button class="' + cls + '" data-bench="' + p.id + '">' +
+      '<span class="pos">' + p.pos + '</span>' +
+      '<span class="bn">' + esc(p.name) + '<small>' + p.age + ' anos · ' + wageFmt(p.wage) + '</small></span>' +
+      '<span class="bo">' + p.ovr + (fit ? '<small>-' + fit + '</small>' : '') + '</span></button>';
+  }).join('') : '<div class="empty">Todo o elenco está escalado.</div>';
+
+  const alvos = POS.filter(p => G.needs[p.id] !== 'ok' && slotsOf(p.id));
+  $('#needBar').innerHTML = alvos.length ? alvos.map(p => {
+    const st = needState(p.id), prog = needProgress(p.id);
+    const ganho = posStrength(G.squad, p.id) - G.baseStrength[p.id];
+    const lbl = st === 'done' ? 'resolvida' : G.needs[p.id] === 'crit' ? 'crítica' : 'reforçar';
+    const num = (ganho >= 0 ? '+' : '') + ganho.toFixed(1).replace('.', ',');
+    return '<button class="needchip ' + (st === 'done' ? 'done' : G.needs[p.id]) + '" data-need="' + p.id + '" ' +
+      'title="Melhor ' + p.name.toLowerCase() + ' do elenco: ' + posStrength(G.squad, p.id).toFixed(0) +
+      ' · nível do clube: ' + G.lvl + '. Clique para filtrar o mercado nesta posição.">' +
+      '<span class="nc-t">' + p.name + ' <em>' + lbl + '</em></span>' +
+      '<span class="nc-b"><i style="width:' + Math.round(prog * 100) + '%"></i></span>' +
+      '<span class="nc-v"><span>' + num + ' de 5,0</span><span class="go">' + (st === 'done' ? 'feito ✓' : 'ver alvos →') + '</span></span>' +
+      '</button>';
+  }).join('') : '<div class="allok">Sem carências no <b>' + G.form + '</b> — o elenco cobre todas as posições do esquema.</div>';
+
+  const xi = lineupRating(G.lineup);
+  $('#lineupStrength').textContent = xi.toFixed(1);
+  $('#lineupDelta').innerHTML = (() => {
+    const d = xi - G.baseXI;
+    return '<span style="color:' + (d >= 0 ? 'var(--pos)' : 'var(--neg)') + '">' + (d >= 0 ? '+' : '') + d.toFixed(2) + '</span> vs. o XI de abertura';
+  })();
+  $('#benchCount').textContent = bench.length + ' fora do XI';
+  $('#listCount').textContent = G.lineup.filter(Boolean).length + '/11 escalados';
+  $('#selHint').textContent = SEL
+    ? (SEL.t === 'slot' ? 'Vaga selecionada: escolha um reserva ao lado ou outra posição para trocar.' : 'Reserva selecionado: clique numa posição do campo.')
+    : 'Clique num reserva e depois numa posição — ou em dois jogadores do campo para trocá-los.';
+}
+function clickSlot(i){
+  if (SEL && SEL.t === 'bench'){
+    G.lineup[i] = SEL.id;   // quem estava na vaga volta para o banco
+    SEL = null;
+  } else if (SEL && SEL.t === 'slot'){
+    if (SEL.i !== i){ const a = G.lineup[SEL.i]; G.lineup[SEL.i] = G.lineup[i]; G.lineup[i] = a; }
+    SEL = null;
+  } else {
+    SEL = { t:'slot', i };
+  }
+  renderLineup(); renderHud(); renderSquad(); renderRight();
+}
+function clickBench(id){
+  if (SEL && SEL.t === 'slot'){
+    G.lineup[SEL.i] = id;
+    SEL = null;
+  } else {
+    SEL = (SEL && SEL.t === 'bench' && SEL.id === id) ? null : { t:'bench', id };
+  }
+  renderLineup(); renderHud(); renderSquad(); renderRight();
+}
+
+function renderCenter(){
+  const isLine = TAB === 'lineup';
+  $('#filters').hidden = isLine;
+  $('#tacbar').hidden = !isLine;
+  $('#pitchWrap').hidden = !isLine;
+  $('#listWrap').hidden = isLine;
+  if (isLine) renderLineup(); else renderList();
+}
+function renderRight(){
+  const ev = evaluate();
+  $('#gLetter').textContent = gradeOf(ev.total);
+  $('#gLetter').style.color = gradeColor(ev.total);
+  $('#gScore').textContent = Math.round(ev.total) + ' / 100 PONTOS';
+  $('#gScale').innerHTML = Array.from({length:20}, (_, i) =>
+    '<span class="' + (i < Math.round(ev.total / 5) ? 'on' : '') + '"></span>').join('');
+  $('#comps').innerHTML = ev.comps.map(c =>
+    '<div class="comp"><div class="k"><span>' + c.k + '</span><b>' + c.v.toFixed(1) + '<span style="color:var(--dim)">/' + c.max + '</span></b></div>' +
+    '<div class="bar"><i style="width:' + (c.v / c.max * 100) + '%"></i></div>' +
+    '<div style="font-family:var(--f-mono);font-size:10px;color:var(--dim);margin-top:5px">' + c.note + '</div></div>').join('') +
+    ev.pen.map(p => '<div class="comp"><div class="k"><span style="color:var(--neg)">' + p.k + '</span><b style="color:var(--neg)">' + p.v + '</b></div></div>').join('');
+
+  const deals = G.signings.map(s =>
+    '<div class="deal"><div><div class="n">' + esc(s.name) + '</div><div class="m">chegou · ' + s.pos + ' ' + s.ovr + ' · ' + s.age + ' anos</div></div>' +
+    '<div class="p" style="color:var(--neg)">-' + money(s.fee) + '<small>' + wageFmt(s.paidWage) + '</small></div></div>')
+    .concat(G.sales.map(s =>
+    '<div class="deal"><div><div class="n">' + esc(s.name) + '</div><div class="m">saiu · ' + s.pos + ' ' + s.ovr + '</div></div>' +
+    '<div class="p" style="color:var(--pos)">+' + money(s.fee) + '<small>libera ' + wageFmt(s.wage) + '</small></div></div>')).join('');
+  $('#deals').innerHTML = deals || '<div class="empty">Nenhum negócio fechado ainda.</div>';
+  $('#dealsCount').textContent = G.signings.length + ' in · ' + G.sales.length + ' out';
+  const net = G.sales.reduce((a, s) => a + s.fee, 0) - ev.spend;
+  $('#netSpend').textContent = (net >= 0 ? '+' : '-') + money(Math.abs(net)).replace('€ ', '');
+  $('#feed').innerHTML = G.feed.map(f =>
+    '<div class="fitem ' + f.kind + '"><span class="d">' + f.d + '</span><span>' + f.text + '</span></div>').join('');
+  $('#btnClose').textContent = G.day >= G.maxDays ? 'Publicar a nota final' : 'Fechar a janela (dia ' + G.day + ')';
+}
+function renderAll(){ renderHud(); renderSquad(); renderCenter(); renderRight(); renderTicker(); }
+
+/* ---------------- negociação ---------------- */
+function closeModal(){ $('#modalRoot').innerHTML = ''; }
+function modal(html){
+  $('#modalRoot').innerHTML = '<div class="scrim" id="scrim"><div class="modal" role="dialog" aria-modal="true">' + html + '</div></div>';
+  $('#scrim').addEventListener('mousedown', e => { if (e.target.id === 'scrim') closeModal(); });
+}
+function openNegotiation(id){
+  const p = G.market.find(x => x.id === id);
+  if (!p || p.gone || p.attempts >= 3) return;
+  const maxFee = Math.max(G.money, p.feeAsk * 1.2);
+  const tags = tagsOf(p, G.lvl).map(t => '<span class="chip ' + t[0] + '">' + t[1] + '</span>').join('');
+  const room = G.wageCap - G.wages;
+
+  modal(
+    '<div class="mh"><div><h3>' + esc(p.name) + ' ' + tags + '</h3>' +
+      '<div class="sub">' + POSMAP[p.pos].name + ' · ' + esc(p.club) + ' · ' + esc(p.liga) + ' · ' + p.age + ' anos<br>' +
+      'pede ' + (p.free ? 'nenhuma taxa (contrato encerrado)' : money(p.feeAsk)) + ' + ' + wageFmt(p.wageAsk) +
+      ' · tentativas: ' + p.attempts + '/3</div></div>' +
+      '<button class="x" id="mx" aria-label="Fechar">✕</button></div>' +
+    '<div class="attrs">' +
+      '<div><div class="k">Overall</div><div class="v">' + p.ovr + '</div></div>' +
+      '<div><div class="k">Potencial</div><div class="v" style="color:var(--amber)">' + p.pot + '</div></div>' +
+      '<div><div class="k">Valor de mercado</div><div class="v">' + money(p.value).replace('€ ', '') + '</div></div>' +
+      '<div><div class="k">Sua posição ' + p.pos + '</div><div class="v">' + posStrength(G.squad, p.pos).toFixed(0) + '</div></div>' +
+    '</div>' +
+    '<div class="negotiate">' +
+      (p.free ? '<div class="msg mid"><span class="who">Empresário</span>Sem contrato: nenhum clube leva taxa. Toda a disputa é salário — e ele sabe disso.</div>' : '') +
+      '<div class="field"><div class="k"><span>Proposta ao ' + esc(p.club) + '</span><b id="feeOut">' + money(Math.min(p.feeAsk, G.money)) + '</b></div>' +
+        '<input type="range" id="feeR" min="0" max="' + Math.round(maxFee) + '" step="100000" value="' + Math.round(Math.min(p.feeAsk, G.money)) + '"' + (p.free ? ' disabled' : '') + '>' +
+        '<div class="quick">' +
+          '<button data-fee="ask">pedida</button><button data-fee="0.9">-10%</button>' +
+          '<button data-fee="0.8">-20%</button><button data-fee="1.05">+5%</button>' +
+          '<button data-fee="all">tudo (' + money(G.money).replace('€ ', '') + ')</button></div></div>' +
+      '<div class="field"><div class="k"><span>Salário oferecido · folga de ' + wageFmt(room) + '</span><b id="wgOut">' + wageFmt(p.wageAsk) + '</b></div>' +
+        '<input type="range" id="wgR" min="4000" max="' + Math.round(p.wageAsk * 1.6) + '" step="1000" value="' + p.wageAsk + '">' +
+        '<div class="quick"><button data-wg="ask">pedido</button><button data-wg="0.92">-8%</button>' +
+        '<button data-wg="1.12">+12%</button></div></div>' +
+      '<div id="negMsg"></div>' +
+    '</div>' +
+    '<div class="mfoot"><span class="hint">Enviar proposta consome 1 dia</span>' +
+      '<div style="display:flex;gap:8px"><button class="btn ghost" id="mCancel">Deixar pra lá</button>' +
+      '<button class="btn" id="mSend">Enviar proposta</button></div></div>'
+  );
+
+  const feeR = $('#feeR'), wgR = $('#wgR');
+  const sync = () => {
+    const fee = +feeR.value, wg = +wgR.value;
+    $('#feeOut').textContent = money(fee);
+    $('#feeOut').style.color = fee > G.money ? 'var(--neg)' : 'var(--ink)';
+    $('#wgOut').textContent = wageFmt(wg);
+    $('#wgOut').style.color = wg > room ? 'var(--neg)' : 'var(--ink)';
+    const bad = fee > G.money || wg > room;
+    $('#mSend').disabled = bad || p.attempts >= 3;
+    if (!$('#negMsg').dataset.locked)
+      $('#negMsg').innerHTML = bad
+        ? '<div class="msg no"><span class="who">Departamento financeiro</span>' +
+          (fee > G.money ? 'Caixa insuficiente para essa proposta.' : 'Esse salário estoura o teto da folha.') + '</div>'
+        : '';
+  };
+  feeR.addEventListener('input', sync);
+  wgR.addEventListener('input', sync);
+  $('#mx').onclick = closeModal;
+  $('#mCancel').onclick = closeModal;
+  $('#modalRoot').querySelectorAll('[data-fee]').forEach(b => b.onclick = () => {
+    const v = b.dataset.fee;
+    feeR.value = v === 'ask' ? p.feeAsk : v === 'all' ? G.money : Math.round(p.feeAsk * parseFloat(v));
+    sync();
+  });
+  $('#modalRoot').querySelectorAll('[data-wg]').forEach(b => b.onclick = () => {
+    const v = b.dataset.wg;
+    wgR.value = v === 'ask' ? p.wageAsk : Math.round(p.wageAsk * parseFloat(v));
+    sync();
+  });
+  $('#mSend').onclick = () => sendOffer(p, +feeR.value, +wgR.value);
+  sync();
+}
+
+function sendOffer(p, fee, wg){
+  if (G.over || fee > G.money || wg > G.wageCap - G.wages) return;
+  p.attempts++;
+
+  const feeOK = p.free ? 'yes' : fee >= p.feeAsk * .97 ? 'yes' : fee >= p.feeAsk * .86 ? 'counter' : 'no';
+  const ambicao = p.ovr >= G.lvl + 7 ? 1.12 : 1;
+  const need = p.wageAsk * ambicao;
+  const wgOK = wg >= need * .99 ? 'yes' : wg >= need * .90 ? 'counter' : 'no';
+  const box = $('#negMsg');
+
+  if (feeOK === 'yes' && wgOK === 'yes'){ doSign(p, fee, wg); tickDay(); return; }
+
+  if (feeOK === 'no' || wgOK === 'no'){
+    if (feeOK === 'no') p.feeAsk = Math.round(p.feeAsk * 1.04 / 1e5) * 1e5;
+    const why = feeOK === 'no'
+      ? '<span class="who">' + esc(p.club) + '</span>Proposta muito abaixo do que consideramos. Nem levamos ao presidente — e a pedida subiu para ' + money(p.feeAsk) + '.'
+      : '<span class="who">Empresário de ' + esc(p.name) + '</span>Com esse salário meu cliente nem atende o telefone. Ele quer ' + wageFmt(Math.round(need)) + '.';
+    if (box){
+      box.dataset.locked = '1';
+      box.innerHTML = '<div class="msg no">' + why + (p.attempts >= 3 ? '<br><br><b>Negociação encerrada</b> — três tentativas, sem acordo.' : '') + '</div>';
+    }
+    news('Proposta por <b>' + esc(p.name) + '</b> recusada.' + (p.attempts >= 3 ? ' Negociação encerrada.' : ''), 'bad');
+    if (p.attempts >= 3 && $('#mSend')) $('#mSend').disabled = true;
+    tickDay();
+    return;
+  }
+
+  const cFee = p.free ? 0 : Math.max(fee, Math.round(p.feeAsk * .985 / 1e5) * 1e5);
+  const cWg = Math.max(wg, Math.round(need * 1.01 / 1000) * 1000);
+  const afford = cFee <= G.money && cWg <= G.wageCap - G.wages;
+  if (box){
+    box.dataset.locked = '1';
+    box.innerHTML = '<div class="msg mid"><span class="who">Contraproposta</span>' +
+      'Chegamos perto. Fechamos por <b>' + money(cFee) + '</b> de transferência e <b>' + wageFmt(cWg) + '</b> de salário.' +
+      (afford ? '' : '<br><br><b style="color:var(--neg)">Não cabe no seu caixa/folha.</b>') + '</div>' +
+      (afford ? '<div style="margin-top:10px"><button class="btn wide" id="mAccept">Aceitar contraproposta (sem custo de dia)</button></div>' : '');
+    if (afford) $('#mAccept').onclick = () => doSign(p, cFee, cWg);
+  }
+  news('<b>' + esc(p.name) + '</b>: contraproposta de ' + money(cFee) + ' + ' + wageFmt(cWg) + '.', 'rival');
+  tickDay();
+}
+
+function doSign(p, fee, wg){
+  G.money -= fee;
+  G.wages += wg;
+  p.gone = true;
+  const signed = Object.assign({}, p, { fee, paidWage:wg, club:G.club.n, liga:G.club.liga.nome, signed:true });
+  G.squad.push(signed);
+  G.signings.push(signed);
+  const vaga = autoPlace(signed);
+  news('<b>' + esc(p.name) + '</b> (' + p.pos + ' ' + p.ovr + ') assinou por ' + money(fee) + ' e ' + wageFmt(wg) + '.' +
+    (vaga ? ' Entra direto no XI como ' + vaga + '.' : ' Começa no banco.'), 'good');
+  closeModal();
+  renderAll();
+}
+
+function openSell(id){
+  const p = G.squad.find(x => x.id === id);
+  if (!p) return;
+  const offer = Math.round(p.value * rnd(.72, 1.18) / 1e5) * 1e5;
+  let buyer = pick(ALL_CLUBS);
+  if (buyer === G.club) buyer = pick(ALL_CLUBS);
+  const need = slotsOf(p.pos);
+  const remaining = G.squad.filter(x => x.pos === p.pos).length - 1;
+  const isStarter = G.lineup.includes(p.id);
+  modal(
+    '<div class="mh"><div><h3>Proposta por ' + esc(p.name) + '</h3>' +
+      '<div class="sub">' + POSMAP[p.pos].name + ' · ' + p.age + ' anos · overall ' + p.ovr + '</div></div>' +
+      '<button class="x" id="mx" aria-label="Fechar">✕</button></div>' +
+    '<div class="attrs">' +
+      '<div><div class="k">Oferta do ' + esc(buyer.n) + '</div><div class="v" style="color:var(--pos)">' + money(offer).replace('€ ', '') + '</div></div>' +
+      '<div><div class="k">Valor de mercado</div><div class="v">' + money(p.value).replace('€ ', '') + '</div></div>' +
+      '<div><div class="k">Libera na folha</div><div class="v">' + Math.round(p.wage / 1000) + ' mil</div></div>' +
+      '<div><div class="k">Sobram na posição</div><div class="v" style="color:' + (remaining < need ? 'var(--neg)' : 'var(--ink)') + '">' + remaining + '</div></div>' +
+    '</div>' +
+    '<div class="negotiate">' +
+      (offer > p.value * 1.05
+        ? '<div class="msg ok"><span class="who">Análise</span>Oferta acima do valor de mercado. Vender aqui é lucro limpo.</div>'
+        : offer < p.value * .85
+        ? '<div class="msg no"><span class="who">Análise</span>Oferta abaixo do valor de mercado. Você perde patrimônio nessa.</div>'
+        : '<div class="msg mid"><span class="who">Análise</span>Oferta em linha com o valor de mercado.</div>') +
+      (isStarter ? '<div class="msg no"><span class="who">Comissão técnica</span>Ele é titular na sua escalação. Sai e a vaga vai para o melhor reserva.</div>' : '') +
+      (remaining < need ? '<div class="msg no"><span class="who">Regulamento interno</span>Sem gente para o ' + G.form + ' nessa posição — a imprensa desconta pontos.</div>' : '') +
+    '</div>' +
+    '<div class="mfoot"><span class="hint">Vender consome 1 dia</span>' +
+      '<div style="display:flex;gap:8px"><button class="btn ghost" id="mCancel">Recusar</button>' +
+      '<button class="btn" id="mSell">Vender por ' + money(offer) + '</button></div></div>'
+  );
+  $('#mx').onclick = closeModal;
+  $('#mCancel').onclick = closeModal;
+  $('#mSell').onclick = () => {
+    if (G.over) return;
+    G.money += offer;
+    G.wages -= p.wage;
+    G.squad = G.squad.filter(x => x.id !== p.id);
+    G.sales.push(Object.assign({}, p, { fee:offer }));
+    cleanLineup(); fillEmpty();
+    news('<b>' + esc(p.name) + '</b> vendido ao ' + esc(buyer.n) + ' por ' + money(offer) + '.', 'good');
+    closeModal();
+    renderAll();
+    tickDay();
+  };
+}
+
+/* ---------------- fechamento ---------------- */
+function verdictFor(t){
+  if (t >= 92) return ['Janela histórica.', 'A imprensa cravou: mandou no mercado do começo ao fim. Resolveu carência, pagou barato e ainda deixou o clube com futuro. Contrato renovado antes da estreia.'];
+  if (t >= 85) return ['Janela de primeira.', 'Nomes certos nas posições certas, sem loucura no caixa. O torcedor entrou na fila da camisa nova.'];
+  if (t >= 78) return ['Janela muito boa.', 'O time subiu de patamar e as contas fecharam. Pequenas sobras — mas a diretoria assinou embaixo.'];
+  if (t >= 70) return ['Janela aprovada.', 'Deu conta do recado: o elenco está melhor do que estava e nada saiu do controle. Passou com folga confortável, não com aplauso de pé.'];
+  if (t >= 62) return ['Janela mediana.', 'Faltou coragem em uma posição e sobrou dinheiro parado em outra. Começa o campeonato sob desconfiança.'];
+  if (t >= 54) return ['Janela fraca.', 'Movimento houve; melhora, quase nenhuma. A crítica já pergunta quem aprovou esses valores.'];
+  if (t >= 44) return ['Janela ruim.', 'O elenco continua com os mesmos buracos e agora com menos caixa. Primeira derrota e o cargo vira assunto.'];
+  return ['Janela desastrosa.', 'A imprensa foi impiedosa e a diretoria também. Você não chega ao fim do primeiro turno.'];
+}
+function closeWindow(){
+  if (G.over) return;
+  G.over = true;
+  closeModal();
+  const ev = evaluate();
+  const g = gradeOf(ev.total), win = ev.total >= 70;
+  const [h, sub] = verdictFor(ev.total);
+  const slots = formSlots();
+
+  const signRows = G.signings.length ? G.signings.map(s => {
+    const r = s.value / Math.max(s.fee, 1e5);
+    const line = s.fee === 0 ? 'Chegou de graça: só salário no orçamento.'
+      : r >= 1.25 ? 'Pagou bem abaixo do valor de mercado — negócio da janela.'
+      : r >= .95 ? 'Preço justo pelo que ele entrega hoje.'
+      : r >= .75 ? 'Pagou um prêmio pela pressa.' : 'Pagou caro: o mercado não valida esse número.';
+    const idx = G.lineup.indexOf(s.id);
+    const impact = idx >= 0
+      ? ' Terminou a janela como titular (' + slots[idx].p + ')' + (slots[idx].p !== s.pos ? ', fora da posição de origem.' : '.')
+      : ' Ficou no banco na escalação que você deixou montada.';
+    return '<div class="crow"><div class="t2"><span class="nm">' + esc(s.name) + ' <span style="color:var(--dim);font-weight:400">' + s.pos + ' ' + s.ovr + '</span></span>' +
+      '<span class="sc">' + money(s.fee) + '</span></div><p>' + line + impact + '</p></div>';
+  }).join('') : '<div class="empty">Você não contratou ninguém.</div>';
+
+  const xiRows = slots.map((s, i) => {
+    const p = G.squad.find(x => x.id === G.lineup[i]);
+    if (!p) return '<div class="crow"><div class="t2"><span class="nm" style="color:var(--neg)">' + s.p + ' — vaga em aberto</span></div></div>';
+    const out = p.pos !== s.p;
+    return '<div class="crow"><div class="t2"><span class="nm"><span style="color:var(--dim);font-weight:400">' + s.p + '</span> ' + esc(p.name) +
+      (p.signed ? ' <span class="chip gem">reforço</span>' : '') + '</span>' +
+      '<span class="sc"' + (out ? ' style="color:var(--neg)"' : '') + '>' + effOvr(p, s.p) + (out ? ' (' + p.pos + ')' : '') + '</span></div></div>';
+  }).join('');
+
+  const compRows = ev.comps.map(c =>
+    '<div class="crow"><div class="t2"><span class="nm">' + c.k + '</span><span class="sc">' + c.v.toFixed(1) + ' / ' + c.max + '</span></div>' +
+    '<div class="bar" style="margin-top:8px"><i class="' + (c.v / c.max >= .7 ? 'pos' : c.v / c.max >= .4 ? 'amber' : 'neg') + '" style="width:' + (c.v / c.max * 100) + '%"></i></div>' +
+    '<p>' + c.note + '</p></div>').join('') +
+    ev.pen.map(p => '<div class="crow"><div class="t2"><span class="nm" style="color:var(--neg)">' + p.k + '</span><span class="sc" style="color:var(--neg)">' + p.v + '</span></div></div>').join('');
+
+  $('#screenReport').innerHTML =
+    '<div class="verdict">' +
+      '<div class="stamp ' + (win ? 'win' : 'lose') + '">' + (win ? 'Janela aprovada · você fica' : 'Janela reprovada · você cai') + '</div>' +
+      '<div class="big" style="color:' + gradeColor(ev.total) + '">' + g + '</div>' +
+      '<h2>' + h + '</h2><p>' + sub + '</p>' +
+      '<div style="font-family:var(--f-mono);font-size:12px;color:var(--dim);margin-top:16px">' +
+        esc(G.club.n) + ' · ' + Math.round(ev.total) + '/100 · ' + G.form + ' · XI de ' + G.baseXI.toFixed(1) + ' para ' + ev.xi.toFixed(1) +
+        ' · ' + G.signings.length + ' chegadas, ' + G.sales.length + ' saídas · ' + money(ev.spend) + ' gastos · ' + money(G.money) + ' em caixa' +
+      '</div>' +
+      '<div class="actions" style="justify-content:center"><button class="btn" id="btnAgain">Nova janela, outro clube</button></div>' +
+    '</div>' +
+    '<div class="rgrid">' +
+      '<div class="pnl"><header><h3>Como a nota foi montada</h3><span class="r">' + Math.round(ev.total) + ' pts</span></header>' + compRows + '</div>' +
+      '<div><div class="pnl"><header><h3>Contratação por contratação</h3><span class="r">' + G.signings.length + '</span></header>' + signRows + '</div>' +
+      '<div class="pnl"><header><h3>Time que ficou de pé</h3><span class="r">' + G.form + '</span></header>' + xiRows + '</div></div>' +
+    '</div>';
+  $('#screenDesk').hidden = true;
+  $('#screenReport').hidden = false;
+  $('#btnAgain').onclick = () => {
+    newGame($('#pickLiga').value || null);
+    renderIntro();
+    $('#screenReport').hidden = true;
+    $('#screenIntro').hidden = false;
+    $('#hud').hidden = true;
+    $('#tickerBar').hidden = true;
+    window.scrollTo(0, 0);
+  };
+  window.scrollTo(0, 0);
+}
+
+/* ---------------- eventos ---------------- */
+function initSelects(){
+  $('#pickLiga').innerHTML = '<option value="">Sortear em qualquer liga</option>' +
+    LIGAS.map(l => '<option value="' + l.id + '">' + esc(l.nome) + ' · ' + esc(l.pais) + '</option>').join('');
+  $('#fLiga').innerHTML = '<option value="">Todas as ligas</option>' +
+    LIGAS.map(l => '<option value="' + esc(l.nome) + '">' + esc(l.nome) + '</option>').join('');
+  $('#fForm').innerHTML = Object.keys(FORMS).map(f => '<option value="' + f + '">' + f + '</option>').join('');
+}
+function setTab(t){
+  TAB = t;
+  SEL = null;
+  $('#tabMarket').setAttribute('aria-selected', String(t === 'market'));
+  $('#tabSquad').setAttribute('aria-selected', String(t === 'squad'));
+  $('#tabLineup').setAttribute('aria-selected', String(t === 'lineup'));
+  renderCenter();
+}
+$('#btnStart').onclick = () => { $('#screenIntro').hidden = true; $('#screenDesk').hidden = false; renderAll(); };
+$('#btnReroll').onclick = () => { newGame($('#pickLiga').value || null); renderIntro(); };
+$('#pickLiga').onchange = () => { newGame($('#pickLiga').value || null); renderIntro(); };
+$('#btnClose').onclick = closeWindow;
+$('#tabMarket').onclick = () => setTab('market');
+$('#tabSquad').onclick = () => setTab('squad');
+$('#tabLineup').onclick = () => setTab('lineup');
+$('#fForm').onchange = () => {
+  G.form = $('#fForm').value;
+  G.lineup = bestXI(G.squad);
+  SEL = null;
+  recomputeBaseline();
+  news('Tática mudada para <b>' + G.form + '</b>. O time foi reorganizado e o scouting revisou as carências.', '');
+  renderAll();
+};
+$('#btnAuto').onclick = () => { G.lineup = bestXI(G.squad); SEL = null; renderAll(); };
+['fPos', 'fLiga', 'fSort', 'fName', 'fNeed', 'fAfford'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener(el.type === 'search' ? 'input' : 'change', renderList);
+});
+$('#listWrap').addEventListener('click', e => {
+  const n = e.target.closest('[data-neg]'), s = e.target.closest('[data-sell]');
+  if (n) openNegotiation(+n.dataset.neg);
+  if (s) openSell(+s.dataset.sell);
+});
+$('#pitchSlots').addEventListener('click', e => {
+  const rm = e.target.closest('[data-rm]');
+  if (rm){ e.stopPropagation(); G.lineup[+rm.dataset.rm] = null; SEL = null; renderAll(); return; }
+  const sl = e.target.closest('[data-slot]');
+  if (sl) clickSlot(+sl.dataset.slot);
+});
+$('#needBar').addEventListener('click', e => {
+  const b = e.target.closest('[data-need]');
+  if (!b) return;
+  $('#fPos').value = b.dataset.need;
+  $('#fName').value = '';
+  $('#fNeed').checked = false;
+  $('#fSort').value = 'ovr';
+  setTab('market');
+});
+$('#bench').addEventListener('click', e => {
+  const b = e.target.closest('[data-bench]');
+  if (b) clickBench(+b.dataset.bench);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ closeModal(); if (SEL){ SEL = null; if (TAB === 'lineup') renderLineup(); } } });
+
+initSelects();
+newGame();
+renderIntro();
+
+</script>
