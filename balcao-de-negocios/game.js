@@ -19,6 +19,7 @@ const POS = [
   {id:'ATA', name:'Atacante',  depth:2}
 ];
 const POSMAP = Object.fromEntries(POS.map(p => [p.id, p]));
+const MAX_TRIES = 4;   /* propostas por alvo antes da negociação morrer */
 
 /* x/y em % do campo: y=92 é a própria área, y=15 é a área adversária */
 const FORMS = {
@@ -106,7 +107,7 @@ function realPlayer(row, club){
   const [name, pos, age, ovr] = row;
   const pot = potOf(ovr, age);
   return { id:UID++, pos, name, age, ovr, pot, value:valueOf(ovr, age, pot), wage:wageOf(ovr, age),
-    club:club.n, liga:club.liga.nome, real:true, attempts:0, gone:false };
+    club:club.n, clubLvl:club.lvl, liga:club.liga.nome, real:true, attempts:0, gone:false };
 }
 function fakePlayer(posId, ovr, opts = {}){
   ovr = clamp(Math.round(ovr), 52, 90);
@@ -117,8 +118,21 @@ function fakePlayer(posId, ovr, opts = {}){
     value:valueOf(ovr, age, pot), wage:wageOf(ovr, age),
     club:opts.club ?? 'Sem clube', liga:opts.liga ?? '—', attempts:0, gone:false };
 }
+/* o quanto o jogador é grande demais para o seu clube: overall acima do nível do elenco
+   mais um empurrão pelo tamanho do clube que o tem hoje */
+function appealGap(p, lvl, myLvl){
+  const my = myLvl ?? lvl;
+  return (p.ovr - my) + Math.max(0, (p.clubLvl || 0) - my) * .45;
+}
+function reachOf(p){
+  const a = appealGap(p, G.lvl);
+  return a > 7 ? 'fora' : a > 3 ? 'dificil' : 'ok';
+}
 function tagsOf(p, lvl){
   const t = [];
+  const r = reachOf(p);
+  if (r === 'fora') t.push(['out','fora do alcance']);
+  else if (r === 'dificil') t.push(['hard','outro patamar']);
   if (p.free) t.push(['free','livre']);
   if (p.age <= 21 && p.pot - p.ovr >= 7) t.push(['gem','joia']);
   if (p.ovr >= lvl + 6) t.push(['star','estrela']);
@@ -190,8 +204,9 @@ function benchList(){
 }
 
 /* quanto a posição melhorou desde a abertura da janela (5.0 = crédito cheio na nota) */
+const NEED_FULL = 5;
 function needProgress(pos){
-  return clamp((posStrength(G.squad, pos) - G.baseStrength[pos]) / 5, 0, 1);
+  return clamp((posStrength(G.squad, pos) - G.baseStrength[pos]) / NEED_FULL, 0, 1);
 }
 function needState(pos){
   const n = G.needs[pos];
@@ -217,30 +232,24 @@ function buildSquad(club){
   }
   return squad;
 }
+/* mercado aberto: todo jogador de todo clube que nao seja o seu aceita ouvir proposta */
 function buildMarket(my){
-  const porPos = { GOL:6, ZAG:12, LAT:10, VOL:12, MEI:8, PON:12, ATA:10 };
   const market = [];
-  for (const [pid, n] of Object.entries(porPos)){
-    const cand = [];
-    for (const c of ALL_CLUBS){
-      if (c === my) continue;
-      for (const r of (c.p || [])) if (r[1] === pid) cand.push({ r, c });
-    }
-    cand.forEach(x => {
-      const gap = Math.max(0, x.r[3] - (my.lvl + 3));
-      x.w = Math.random() / (1 + Math.pow(gap, 1.7) * 0.3);
-    });
-    cand.sort((a, b) => b.w - a.w).slice(0, n).forEach(x => market.push(realPlayer(x.r, x.c)));
+  for (const c of ALL_CLUBS){
+    if (c === my) continue;
+    for (const r of (c.p || [])) market.push(realPlayer(r, c));
   }
-  for (let i = 0; i < 5; i++){
+  for (let i = 0; i < 14; i++){
     const p = fakePlayer(pick(POS).id, my.lvl - ri(0, 7), { age:ri(29, 35), pool:my.liga.nomes });
     p.free = true; p.value = Math.round(p.value * .6 / 1e5) * 1e5;
     market.push(p);
   }
   for (const p of market){
-    p.demand = p.free ? 0 : rnd(.95, 1.32);
+    const gap = appealGap(p, my.lvl);
+    const prem = gap > 3 ? 1 + (Math.min(gap, 7) - 3) * .12 : 1;   /* até +48% para alvo de outro patamar */
+    p.demand = p.free ? 0 : rnd(.86, 1.18) * prem;
     p.feeAsk = p.free ? 0 : Math.round(p.value * p.demand / 1e5) * 1e5;
-    p.wageAsk = Math.round(p.wage * (1 + Math.max(0, p.ovr - my.lvl) * .04) * (p.free ? 1.3 : 1) / 1000) * 1000;
+    p.wageAsk = Math.round(p.wage * (1 + Math.max(0, p.ovr - my.lvl) * .03) * prem * (p.free ? 1.2 : 1) / 1000) * 1000;
   }
   return market;
 }
@@ -267,25 +276,26 @@ function newGame(ligaId){
   const c = pick(pool);
   const squad = buildSquad(c);
   const wages = squad.reduce((s, p) => s + p.wage, 0);
-  const budget = Math.round(clamp(0.5e6 * Math.pow(1.27, c.lvl - 60), 8e5, 2e8) / 1e5) * 1e5;
+  /* caixa ancorado no que custa um reforço de dois pontos acima do elenco: ~3 alvos por janela */
+  const budget = Math.round(clamp(2.0 * valueOf(c.lvl + 2, 26, c.lvl + 4), 1e7, 2.4e8) / 1e5) * 1e5;
 
   G = {
     club: c, lvl: c.lvl, squad, squad0: squad.slice(), market: buildMarket(c),
     form: '4-3-3', lineup: [],
     money: budget, budget0: budget,
-    wageCap: Math.round(wages * rnd(1.14, 1.32) / 1000) * 1000,
-    wages, day: 1, maxDays: 14,
+    wageCap: Math.round(wages * rnd(1.3, 1.58) / 1000) * 1000,
+    wages, day: 1, maxDays: 18,
     signings: [], sales: [], feed: [], over: false
   };
   G.lineup = bestXI(squad);
   recomputeBaseline();
-  news('Janela aberta. O ' + c.n + ' tem ' + money(G.money) + ' em caixa e 14 dias para se resolver.', '');
+  news('Janela aberta. O ' + c.n + ' tem ' + money(G.money) + ' em caixa e ' + G.maxDays + ' dias para se resolver. O mercado inteiro atende o telefone.', '');
   return G;
 }
 function dificuldade(){
-  return G.lvl >= 83 ? ['Alta', 'elenco de elite: quase todo reforço custa fortuna e o teto salarial aperta']
-       : G.lvl >= 76 ? ['Média', 'há upgrades no mercado, mas o caixa não cobre todos']
-       : ['Acessível', 'elenco com muito o que melhorar e mercado cheio de alvos no seu alcance'];
+  return G.lvl >= 83 ? ['Alta', 'elenco de elite: o mundo inteiro atende, mas subir esse time de patamar custa uma fortuna']
+       : G.lvl >= 76 ? ['Média', 'há upgrade em quase toda posição; as estrelas dos gigantes é que não atendem']
+       : ['Acessível', 'elenco com muito o que melhorar — e alvos baratos de sobra dentro do seu alcance'];
 }
 
 /* ---------------- notícias ---------------- */
@@ -302,8 +312,8 @@ function tickDay(){
     closeWindow();
     return;
   }
-  if (Math.random() < .42){
-    const live = G.market.filter(p => !p.gone).sort((a, b) => b.ovr - a.ovr).slice(0, 16);
+  if (Math.random() < .28){
+    const live = G.market.filter(p => !p.gone && !p.free).sort((a, b) => b.ovr - a.ovr).slice(0, 120);
     if (live.length){
       const t = pick(live);
       t.gone = true;
@@ -325,7 +335,7 @@ function evaluate(){
   const valueIn = s.reduce((a, x) => a + x.value, 0);
   const comps = [];
 
-  const c1 = clamp(delta / 2.4, 0, 1) * 30;
+  const c1 = clamp(delta / 3.0, 0, 1) * 30;
   comps.push({ k:'Impacto na escalação', v:c1, max:30,
     note:(delta >= 0 ? '+' : '') + delta.toFixed(2) + ' de força no XI · ' + G.form });
 
@@ -334,7 +344,7 @@ function evaluate(){
     const w = G.needs[p.id] === 'crit' ? 1 : G.needs[p.id] === 'soft' ? .5 : 0;
     if (!w) continue;
     wSum += w;
-    wGot += w * clamp((posStrength(G.squad, p.id) - G.baseStrength[p.id]) / 5, 0, 1);
+    wGot += w * needProgress(p.id);
   }
   const c2 = wSum ? (wGot / wSum) * 25 : 25;
   comps.push({ k:'Carências resolvidas', v:c2, max:25,
@@ -342,13 +352,13 @@ function evaluate(){
 
   let c3;
   if (!s.length) c3 = 3;
-  else { const ratio = valueIn / Math.max(spend, 1e5); c3 = clamp((ratio - .62) / .68, 0, 1) * 20; }
+  else { const ratio = valueIn / Math.max(spend, 1e5); c3 = clamp((ratio - .78) / .62, 0, 1) * 20; }
   comps.push({ k:'Custo-benefício', v:c3, max:20,
     note: s.length ? money(spend) + ' gastos por ' + money(valueIn) + ' de mercado' : 'nenhuma contratação' });
 
   let c4 = 0;
   if (s.length){
-    const avg = s.reduce((a, x) => a + clamp((x.pot - x.ovr) / 8, 0, 1) * .55 + clamp((31 - x.age) / 12, 0, 1) * .45, 0) / s.length;
+    const avg = s.reduce((a, x) => a + clamp((x.pot - x.ovr) / 7, 0, 1) * .52 + clamp((32 - x.age) / 12.5, 0, 1) * .48, 0) / s.length;
     c4 = avg * 15;
   }
   comps.push({ k:'Projeto de futuro', v:c4, max:15,
@@ -357,13 +367,13 @@ function evaluate(){
   let c5 = 0;
   if (G.wages <= G.wageCap) c5 += 6;
   const usage = 1 - G.money / Math.max(G.budget0, 1);
-  c5 += clamp(1 - Math.abs(usage - .78) / .78, 0, 1) * 4;
+  c5 += clamp(usage / .55, 0, 1) * 4;
   comps.push({ k:'Saúde financeira', v:c5, max:10,
     note:(G.wages <= G.wageCap ? 'folha dentro do teto' : 'FOLHA ESTOURADA') + ' · ' + Math.round(usage * 100) + '% do caixa usado' });
 
   const pen = [];
   const vagas = G.lineup.filter(x => !x).length;
-  if (vagas) pen.push({ k:'Escalação incompleta (' + vagas + (vagas > 1 ? ' vagas' : ' vaga') + ')', v:-7 * vagas });
+  if (vagas) pen.push({ k:'Escalação incompleta (' + vagas + (vagas > 1 ? ' vagas' : ' vaga') + ')', v:-6 * vagas });
   const fora = G.lineup.reduce((a, id, i) => {
     const p = G.squad.find(x => x.id === id);
     return a + (p && p.pos !== formSlots()[i].p ? 1 : 0);
@@ -372,10 +382,10 @@ function evaluate(){
   for (const p of POS){
     const need = slotsOf(p.id);
     const have = G.squad.filter(x => x.pos === p.id).length;
-    if (have < need) pen.push({ k:'Sem elenco para a posição: ' + p.name, v:-9 * (need - have) });
+    if (have < need) pen.push({ k:'Sem elenco para a posição: ' + p.name, v:-7 * (need - have) });
   }
-  if (s.length > 7) pen.push({ k:'Elenco inchado (' + s.length + ' contratações)', v:-6 });
-  if (G.wages > G.wageCap) pen.push({ k:'Teto salarial estourado', v:-12 });
+  if (s.length > 9) pen.push({ k:'Elenco inchado (' + s.length + ' contratações)', v:-5 });
+  if (G.wages > G.wageCap) pen.push({ k:'Teto salarial estourado', v:-10 });
   if (!s.length && G.day > 1) pen.push({ k:'Janela sem reforço nenhum', v:-8 });
 
   const total = clamp(comps.reduce((a, c) => a + c.v, 0) + pen.reduce((a, c) => a + c.v, 0), 0, 100);
@@ -468,13 +478,14 @@ let SEL = null;
 function currentList(){
   const posF = $('#fPos').value, ligaF = $('#fLiga').value, sort = $('#fSort').value;
   const q = $('#fName').value.trim().toLowerCase();
-  const onlyNeed = $('#fNeed').checked, onlyAfford = $('#fAfford').checked;
+  const onlyNeed = $('#fNeed').checked, onlyAfford = $('#fAfford').checked, onlyReach = $('#fReach').checked;
   let list = TAB === 'market' ? G.market.filter(p => !p.gone) : G.squad.slice();
   if (posF) list = list.filter(p => p.pos === posF);
   if (ligaF && TAB === 'market') list = list.filter(p => p.liga === ligaF);
   if (q) list = list.filter(p => (p.name + ' ' + p.club).toLowerCase().includes(q));
   if (onlyNeed) list = list.filter(p => G.needs[p.pos] !== 'ok');
   if (onlyAfford && TAB === 'market') list = list.filter(p => p.feeAsk <= G.money && p.wageAsk <= G.wageCap - G.wages);
+  if (onlyReach && TAB === 'market') list = list.filter(p => reachOf(p) !== 'fora');
   const cmp = {
     ovr:(a, b) => b.ovr - a.ovr,
     fee:(a, b) => (a.feeAsk ?? a.value) - (b.feeAsk ?? b.value),
@@ -484,28 +495,34 @@ function currentList(){
   }[sort];
   return list.sort(cmp);
 }
+const LIST_CAP = 250;   /* o mercado tem o mundo inteiro; a tabela mostra os melhores por filtro */
 function renderList(){
   const list = currentList();
-  $('#listCount').textContent = list.length + (TAB === 'market' ? ' disponíveis' : ' no elenco');
+  const shown = list.slice(0, LIST_CAP);
+  $('#listCount').textContent = list.length + (TAB === 'market' ? ' disponíveis' : ' no elenco') +
+    (list.length > shown.length ? ' · mostrando ' + shown.length : '');
   if (!list.length){ $('#listWrap').innerHTML = '<div class="empty">Nenhum jogador com esses filtros.</div>'; return; }
   const isMk = TAB === 'market';
   const head = '<thead><tr><th>Pos</th><th>Jogador</th><th class="num">Idade</th><th class="num">OVR</th><th class="num">POT</th>' +
     '<th class="num">' + (isMk ? 'Pedida' : 'Valor') + '</th><th class="num">Salário</th><th></th></tr></thead>';
-  const body = list.map(p => {
+  const body = shown.map(p => {
     const tags = isMk ? tagsOf(p, G.lvl).map(t => '<span class="chip ' + t[0] + '">' + t[1] + '</span>').join('')
                       : (G.lineup.includes(p.id) ? '<span class="chip xi">titular</span>' : '');
     const fee = isMk ? (p.free ? '<span style="color:var(--blue)">livre</span>' : money(p.feeAsk)) : money(p.value);
     const btn = isMk
-      ? '<button class="btn sm" data-neg="' + p.id + '"' + (p.attempts >= 3 ? ' disabled' : '') + '>' + (p.attempts >= 3 ? 'encerrado' : 'Negociar') + '</button>'
+      ? '<button class="btn sm" data-neg="' + p.id + '"' + (p.attempts >= MAX_TRIES ? ' disabled' : '') + '>' + (p.attempts >= MAX_TRIES ? 'encerrado' : 'Negociar') + '</button>'
       : '<button class="btn sm ghost" data-sell="' + p.id + '">Vender</button>';
-    return '<tr><td><div class="pos ' + (G.needs[p.pos] === 'crit' ? 'crit' : G.needs[p.pos] === 'soft' ? 'soft' : '') + '">' + p.pos + '</div></td>' +
+    return '<tr' + (isMk && reachOf(p) === 'fora' ? ' class="unreach"' : '') + '><td><div class="pos ' + (G.needs[p.pos] === 'crit' ? 'crit' : G.needs[p.pos] === 'soft' ? 'soft' : '') + '">' + p.pos + '</div></td>' +
       '<td><div class="pname">' + esc(p.name) + tags + '</div><div class="pmeta">' + esc(p.club) + (isMk ? ' · ' + esc(p.liga) : '') + '</div></td>' +
       '<td class="num">' + p.age + '</td><td class="num" style="font-weight:600">' + p.ovr + '</td>' +
       '<td class="num" style="color:' + (p.pot > p.ovr ? 'var(--amber)' : 'var(--dim)') + '">' + p.pot + '</td>' +
       '<td class="num">' + fee + '</td><td class="num" style="color:var(--muted)">' + wageFmt(isMk ? p.wageAsk : p.wage) + '</td>' +
       '<td style="text-align:right">' + btn + '</td></tr>';
   }).join('');
-  $('#listWrap').innerHTML = '<table>' + head + '<tbody>' + body + '</tbody></table>';
+  const corte = list.length > shown.length
+    ? '<div class="empty">Mais ' + (list.length - shown.length) + ' jogadores atendem a esses filtros. Refine por posição, liga ou nome para chegar neles.</div>'
+    : '';
+  $('#listWrap').innerHTML = '<table>' + head + '<tbody>' + body + '</tbody></table>' + corte;
 }
 
 function renderLineup(){
@@ -555,7 +572,7 @@ function renderLineup(){
       ' · nível do clube: ' + G.lvl + '. Clique para filtrar o mercado nesta posição.">' +
       '<span class="nc-t">' + p.name + ' <em>' + lbl + '</em></span>' +
       '<span class="nc-b"><i style="width:' + Math.round(prog * 100) + '%"></i></span>' +
-      '<span class="nc-v"><span>' + num + ' de 5,0</span><span class="go">' + (st === 'done' ? 'feito ✓' : 'ver alvos →') + '</span></span>' +
+      '<span class="nc-v"><span>' + num + ' de ' + NEED_FULL + ',0</span><span class="go">' + (st === 'done' ? 'feito ✓' : 'ver alvos →') + '</span></span>' +
       '</button>';
   }).join('') : '<div class="allok">Sem carências no <b>' + G.form + '</b> — o elenco cobre todas as posições do esquema.</div>';
 
@@ -638,8 +655,9 @@ function modal(html){
 }
 function openNegotiation(id){
   const p = G.market.find(x => x.id === id);
-  if (!p || p.gone || p.attempts >= 3) return;
+  if (!p || p.gone || p.attempts >= MAX_TRIES) return;
   const maxFee = Math.max(G.money, p.feeAsk * 1.2);
+  const reach = reachOf(p);
   const tags = tagsOf(p, G.lvl).map(t => '<span class="chip ' + t[0] + '">' + t[1] + '</span>').join('');
   const room = G.wageCap - G.wages;
 
@@ -647,7 +665,7 @@ function openNegotiation(id){
     '<div class="mh"><div><h3>' + esc(p.name) + ' ' + tags + '</h3>' +
       '<div class="sub">' + POSMAP[p.pos].name + ' · ' + esc(p.club) + ' · ' + esc(p.liga) + ' · ' + p.age + ' anos<br>' +
       'pede ' + (p.free ? 'nenhuma taxa (contrato encerrado)' : money(p.feeAsk)) + ' + ' + wageFmt(p.wageAsk) +
-      ' · tentativas: ' + p.attempts + '/3</div></div>' +
+      ' · tentativas: ' + p.attempts + '/' + MAX_TRIES + '</div></div>' +
       '<button class="x" id="mx" aria-label="Fechar">✕</button></div>' +
     '<div class="attrs">' +
       '<div><div class="k">Overall</div><div class="v">' + p.ovr + '</div></div>' +
@@ -656,6 +674,11 @@ function openNegotiation(id){
       '<div><div class="k">Sua posição ' + p.pos + '</div><div class="v">' + posStrength(G.squad, p.pos).toFixed(0) + '</div></div>' +
     '</div>' +
     '<div class="negotiate">' +
+      (reach === 'fora'
+        ? '<div class="msg no"><span class="who">Scouting</span>Patamar acima do ' + esc(G.club.n) + '. Você pode mandar a proposta — e vai voltar sem conversa: nesta janela ele não troca o ' + esc(p.club) + ' pelo seu clube.</div>'
+        : reach === 'dificil'
+        ? '<div class="msg mid"><span class="who">Scouting</span>Alvo de outro patamar. Dá para tirar, mas só com prêmio: a pedida e o salário já vêm inflados por isso.</div>'
+        : '') +
       (p.free ? '<div class="msg mid"><span class="who">Empresário</span>Sem contrato: nenhum clube leva taxa. Toda a disputa é salário — e ele sabe disso.</div>' : '') +
       '<div class="field"><div class="k"><span>Proposta ao ' + esc(p.club) + '</span><b id="feeOut">' + money(Math.min(p.feeAsk, G.money)) + '</b></div>' +
         '<input type="range" id="feeR" min="0" max="' + Math.round(maxFee) + '" step="100000" value="' + Math.round(Math.min(p.feeAsk, G.money)) + '"' + (p.free ? ' disabled' : '') + '>' +
@@ -669,7 +692,7 @@ function openNegotiation(id){
         '<button data-wg="1.12">+12%</button></div></div>' +
       '<div id="negMsg"></div>' +
     '</div>' +
-    '<div class="mfoot"><span class="hint">Enviar proposta consome 1 dia</span>' +
+    '<div class="mfoot"><span class="hint">Acordo ou contraproposta consome 1 dia · recusa não custa nada</span>' +
       '<div style="display:flex;gap:8px"><button class="btn ghost" id="mCancel">Deixar pra lá</button>' +
       '<button class="btn" id="mSend">Enviar proposta</button></div></div>'
   );
@@ -682,7 +705,7 @@ function openNegotiation(id){
     $('#wgOut').textContent = wageFmt(wg);
     $('#wgOut').style.color = wg > room ? 'var(--neg)' : 'var(--ink)';
     const bad = fee > G.money || wg > room;
-    $('#mSend').disabled = bad || p.attempts >= 3;
+    $('#mSend').disabled = bad || p.attempts >= MAX_TRIES;
     if (!$('#negMsg').dataset.locked)
       $('#negMsg').innerHTML = bad
         ? '<div class="msg no"><span class="who">Departamento financeiro</span>' +
@@ -709,33 +732,46 @@ function openNegotiation(id){
 
 function sendOffer(p, fee, wg){
   if (G.over || fee > G.money || wg > G.wageCap - G.wages) return;
+  const box0 = $('#negMsg');
+
+  if (reachOf(p) === 'fora'){
+    if (box0){
+      box0.dataset.locked = '1';
+      box0.innerHTML = '<div class="msg no"><span class="who">' + esc(p.club) + '</span>Não é questão de valor. ' +
+        esc(p.name) + ' não sai daqui para o ' + esc(G.club.n) + ' nesta janela — a proposta nem chegou a ele.</div>';
+    }
+    news('<b>' + esc(p.name) + '</b> devolveu a sondagem do ' + esc(G.club.n) + ' sem conversa. Está fora do alcance do clube.', 'bad');
+    renderAll();
+    return;
+  }
   p.attempts++;
 
-  const feeOK = p.free ? 'yes' : fee >= p.feeAsk * .97 ? 'yes' : fee >= p.feeAsk * .86 ? 'counter' : 'no';
-  const ambicao = p.ovr >= G.lvl + 7 ? 1.12 : 1;
+  const feeOK = p.free ? 'yes' : fee >= p.feeAsk * .93 ? 'yes' : fee >= p.feeAsk * .80 ? 'counter' : 'no';
+  const ambicao = p.ovr >= G.lvl + 8 ? 1.06 : 1;
   const need = p.wageAsk * ambicao;
-  const wgOK = wg >= need * .99 ? 'yes' : wg >= need * .90 ? 'counter' : 'no';
-  const box = $('#negMsg');
+  const wgOK = wg >= need * .97 ? 'yes' : wg >= need * .86 ? 'counter' : 'no';
+  const box = box0;
 
   if (feeOK === 'yes' && wgOK === 'yes'){ doSign(p, fee, wg); tickDay(); return; }
 
   if (feeOK === 'no' || wgOK === 'no'){
-    if (feeOK === 'no') p.feeAsk = Math.round(p.feeAsk * 1.04 / 1e5) * 1e5;
+    if (feeOK === 'no') p.feeAsk = Math.round(p.feeAsk * 1.03 / 1e5) * 1e5;
+    else if (wgOK === 'no') p.wageAsk = Math.round(p.wageAsk * 1.03 / 1000) * 1000;
     const why = feeOK === 'no'
       ? '<span class="who">' + esc(p.club) + '</span>Proposta muito abaixo do que consideramos. Nem levamos ao presidente — e a pedida subiu para ' + money(p.feeAsk) + '.'
-      : '<span class="who">Empresário de ' + esc(p.name) + '</span>Com esse salário meu cliente nem atende o telefone. Ele quer ' + wageFmt(Math.round(need)) + '.';
+      : '<span class="who">Empresário de ' + esc(p.name) + '</span>Com esse salário meu cliente nem atende o telefone. Depois dessa ele quer ' + wageFmt(Math.round(p.wageAsk * ambicao)) + '.';
     if (box){
       box.dataset.locked = '1';
-      box.innerHTML = '<div class="msg no">' + why + (p.attempts >= 3 ? '<br><br><b>Negociação encerrada</b> — três tentativas, sem acordo.' : '') + '</div>';
+      box.innerHTML = '<div class="msg no">' + why + (p.attempts >= MAX_TRIES ? '<br><br><b>Negociação encerrada</b> — ' + MAX_TRIES + ' tentativas, sem acordo.' : '') + '</div>';
     }
-    news('Proposta por <b>' + esc(p.name) + '</b> recusada.' + (p.attempts >= 3 ? ' Negociação encerrada.' : ''), 'bad');
-    if (p.attempts >= 3 && $('#mSend')) $('#mSend').disabled = true;
-    tickDay();
+    news('Proposta por <b>' + esc(p.name) + '</b> recusada — sem custo de dia.' + (p.attempts >= MAX_TRIES ? ' Negociação encerrada.' : ''), 'bad');
+    if (p.attempts >= MAX_TRIES && $('#mSend')) $('#mSend').disabled = true;
+    renderAll();
     return;
   }
 
-  const cFee = p.free ? 0 : Math.max(fee, Math.round(p.feeAsk * .985 / 1e5) * 1e5);
-  const cWg = Math.max(wg, Math.round(need * 1.01 / 1000) * 1000);
+  const cFee = p.free ? 0 : Math.max(fee, Math.round(p.feeAsk * .945 / 1e5) * 1e5);
+  const cWg = Math.max(wg, Math.round(need * .985 / 1000) * 1000);
   const afford = cFee <= G.money && cWg <= G.wageCap - G.wages;
   if (box){
     box.dataset.locked = '1';
@@ -922,7 +958,7 @@ $('#fForm').onchange = () => {
   renderAll();
 };
 $('#btnAuto').onclick = () => { G.lineup = bestXI(G.squad); SEL = null; renderAll(); };
-['fPos', 'fLiga', 'fSort', 'fName', 'fNeed', 'fAfford'].forEach(id => {
+['fPos', 'fLiga', 'fSort', 'fName', 'fNeed', 'fAfford', 'fReach'].forEach(id => {
   const el = document.getElementById(id);
   el.addEventListener(el.type === 'search' ? 'input' : 'change', renderList);
 });

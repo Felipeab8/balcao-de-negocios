@@ -2,8 +2,10 @@
 
 Jogo de navegador em que você não escala o time durante a partida — você monta o elenco na janela
 de transferências. Um clube das oito principais ligas do mundo cai no seu colo com o caixa, o teto
-salarial e os buracos que ele tem de verdade. Você tem 14 dias para negociar, vender, escalar e
-fechar. No dia seguinte a imprensa dá a nota — e é ela que decide se você fica.
+salarial e os buracos que ele tem de verdade. Você tem 18 dias para negociar, vender, escalar e
+fechar. O mercado inteiro aparece na sua mesa, mas só uma parte dele atende: o que está ao seu
+alcance depende do tamanho do clube que caiu no seu colo. No dia seguinte a imprensa dá a nota —
+e é ela que decide se você fica.
 
 HTML, CSS e JavaScript puros. Sem dependências, sem build obrigatório, sem servidor.
 
@@ -14,13 +16,20 @@ Abra `balcao-de-negocios/index.html` no navegador (duplo clique já funciona), o
 
 ### Regras
 
-1. **Cada proposta enviada gasta um dia** — recusada também. Enquanto você pensa, clubes rivais
-   fecham com alvos do mercado.
-2. **Toda contratação tem duas conversas**: o clube dono do jogador quer o valor de transferência,
+1. **O mercado é aberto, o alcance não é**: todo jogador de todo clube (menos o seu) aparece na aba
+   Mercado e você pode mandar proposta para qualquer um. Mas cada nome vem marcado por patamar —
+   **fora do alcance** devolve a sondagem sem conversa (o Bayern não senta pra falar do Kane com um
+   clube médio), **outro patamar** aceita negociar cobrando prêmio na taxa e no salário, e o resto
+   trata normalmente. O que é alcançável sobe junto com o nível do seu elenco. A tabela mostra os
+   250 primeiros do filtro — refine por posição, liga ou nome, ou marque *só quem me atende*.
+2. **Acordo fechado gasta um dia**, contraproposta também. **Proposta recusada não custa dia nenhum**,
+   mas encarece o alvo: cada "não" sobe a pedida em 3%, e são quatro tentativas por jogador antes de
+   a negociação morrer. Enquanto isso, clubes rivais vão fechando com alguns nomes do mercado.
+3. **Toda contratação tem duas conversas**: o clube dono do jogador quer o valor de transferência,
    o jogador quer salário. Os dois precisam dizer sim. Perto do acordo vem contraproposta; longe
-   demais, a pedida sobe e depois de três tentativas a negociação morre.
-3. **Vender é ferramenta legítima** para liberar caixa e folha — deixar uma posição descoberta não é.
-4. **A nota vai de F a A+**, e a aprovação começa em **B (70 pontos)**.
+   demais, a pedida sobe.
+4. **Vender é ferramenta legítima** para liberar caixa e folha — deixar uma posição descoberta não é.
+5. **A nota vai de F a A+**, e a aprovação começa em **B (70 pontos)**.
 
 ### Como a nota é calculada
 

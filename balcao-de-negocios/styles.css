@@ -127,6 +127,10 @@ th.num{text-align:right}
 .chip.gem{background:rgba(255,176,32,.16);color:var(--amber)}
 .chip.star{background:rgba(255,95,110,.15);color:#FF9AA4}
 .chip.vet{background:rgba(148,156,210,.14);color:var(--muted)}
+.chip.out{background:rgba(255,95,110,.22);color:#FFB2B9}
+.chip.hard{background:rgba(255,176,32,.14);color:var(--amber)}
+tr.unreach td{opacity:.5}
+tr.unreach:hover td{opacity:.8}
 .empty{padding:28px 14px;color:var(--dim);font-family:var(--f-mono);font-size:12px;text-align:center}
 
 .feed{max-height:250px;overflow:auto}
