@@ -9,10 +9,14 @@ e é ela que decide se você fica.
 
 HTML, CSS e JavaScript puros. Sem dependências, sem build obrigatório, sem servidor.
 
+**[Jogar agora](https://felipeab8.github.io/balcao-de-negocios/)**
+
 ## Como jogar
 
-Abra `balcao-de-negocios/index.html` no navegador (duplo clique já funciona), ou o arquivo único
-`balcao-de-negocios.html`, que é a mesma coisa com tudo embutido.
+Online, sem baixar nada: <https://felipeab8.github.io/balcao-de-negocios/>.
+
+Localmente, abra `balcao-de-negocios/index.html` no navegador (duplo clique já funciona), ou o
+arquivo único `balcao-de-negocios.html`, que é a mesma coisa com tudo embutido.
 
 ### Regras
 
@@ -55,6 +59,7 @@ deixar montada é a que a imprensa avalia.
 ## Estrutura
 
 ```
+index.html                     redireciona para o jogo (GitHub Pages)
 balcao-de-negocios.html        build de arquivo único (tudo embutido)
 balcao-de-negocios/
 ├── index.html                 marcação das três telas
