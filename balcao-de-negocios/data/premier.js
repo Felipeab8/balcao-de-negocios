@@ -133,7 +133,7 @@ clubes: [
   ['Chris Rigg','MEI',19,74],['Simon Adingra','PON',24,77],['Chemsdine Talbi','PON',21,75],
   ['Romaine Mundle','PON',23,73],['Brian Brobbey','ATA',24,77],['Wilson Isidor','ATA',26,76]] },
 { n:'Leeds United', cid:'Leeds', lvl:74, c1:'#FFFFFF', c2:'#1D428A', p:[
-  ['James Trafford','GOL',23,77],['Michael Zetterer','GOL',31,72],['Joe Rodon','ZAG',28,76],
+  ['James Trafford','GOL',23,77],['Alex Cairns','GOL',33,69],['Joe Rodon','ZAG',28,76],
   ['Jaka Bijol','ZAG',27,76],['Nico Elvedi','ZAG',29,76],['Tarik Muharemovic','ZAG',23,73],
   ['James Justin','LAT',28,75],['Jayden Bogle','LAT',26,74],['Gabriel Gudmundsson','LAT',27,74],
   ['Ethan Ampadu','VOL',25,77],['Anton Stach','VOL',27,76],['Ao Tanaka','VOL',27,75],
@@ -145,7 +145,7 @@ clubes: [
   ['Dara O’Shea','ZAG',27,74],['Issa Diop','ZAG',29,74],['Cédric Kipré','ZAG',29,72],
   ['Leif Davis','LAT',26,75],['Darnell Furlong','LAT',30,72],['Abdoul Ouattara','LAT',20,69],
   ['Florentino Luís','VOL',27,76],['Azor Matusiwa','VOL',28,74],['Sasa Lukic','VOL',30,74],
-  ['Exequiel Palacios','MEI',27,77],['Marcelino Núñez','MEI',26,74],['Anis Mehmeti','MEI',25,72],
+  ['Marcelino Núñez','MEI',26,74],['Anis Mehmeti','MEI',25,72],
   ['Jack Clarke','PON',25,74],['Fatawu Issahaku','PON',22,74],['Sindre Walle Egeli','PON',20,70],
   ['Daizen Maeda','ATA',28,76],['Julio Enciso','ATA',22,75],['Zian Flemming','ATA',28,73]] },
 { n:'Hull City', cid:'Hull', lvl:71, c1:'#F5A12D', c2:'#000000', p:[
