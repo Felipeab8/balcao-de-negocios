@@ -1,10 +1,11 @@
 # Balcão de Negócios
 
-Jogo de navegador em que você não escala o time durante a partida — você monta o elenco na janela
-de transferências. Um clube das oito principais ligas do mundo cai no seu colo com o caixa, o teto
-salarial e os buracos que ele tem de verdade. Você tem 18 dias para negociar, vender, escalar e
+Jogo de navegador em que você não escala o time durante a partida. Você monta o elenco na janela
+de transferências. Um clube das oito principais ligas do mundo cai no seu colo (escolhido por você
+no modo fácil, sorteado no difícil, imposto no expert) com o caixa, o teto salarial e os buracos
+que ele tem de verdade. Você tem 18 dias para negociar, vender, escalar e
 fechar. O mercado inteiro aparece na sua mesa, mas só uma parte dele atende: o que está ao seu
-alcance depende do tamanho do clube que caiu no seu colo. No dia seguinte a imprensa dá a nota —
+alcance depende do tamanho do clube que caiu no seu colo. No dia seguinte a imprensa dá a nota,
 e é ela que decide se você fica.
 
 HTML, CSS e JavaScript puros. Sem dependências, sem build obrigatório, sem servidor.
@@ -18,35 +19,104 @@ Online, sem baixar nada: <https://felipeab8.github.io/balcao-de-negocios/>.
 Localmente, abra `balcao-de-negocios/index.html` no navegador (duplo clique já funciona), ou o
 arquivo único `balcao-de-negocios.html`, que é a mesma coisa com tudo embutido.
 
+### Modos
+
+Escolhidos na tela de abertura, antes de abrir a janela. Mudam só como o clube chega até você. As
+regras da janela são as mesmas nos três.
+
+| Modo | Como o clube chega |
+| --- | --- |
+| **Fácil** | Você escolhe a liga e o clube, um a um, entre os 150, e qual **incorporação financeira** aceitar. |
+| **Difícil** | O clube é sorteado dentro da liga que você apontar. Não gostou? Sorteia de novo, **três vezes**. Trocar de liga gasta uma delas, e no fim das chances liga e clube travam. |
+| **Expert** | Liga e clube sorteados de uma vez só, sem filtro e sem segunda chance. O que sair é seu. |
+
+#### Incorporação financeira (só no fácil)
+
+Três investidores na mesa, e cada um põe o dinheiro em um lugar diferente. Caixa compra passe, teto
+salarial banca folha, e escolher o aporte é escolher que tipo de janela você vai fazer. Dá para
+recusar os três.
+
+| Investidor | Caixa | Teto salarial | Que janela ele permite |
+| --- | ---: | ---: | --- |
+| **Nenhuma** | — | — | o clube se vira com o que tem |
+| **Fundo de investimento** | +90% | igual | comprar passe caro, sem espaço novo na folha |
+| **Sócio majoritário** | +50% | +15% | meio-termo nas duas pontas |
+| **Patrocinador master** | +15% | +40% | estrela livre e salário alto, sem dinheiro de compra |
+
+O modo fica registrado na barra do topo e na nota final: janela de modo fácil com aporte aparece
+como tal no relatório da imprensa (*modo fácil com patrocinador master*).
+
 ### Regras
 
 1. **O mercado é aberto, o alcance não é**: todo jogador de todo clube (menos o seu) aparece na aba
-   Mercado e você pode mandar proposta para qualquer um. Mas cada nome vem marcado por patamar —
+   Mercado e você pode mandar proposta para qualquer um. Mas cada nome vem marcado por patamar:
    **fora do alcance** devolve a sondagem sem conversa (o Bayern não senta pra falar do Kane com um
    clube médio), **outro patamar** aceita negociar cobrando prêmio na taxa e no salário, e o resto
    trata normalmente. O que é alcançável sobe junto com o nível do seu elenco. A tabela mostra os
-   250 primeiros do filtro — refine por posição, liga ou nome, ou marque *só quem me atende*.
-2. **Acordo fechado gasta um dia**, contraproposta também. **Proposta recusada não custa dia nenhum**,
-   mas encarece o alvo: cada "não" sobe a pedida em 3%, e são quatro tentativas por jogador antes de
-   a negociação morrer. Enquanto isso, clubes rivais vão fechando com alguns nomes do mercado.
-3. **Toda contratação tem duas conversas**: o clube dono do jogador quer o valor de transferência,
-   o jogador quer salário. Os dois precisam dizer sim. Perto do acordo vem contraproposta; longe
-   demais, a pedida sobe.
-4. **Vender é ferramenta legítima** para liberar caixa e folha — deixar uma posição descoberta não é.
-5. **A nota vai de F a A+**, e a aprovação começa em **B (70 pontos)**.
+   250 primeiros do filtro. Refine por posição, liga ou nome, ou marque *só quem me atende*.
+2. **Toda contratação tem duas fases.** Primeiro o dinheiro da transferência com o clube dono do
+   jogador; depois a **entrevista** com o jogador e o empresário, onde se discute o contrato inteiro.
+   Os dois precisam dizer sim.
+3. **Recusa do clube não custa dia nenhum**, mas encarece o alvo: cada "não" sobe a pedida em 3%, e
+   são quatro tentativas por jogador. **Assinar consome um dia, e sair da entrevista sem acordo
+   também.** Enquanto isso, clubes rivais vão fechando com alguns nomes do mercado.
+4. **Vender é ferramenta legítima** para liberar caixa e folha. Deixar uma posição descoberta não é.
+5. **A nota vai de F a A+**, e a aprovação começa em **B (68 pontos)**.
+
+### A entrevista
+
+Fechado o valor com o clube, o jogador senta à mesa. São seis itens, e um medidor de
+**convencimento** (0 a 100) que reage a cada ajuste. Ele só assina acima da exigência dele, que
+começa em 70 e **sobe 7 a cada recusa**. São três rodadas antes de o empresário levantar da mesa.
+
+| Item | O que está em jogo |
+| --- | --- |
+| **Salário semanal** | pesa mais que tudo e ocupa o teto da folha para sempre |
+| **Luvas** | dinheiro à vista na assinatura, direto do caixa |
+| **Comissão do empresário** | percentual sobre a taxa, também à vista |
+| **Duração do contrato** | 1 a 5 anos; jovem quer contrato longo, veterano quer curto |
+| **Papel no elenco** | promessa, rotação, titular ou estrela; prometer é grátis, cumprir não |
+| **Cláusula de rescisão** | nenhuma a 1,5× o valor dele; quanto mais alta, pior para ele |
+
+A mesa abre na posição do clube, não na dele: é você que tem de subir. Pagar acima do pedido em um
+item compensa apertar outro: dá para segurar salário com luvas gordas, ou comprar um contrato de
+cinco anos prometendo papel de estrela. Chegando perto, vem contraproposta com os números exatos.
+Perto demais do limite é sempre risco: o jogador tem uma teimosia escondida de alguns pontos.
+
+E a imprensa cobra o que você prometeu: **papel de titular ou estrela para quem termina a janela no
+banco vira desconto na nota**, assim como **cláusula barata em reforço de destaque**. Luvas e
+comissão entram no custo-benefício junto com a taxa, porque o pacote inteiro é o que você gastou.
+
+### As metas do conselho
+
+Antes de a janela abrir, o conselho fecha **quatro metas contáveis**, tiradas do próprio elenco
+sorteado: contratar dois laterais, levar a zaga a 79 de média, levar o XI titular a 78,2 de força,
+arrecadar um valor em vendas, contratar um jogador de até 23 anos com potencial alto. Elas aparecem
+no dossiê de abertura, num painel próprio ao lado do mercado (com barra de andamento e o número de
+hoje) e voltam uma a uma no relatório final.
+
+Valem **26 dos 100 pontos**, com **crédito proporcional**: meta pela metade paga metade. São o
+caminho mais direto para a nota, e cumprir as quatro puxa junto o impacto na escalação e as
+carências, porque é disso que elas são feitas.
 
 ### Como a nota é calculada
 
 | Critério | Pontos |
 | --- | ---: |
-| Impacto na escalação (força do XI vs. o XI de abertura) | 30 |
-| Carências resolvidas | 25 |
-| Custo-benefício (valor de mercado ÷ o que você gastou) | 20 |
-| Projeto de futuro (idade e potencial dos reforços) | 15 |
+| Metas do conselho | 26 |
+| Impacto na escalação (força do XI vs. o XI de abertura) | 20 |
+| Carências resolvidas | 20 |
+| Custo-benefício (valor de mercado ÷ taxa + luvas + comissão) | 14 |
 | Saúde financeira (folha dentro do teto, uso do caixa) | 10 |
+| Projeto de futuro (idade, potencial e tamanho do contrato dos reforços) | 10 |
+
+**Carência é medida pelo buraco que ela tem**, não por uma régua fixa: a posição está resolvida
+quando alcança o nível do elenco. Um buraco de 6 pontos pede 6 pontos de reforço; um de 2 pede 2.
+Antes toda posição pedia 5, e a que estava quase em dia era impossível de fechar.
 
 Com penalidades para vaga em aberto no XI, elenco sem gente para a posição, folha estourada,
-elenco inchado e janela sem nenhum reforço.
+elenco inchado, janela sem nenhum reforço, papel prometido na entrevista e não cumprido, e cláusula
+de rescisão barata em reforço de destaque.
 
 ### Escalação
 
@@ -78,7 +148,7 @@ balcao-de-negocios/
     └── portugal.js            Liga Portugal
 ```
 
-`game.js` não tem nenhum nome de clube ou jogador embutido — ele lê `window.LIGAS`, montado pelos
+`game.js` não tem nenhum nome de clube ou jogador embutido: ele lê `window.LIGAS`, montado pelos
 arquivos de `data/`. Dá para trocar ligas, clubes e elencos inteiros sem tocar na lógica.
 
 ### Formato dos dados
@@ -105,7 +175,7 @@ sh build.sh
 ## Sobre os dados
 
 150 clubes e cerca de 1.900 jogadores reais das temporadas 2025/26 (2025 no Brasileirão), em
-**valores aproximados** montados de memória — overalls, idades e elencos servem ao equilíbrio do
+**valores aproximados** montados de memória. Overalls, idades e elencos servem ao equilíbrio do
 jogo, não à precisão de banco de dados. Quando a base não cobre a profundidade de uma posição, o
 elenco é completado por atletas gerados com nomes do país da liga. Projeto de fã, sem vínculo com
 os clubes, ligas ou entidades citados.

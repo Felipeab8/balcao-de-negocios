@@ -31,19 +31,31 @@
     <div>
       <div class="eyebrow">18 dias &middot; um elenco &middot; o mercado inteiro</div>
       <h1>Você não escala.<span>Você contrata.</span></h1>
-      <p class="lede">Um clube das oito principais ligas do mundo cai no seu colo &mdash; com o caixa real, a folha
+      <p class="lede">Um clube das oito principais ligas do mundo cai no seu colo, com o caixa real, a folha
       salarial e os buracos que o elenco tem de verdade. Sua única função é a janela: negociar, vender, encaixar
-      salário e fechar antes do gongo. No dia seguinte a imprensa dá a nota &mdash; e é ela que decide se você fica.</p>
+      salário e fechar antes do gongo. No dia seguinte a imprensa dá a nota, e é ela que decide se você fica.</p>
       <ul class="rules">
-        <li><span class="n">01</span><span><b>O mercado inteiro está na mesa &mdash; nem todo mundo senta.</b> Você pode mandar proposta para qualquer nome das oito ligas, mas quem é de outro patamar devolve sem conversa. O que está ao seu alcance depende do tamanho do clube que caiu no seu colo.</span></li>
-        <li><span class="n">02</span><span><b>Acordo fechado gasta um dia</b> &mdash; contraproposta também. Recusa não custa dia, mas encarece o alvo: cada &quot;não&quot; sobe a pedida, e são quatro tentativas por jogador.</span></li>
-        <li><span class="n">03</span><span><b>Duas conversas por negócio:</b> o clube quer o valor de transferência, o jogador quer salário. Os dois precisam dizer sim &mdash; e vender libera caixa e folha.</span></li>
+        <li><span class="n">01</span><span><b>O mercado inteiro está na mesa, nem todo mundo senta.</b> Você pode mandar proposta para qualquer nome das oito ligas, mas quem é de outro patamar devolve sem conversa. O que está ao seu alcance depende do tamanho do clube que caiu no seu colo.</span></li>
+        <li><span class="n">02</span><span><b>Duas fases por negócio:</b> primeiro a taxa com o clube, depois a <b>entrevista</b> com o jogador: salário, luvas, comissão do empresário, anos de contrato, papel no elenco e cláusula de rescisão.</span></li>
+        <li><span class="n">03</span><span><b>Assinar gasta um dia</b>, e levantar da mesa sem acordo também. Recusa do clube não custa dia, mas encarece o alvo: cada &quot;não&quot; sobe a pedida, e são quatro tentativas por jogador.</span></li>
         <li><span class="n">04</span><span><b>A nota vai de F a A+.</b> Aprovação a partir de <b>B</b> (70 pontos): reforço do time, carências resolvidas, custo-benefício, projeto e finanças.</span></li>
       </ul>
+      <div class="modes" id="modeBar" role="radiogroup" aria-label="Modo de jogo">
+        <button role="radio" data-mode="facil"><b>Fácil</b><small>você escolhe o clube e a incorporação</small></button>
+        <button role="radio" data-mode="dificil"><b>Difícil</b><small>clube sorteado &middot; três novos sorteios</small></button>
+        <button role="radio" data-mode="expert"><b>Expert</b><small>o clube que sair é o seu, e ponto</small></button>
+      </div>
+      <div class="setup" id="setupBar">
+        <select id="pickLiga" aria-label="Liga"></select>
+        <select id="pickClube" aria-label="Clube"></select>
+        <button class="btn ghost sm" id="btnReroll">Sortear outro clube <b id="rerollLeft"></b></button>
+      </div>
+      <div class="aporte" id="aporteWrap">
+        <div class="k">Incorporação financeira: escolha o investidor</div>
+        <div class="apbar" id="aporteSeg" role="radiogroup" aria-label="Incorporação financeira"></div>
+      </div>
       <div class="actions">
         <button class="btn" id="btnStart">Abrir a janela</button>
-        <button class="btn ghost" id="btnReroll">Sortear outro clube</button>
-        <select id="pickLiga" aria-label="Liga do sorteio"></select>
       </div>
       <p class="hint" style="margin-top:14px">Premier League &middot; Bundesliga &middot; La Liga &middot; Serie A &middot; Ligue 1 &middot; Brasileirão &middot; Pro League &middot; Liga Portugal</p>
     </div>
@@ -136,6 +148,10 @@
 
     <div>
       <div class="stack">
+        <div class="pnl">
+          <header><h3>Metas do conselho</h3><span class="r" id="goalsCount"></span></header>
+          <div id="goals"></div>
+        </div>
         <div class="pnl">
           <header><h3>Prévia da imprensa</h3><span class="r" id="dealsCount"></span></header>
           <div class="gradebox">
