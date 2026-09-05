@@ -60,7 +60,8 @@ como tal no relatório da imprensa (*modo fácil com patrocinador master*).
 3. **Recusa do clube não custa dia nenhum**, mas encarece o alvo: cada "não" sobe a pedida em 3%, e
    são quatro tentativas por jogador. **Assinar consome um dia, e sair da entrevista sem acordo
    também.** Enquanto isso, clubes rivais vão fechando com alguns nomes do mercado.
-4. **Vender é ferramenta legítima** para liberar caixa e folha. Deixar uma posição descoberta não é.
+4. **Vender é ferramenta legítima** para liberar caixa e folha, e também é negociação: cada
+   jogador do elenco tem a sua fila de clubes interessados. Deixar uma posição descoberta não é.
 5. **A nota vai de F a A+**, e a aprovação começa em **B (68 pontos)**.
 
 ### A entrevista
@@ -86,6 +87,32 @@ Perto demais do limite é sempre risco: o jogador tem uma teimosia escondida de 
 E a imprensa cobra o que você prometeu: **papel de titular ou estrela para quem termina a janela no
 banco vira desconto na nota**, assim como **cláusula barata em reforço de destaque**. Luvas e
 comissão entram no custo-benefício junto com a taxa, porque o pacote inteiro é o que você gastou.
+
+### A venda
+
+Clicar em *Vender* abre a **fila de interessados** daquele jogador: de dois a quatro clubes das oito
+ligas, cada um com liga, nível, o quanto quer o jogador (*prioridade da diretoria*, *interessado*,
+*só sondando*) e a oferta que pôs na mesa. Dá para aceitar a oferta como está ou **sentar com um
+clube de cada vez**.
+
+Na mesa há dois botões de verdade: a **pedida** e a **forma de pagamento**. Um medidor mostra o
+quanto a sua pedida pesa no bolso daquele comprador, com a linha do teto estimado dele.
+
+| Item | O que está em jogo |
+| --- | --- |
+| **Pedida** | o total do negócio; acima do teto do clube vem contraproposta, muito acima vem recusa |
+| **À vista** | tudo entra no caixa hoje, e o teto do comprador é o que ele tem |
+| **2 parcelas** | ele aguenta 14% a mais no total, e só 62% entra no caixa agora |
+| **3 parcelas** | ele aguenta 27% a mais no total, e só 42% entra no caixa agora |
+
+São **três rodadas por clube**. Pedir demais queima rodada e esfria o comprador em 3%; sem rodada,
+ele levanta da mesa e sai da fila. Enquanto você aperta um, os outros da fila se mexem: é comum um
+rival subir a oferta no meio da conversa. Se a fila inteira acabar, dá para **sondar o mercado de
+novo por um dia**, com clubes novos e um pouco menos de fome.
+
+O painel de negócios e a meta de arrecadação contam **o que entrou no caixa**, não o total assinado:
+parcelar sobe o preço do passe e adia o dinheiro que você tem para gastar na janela. Fechar a venda
+consome um dia.
 
 ### As metas do conselho
 

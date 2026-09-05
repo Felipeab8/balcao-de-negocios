@@ -15,13 +15,18 @@
   <div class="topin">
     <div>
       <div class="mark">BALCÃO DE <em>NEGÓCIOS</em></div>
-      <div class="tag" id="topTag">Janela de transferências &middot; simulador de diretoria</div>
+      <div class="tag" id="topTag" data-i18n="app.tag">Janela de transferências &middot; simulador de diretoria</div>
     </div>
     <div class="spacer"></div>
+    <div class="langbar" id="langBar" role="group" data-i18n-aria="lang.aria" aria-label="Idioma">
+      <button type="button" data-lang="pt" class="on">PT</button>
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="es">ES</button>
+    </div>
     <div class="hud" id="hud" hidden></div>
   </div>
   <div class="ticker" id="tickerBar" hidden>
-    <span class="lbl">PLANTÃO</span>
+    <span class="lbl" data-i18n="app.ticker">PLANTÃO</span>
     <span class="vp"><span class="run" id="tickerRun"></span></span>
   </div>
 </div>
@@ -29,33 +34,33 @@
 <div class="wrap">
   <section class="intro" id="screenIntro">
     <div>
-      <div class="eyebrow">18 dias &middot; um elenco &middot; o mercado inteiro</div>
-      <h1>Você não escala.<span>Você contrata.</span></h1>
-      <p class="lede">Um clube das oito principais ligas do mundo cai no seu colo, com o caixa real, a folha
+      <div class="eyebrow" data-i18n="intro.eyebrow">18 dias &middot; um elenco &middot; o mercado inteiro</div>
+      <h1><span class="l1" data-i18n="intro.h1a">Você não escala.</span><span data-i18n="intro.h1b">Você contrata.</span></h1>
+      <p class="lede" data-i18n="intro.lede">Um clube das oito principais ligas do mundo cai no seu colo, com o caixa real, a folha
       salarial e os buracos que o elenco tem de verdade. Sua única função é a janela: negociar, vender, encaixar
       salário e fechar antes do gongo. No dia seguinte a imprensa dá a nota, e é ela que decide se você fica.</p>
       <ul class="rules">
-        <li><span class="n">01</span><span><b>O mercado inteiro está na mesa, nem todo mundo senta.</b> Você pode mandar proposta para qualquer nome das oito ligas, mas quem é de outro patamar devolve sem conversa. O que está ao seu alcance depende do tamanho do clube que caiu no seu colo.</span></li>
-        <li><span class="n">02</span><span><b>Duas fases por negócio:</b> primeiro a taxa com o clube, depois a <b>entrevista</b> com o jogador: salário, luvas, comissão do empresário, anos de contrato, papel no elenco e cláusula de rescisão.</span></li>
-        <li><span class="n">03</span><span><b>Assinar gasta um dia</b>, e levantar da mesa sem acordo também. Recusa do clube não custa dia, mas encarece o alvo: cada &quot;não&quot; sobe a pedida, e são quatro tentativas por jogador.</span></li>
-        <li><span class="n">04</span><span><b>A nota vai de F a A+.</b> Aprovação a partir de <b>B</b> (70 pontos): reforço do time, carências resolvidas, custo-benefício, projeto e finanças.</span></li>
+        <li><span class="n">01</span><span data-i18n-html="intro.r1"><b>O mercado inteiro está na mesa, nem todo mundo senta.</b> Você pode mandar proposta para qualquer nome das oito ligas, mas quem é de outro patamar devolve sem conversa. O que está ao seu alcance depende do tamanho do clube que caiu no seu colo.</span></li>
+        <li><span class="n">02</span><span data-i18n-html="intro.r2"><b>Duas fases por negócio:</b> primeiro a taxa com o clube, depois a <b>entrevista</b> com o jogador: salário, luvas, comissão do empresário, anos de contrato, papel no elenco e cláusula de rescisão.</span></li>
+        <li><span class="n">03</span><span data-i18n-html="intro.r3"><b>Assinar gasta um dia</b>, e levantar da mesa sem acordo também. Recusa do clube não custa dia, mas encarece o alvo: cada &quot;não&quot; sobe a pedida, e são quatro tentativas por jogador.</span></li>
+        <li><span class="n">04</span><span data-i18n-html="intro.r4"><b>A nota vai de F a A+.</b> Aprovação a partir de <b>B</b> (70 pontos): reforço do time, carências resolvidas, custo-benefício, projeto e finanças.</span></li>
       </ul>
-      <div class="modes" id="modeBar" role="radiogroup" aria-label="Modo de jogo">
-        <button role="radio" data-mode="facil"><b>Fácil</b><small>você escolhe o clube e a incorporação</small></button>
-        <button role="radio" data-mode="dificil"><b>Difícil</b><small>clube sorteado &middot; três novos sorteios</small></button>
-        <button role="radio" data-mode="expert"><b>Expert</b><small>o clube que sair é o seu, e ponto</small></button>
+      <div class="modes" id="modeBar" role="radiogroup" data-i18n-aria="intro.modes.aria" aria-label="Modo de jogo">
+        <button role="radio" data-mode="facil"><b data-i18n="mode.facil.n">Fácil</b><small data-i18n="mode.facil.small">você escolhe o clube e a incorporação</small></button>
+        <button role="radio" data-mode="dificil"><b data-i18n="mode.dificil.n">Difícil</b><small data-i18n="mode.dificil.small">clube sorteado &middot; três novos sorteios</small></button>
+        <button role="radio" data-mode="expert"><b data-i18n="mode.expert.n">Expert</b><small data-i18n="mode.expert.small">o clube que sair é o seu, e ponto</small></button>
       </div>
       <div class="setup" id="setupBar">
-        <select id="pickLiga" aria-label="Liga"></select>
-        <select id="pickClube" aria-label="Clube"></select>
-        <button class="btn ghost sm" id="btnReroll">Sortear outro clube <b id="rerollLeft"></b></button>
+        <select id="pickLiga" data-i18n-aria="setup.liga.aria" aria-label="Liga"></select>
+        <select id="pickClube" data-i18n-aria="setup.clube.aria" aria-label="Clube"></select>
+        <button class="btn ghost sm" id="btnReroll"><span data-i18n="setup.reroll">Sortear outro clube</span> <b id="rerollLeft"></b></button>
       </div>
       <div class="aporte" id="aporteWrap">
-        <div class="k">Incorporação financeira: escolha o investidor</div>
-        <div class="apbar" id="aporteSeg" role="radiogroup" aria-label="Incorporação financeira"></div>
+        <div class="k" data-i18n="aporte.title">Incorporação financeira: escolha o investidor</div>
+        <div class="apbar" id="aporteSeg" role="radiogroup" data-i18n-aria="aporte.aria" aria-label="Incorporação financeira"></div>
       </div>
       <div class="actions">
-        <button class="btn" id="btnStart">Abrir a janela</button>
+        <button class="btn" id="btnStart" data-i18n="intro.start">Abrir a janela</button>
       </div>
       <p class="hint" style="margin-top:14px">Premier League &middot; Bundesliga &middot; La Liga &middot; Serie A &middot; Ligue 1 &middot; Brasileirão &middot; Pro League &middot; Liga Portugal</p>
     </div>
@@ -66,14 +71,14 @@
     <div>
       <div class="stack">
         <div class="pnl">
-          <header><h3>Elenco atual</h3><span class="r" id="squadCount"></span></header>
+          <header><h3 data-i18n="panel.squad">Elenco atual</h3><span class="r" id="squadCount"></span></header>
           <div id="squadList"></div>
           <div class="meterbox">
-            <div class="k"><span>Força da escalação (<b id="formLabel">4-3-3</b>)</span><b id="xiNow">0.0</b></div>
+            <div class="k"><span><span data-i18n="meter.xi">Força da escalação</span> (<b id="formLabel">4-3-3</b>)</span><b id="xiNow">0.0</b></div>
             <div class="bar"><i id="xiBar" class="amber" style="width:0%"></i></div>
-            <div class="k" style="margin-top:9px"><span>Caixa usado</span><b id="spentPct">0%</b></div>
+            <div class="k" style="margin-top:9px"><span data-i18n="meter.cash">Caixa usado</span><b id="spentPct">0%</b></div>
             <div class="bar"><i id="spentBar" style="width:0%"></i></div>
-            <div class="k" style="margin-top:9px"><span>Folha semanal</span><b id="wagePct">0%</b></div>
+            <div class="k" style="margin-top:9px"><span data-i18n="meter.wage">Folha semanal</span><b id="wagePct">0%</b></div>
             <div class="bar"><i id="wageBar" class="pos" style="width:0%"></i></div>
           </div>
         </div>
@@ -83,40 +88,54 @@
     <div class="pnl">
       <header>
         <div class="tabs" role="tablist">
-          <button class="tab" id="tabMarket" role="tab" aria-selected="true">Mercado</button>
-          <button class="tab" id="tabSquad" role="tab" aria-selected="false">Vender do elenco</button>
-          <button class="tab" id="tabLineup" role="tab" aria-selected="false">Escalação</button>
+          <button class="tab" id="tabMarket" role="tab" aria-selected="true" data-i18n="tab.market">Mercado</button>
+          <button class="tab" id="tabCentral" role="tab" aria-selected="false"><span data-i18n="tab.central">Central de transferências</span> <b id="tabWatchN"></b></button>
+          <button class="tab" id="tabSquad" role="tab" aria-selected="false" data-i18n="tab.squad">Vender do elenco</button>
+          <button class="tab" id="tabLineup" role="tab" aria-selected="false" data-i18n="tab.lineup">Escalação</button>
         </div>
         <span class="r" id="listCount"></span>
       </header>
       <div class="filters" id="filters">
         <select id="fPos">
-          <option value="">Todas as posições</option>
-          <option value="GOL">Goleiro</option><option value="ZAG">Zagueiro</option>
-          <option value="LAT">Lateral</option><option value="VOL">Volante</option>
-          <option value="MEI">Meia</option><option value="PON">Ponta</option>
-          <option value="ATA">Atacante</option>
+          <option value="" data-i18n="f.pos.all">Todas as posições</option>
+          <option value="GOL" data-i18n="pos.GOL">Goleiro</option>
+          <option value="ZAG" data-i18n="pos.ZAG">Zagueiro</option>
+          <option value="LAT" data-i18n="f.pos.LAT">Lateral (os dois lados)</option>
+          <option value="LAT:E" data-i18n="f.pos.LAT.E">Lateral esquerdo</option>
+          <option value="LAT:D" data-i18n="f.pos.LAT.D">Lateral direito</option>
+          <option value="VOL" data-i18n="pos.VOL">Volante</option>
+          <option value="MEI" data-i18n="f.pos.MEI">Meia (os dois lados)</option>
+          <option value="MEI:E" data-i18n="f.pos.MEI.E">Meia pela esquerda</option>
+          <option value="MEI:D" data-i18n="f.pos.MEI.D">Meia pela direita</option>
+          <option value="PON" data-i18n="f.pos.PON">Ponta (os dois lados)</option>
+          <option value="PON:E" data-i18n="f.pos.PON.E">Ponta esquerda</option>
+          <option value="PON:D" data-i18n="f.pos.PON.D">Ponta direita</option>
+          <option value="ATA" data-i18n="pos.ATA">Atacante</option>
         </select>
         <select id="fLiga"></select>
-        <select id="fSort">
-          <option value="ovr">Melhor overall</option>
-          <option value="fee">Menor pedida</option>
-          <option value="pot">Maior potencial</option>
-          <option value="age">Mais jovem</option>
-          <option value="wage">Menor salário</option>
-        </select>
-        <input type="search" id="fName" placeholder="Buscar jogador ou clube" autocomplete="off">
-        <label class="tog"><input type="checkbox" id="fNeed"> só carências</label>
-        <label class="tog"><input type="checkbox" id="fAfford"> cabe no caixa</label>
-        <label class="tog"><input type="checkbox" id="fReach"> só quem me atende</label>
+        <select id="fSort"></select>
+        <input type="search" id="fName" data-i18n-ph="f.search.market" placeholder="Buscar jogador ou clube" autocomplete="off">
+        <div class="fline">
+          <label class="tog"><input type="checkbox" id="fNeed"> <span data-i18n="f.need">só carências</span></label>
+          <label class="tog"><input type="checkbox" id="fAfford"> <span data-i18n="f.afford">cabe no caixa</span></label>
+          <label class="tog"><input type="checkbox" id="fReach"> <span data-i18n="f.reach">só quem me atende</span></label>
+          <label class="tog"><input type="checkbox" id="fBench"> <span data-i18n="f.bench">só reservas</span></label>
+          <label class="tog"><input type="checkbox" id="fHeavy"> <span data-i18n="f.heavy">salário acima da média</span></label>
+          <button type="button" class="clearf" id="fClear" data-i18n="f.clear">Zerar filtros</button>
+        </div>
+        <label class="frange" id="wFee">
+          <span data-i18n="f.fee">Teto de compra</span>
+          <input type="range" id="fFee" min="0" max="100000000" step="500000" value="100000000" data-i18n-aria="f.fee.aria" aria-label="Valor máximo da pedida">
+          <b id="fFeeLab">sem limite</b>
+        </label>
       </div>
       <div class="tacbar" id="tacbar" hidden>
-        <label class="tog" for="fForm">Tática</label>
-        <select id="fForm" aria-label="Formação tática"></select>
-        <button class="btn sm ghost" id="btnAuto">Escalação automática</button>
+        <label class="tog" for="fForm" data-i18n="tac.form">Tática</label>
+        <select id="fForm" data-i18n-aria="tac.form.aria" aria-label="Formação tática"></select>
+        <button class="btn sm ghost" id="btnAuto" data-i18n="tac.auto">Escalação automática</button>
         <div class="spacer"></div>
         <div class="lstat">
-          <span class="k">Força da escalação</span>
+          <span class="k" data-i18n="tac.strength">Força da escalação</span>
           <b id="lineupStrength">0.0</b>
           <span class="d" id="lineupDelta"></span>
         </div>
@@ -138,7 +157,7 @@
           <p class="hint" id="selHint" style="margin:10px 2px 0"></p>
         </div>
         <div class="benchcol">
-          <div class="bhead"><span>Reservas</span><span id="benchCount"></span></div>
+          <div class="bhead"><span data-i18n="lineup.bench">Reservas</span><span id="benchCount"></span></div>
           <div class="bench" id="bench"></div>
         </div>
       </div>
@@ -149,28 +168,28 @@
     <div>
       <div class="stack">
         <div class="pnl">
-          <header><h3>Metas do conselho</h3><span class="r" id="goalsCount"></span></header>
+          <header><h3 data-i18n="panel.goals">Metas do conselho</h3><span class="r" id="goalsCount"></span></header>
           <div id="goals"></div>
         </div>
         <div class="pnl">
-          <header><h3>Prévia da imprensa</h3><span class="r" id="dealsCount"></span></header>
+          <header><h3 data-i18n="panel.press">Prévia da imprensa</h3><span class="r" id="dealsCount"></span></header>
           <div class="gradebox">
             <div class="gletter" id="gLetter">&ndash;</div>
-            <div class="gscore" id="gScore">0 / 100 PONTOS</div>
+            <div class="gscore" id="gScore">0 / 100</div>
             <div class="scale" id="gScale"></div>
           </div>
           <div id="comps"></div>
         </div>
         <div class="pnl">
-          <header><h3>Movimentações</h3><span class="r" id="netSpend"></span></header>
-          <div id="deals"><div class="empty">Nenhum negócio fechado ainda.</div></div>
+          <header><h3 data-i18n="panel.deals">Movimentações</h3><span class="r" id="netSpend"></span></header>
+          <div id="deals"></div>
         </div>
         <div class="pnl">
-          <header><h3>Últimas do dia</h3></header>
+          <header><h3 data-i18n="panel.feed">Últimas do dia</h3></header>
           <div class="feed" id="feed"></div>
           <div style="padding:12px 13px;border-top:1px solid var(--line)">
-            <button class="btn wide" id="btnClose">Fechar a janela</button>
-            <div class="hint" style="margin-top:8px;text-align:center">Encerra e publica a nota final</div>
+            <button class="btn wide" id="btnClose" data-i18n="btn.close">Fechar a janela</button>
+            <div class="hint" style="margin-top:8px;text-align:center" data-i18n="close.hint">Encerra e publica a nota final</div>
           </div>
         </div>
       </div>
@@ -181,6 +200,7 @@
 </div>
 <div id="modalRoot"></div>
 
+<script src="data/i18n.js"></script>
 <script src="data/names.js"></script>
 <script src="data/premier.js"></script>
 <script src="data/bundesliga.js"></script>
