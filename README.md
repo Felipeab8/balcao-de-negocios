@@ -1,7 +1,7 @@
 # Balcão de Negócios
 
 Jogo de navegador em que você não escala o time durante a partida. Você monta o elenco na janela
-de transferências. Um clube das oito principais ligas do mundo cai no seu colo (escolhido por você
+de transferências. Um clube das treze principais ligas do mundo cai no seu colo (escolhido por você
 no modo fácil, sorteado no difícil, imposto no expert) com o caixa, o teto salarial e os buracos
 que ele tem de verdade. Você tem 18 dias para negociar, vender, escalar e
 fechar. O mercado inteiro aparece na sua mesa, mas só uma parte dele atende: o que está ao seu
@@ -90,7 +90,7 @@ comissão entram no custo-benefício junto com a taxa, porque o pacote inteiro �
 
 ### A venda
 
-Clicar em *Vender* abre a **fila de interessados** daquele jogador: de dois a quatro clubes das oito
+Clicar em *Vender* abre a **fila de interessados** daquele jogador: de dois a quatro clubes das treze
 ligas, cada um com liga, nível, o quanto quer o jogador (*prioridade da diretoria*, *interessado*,
 *só sondando*) e a oferta que pôs na mesa. Dá para aceitar a oferta como está ou **sentar com um
 clube de cada vez**.
@@ -170,9 +170,14 @@ balcao-de-negocios/
     ├── laliga.js              La Liga
     ├── seriea.js              Serie A
     ├── ligue1.js              Ligue 1
-    ├── brasileirao.js         Brasileirão
     ├── belgica.js             Pro League
-    └── portugal.js            Liga Portugal
+    ├── portugal.js            Liga Portugal
+    ├── brasileirao.js         Brasileirão
+    ├── argentina.js           Liga Profesional
+    ├── uruguai.js             Primera División
+    ├── colombia.js            Primera A
+    ├── equador.js             LigaPro Serie A
+    └── paraguai.js            División Profesional
 ```
 
 `game.js` não tem nenhum nome de clube ou jogador embutido: ele lê `window.LIGAS`, montado pelos
@@ -201,7 +206,8 @@ sh build.sh
 
 ## Sobre os dados
 
-150 clubes e cerca de 1.900 jogadores reais das temporadas 2025/26 (2025 no Brasileirão), em
+216 clubes e cerca de 2.800 jogadores reais das temporadas 2025/26 na Europa e 2026 na América do
+Sul, em
 **valores aproximados** montados de memória. Overalls, idades e elencos servem ao equilíbrio do
 jogo, não à precisão de banco de dados. Quando a base não cobre a profundidade de uma posição, o
 elenco é completado por atletas gerados com nomes do país da liga. Projeto de fã, sem vínculo com

@@ -15,7 +15,8 @@ OUT=../balcao-de-negocios.html
   sed -n '/^<body>$/,/^<\/body>$/p' index.html | sed '1d;$d' | grep -v '^<script src='
   echo '<script>'
   for f in data/i18n.js data/names.js data/premier.js data/bundesliga.js data/laliga.js data/seriea.js \
-           data/ligue1.js data/brasileirao.js data/belgica.js data/portugal.js game.js; do
+           data/ligue1.js data/brasileirao.js data/belgica.js data/portugal.js \
+           data/argentina.js data/uruguai.js data/colombia.js data/equador.js data/paraguai.js game.js season.js; do
     cat "$f"
     echo
   done

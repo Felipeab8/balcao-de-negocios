@@ -29,6 +29,26 @@ window.NOMES = {
     f: ['Senne','Wout','Lars','Milan','Arne','Stan','Vic','Jarne','Sem','Lucas','Tuur','Kobe'],
     s: ['Vandersteen','Vermeulen','De Backer','Van Damme','Coppens','Segers','Vanhoutte','Claeys','Buyens','Wauters','Dhondt','Verhaeghe']
   },
+  ARG: {
+    f: ['Thiago','Bautista','Valentín','Lautaro','Ramiro','Joaquín','Facundo','Agustín','Tomás','Santino','Benjamín','Ignacio','Nahuel','Franco'],
+    s: ['Bordagaray','Peruzzi','Cerrudo','Iramain','Vietto','Bogado','Zabaleta','Arzamendia','Cufré','Verón','Colombatto','Bareiro','Insúa','Recalde']
+  },
+  URU: {
+    f: ['Mathías','Rodrigo','Emiliano','Bruno','Maximiliano','Santiago','Nicolás','Gonzalo','Sebastián','Facundo','Thiago','Agustín'],
+    s: ['Larrañaga','Cotelo','Sappa','Techera','Ubal','Lasalvia','Perujo','Ifrán','Zunino','Corujo','Elizalde','Pellistri']
+  },
+  COL: {
+    f: ['Jhon','Deiver','Yeison','Brayan','Kevin','Wilmar','Andrés','Duván','Cristian','Sebastián','Miguel','Jefferson','Carlos','Julián'],
+    s: ['Quiñónez','Mosquera-Riascos','Bocanegra','Palomeque','Renteria','Balanta','Hinestroza','Cuadrado','Angulo','Machado','Zapata-Lara','Caicedo']
+  },
+  EQU: {
+    f: ['Jhojan','Ángel','Byron','Denil','Alan','Jeremy','Kevin','Anderson','Washington','Segundo','Jordy','Yaimar'],
+    s: ['Preciado','Bagüí','Arroyo','Cortez','Congo','Tenorio','Quinteros','Chalá','Corozo','Mina-Vera','Estupiñán','Anangonó']
+  },
+  PAR: {
+    f: ['Derlis','Rodrigo','Blas','Junior','Adalberto','Braian','Hugo','Ángel','Alexis','Marcelo','Gustavo','Ramón'],
+    s: ['Bogarín','Cañete','Ovelar','Aquino','Benítez-Cardozo','Villasanti','Escurra','Ferreira-Ramírez','Meléndez','Roldán','Ayala','Sanabria']
+  },
   POR: {
     f: ['Diogo','Tiago','Gonçalo','Rodrigo','Afonso','Rúben','Fábio','Duarte','Salvador','Martim','Ivo','Bernardo'],
     s: ['Vilaverde','Carvalhosa','Trigueiro','Palhinhas','Vasconcelos','Bragança','Sardinha','Estrela','Loureiro','Cordeiro','Maia','Pinhão']

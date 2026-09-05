@@ -167,8 +167,8 @@ const COMPAT = {
   PON:{PON:0, MEI:4, ATA:4, LAT:6},
   ATA:{ATA:0, PON:4, MEI:5}
 };
-/* lateral, ponta e meia jogam num corredor; o resto do time joga pelo meio */
-const SIDED = { LAT:1, PON:1, MEI:1 };
+/* lateral e ponta jogam num corredor; o resto do time joga pelo meio */
+const SIDED = { LAT:1, PON:1 };
 const SIDE_PEN = 3;   /* quanto custa jogar no corredor trocado */
 const ROLE_PEN = 1;   /* quanto custa jogar na função secundária que ele já faz */
 /* o lado de cada vaga sai da posição dela no campo */
@@ -273,9 +273,9 @@ function traitsOf(pos, seed, forceSide){
 /* quem faz mais de uma função vale mais: é uma vaga a mais coberta no mesmo contrato */
 function versatilidade(tr){ return 1 + tr.roles.length * .04 + (tr.side === 'A' ? .02 : 0); }
 function realPlayer(row, club){
-  const [name, pos, age, ovr] = row;
+  const [name, pos, age, ovr, side] = row;
   const pot = potOf(ovr, age);
-  const tr = traitsOf(pos, hashName(name + pos));
+  const tr = traitsOf(pos, hashName(name + pos), side);
   return { id:UID++, pos, name, age, ovr, pot, side:tr.side, roles:tr.roles,
     value:Math.round(valueOf(ovr, age, pot) * versatilidade(tr) / 1e5) * 1e5, wage:wageOf(ovr, age),
     club:club.n, clubLvl:club.lvl, liga:club.liga.nome, real:true, attempts:0, gone:false };
@@ -853,10 +853,10 @@ function currentList(){
            : TAB === 'central' ? G.market.filter(p => observado(p.id))
            : G.market.filter(p => !p.gone);
   if (posF){
-    /* 'LAT:E' pede lateral que jogue pela esquerda; quem faz a função como segunda opção também entra */
+    /* 'LAT:E' pede lateral que jogue pela esquerda. O filtro é pela posição de origem:
+       a função secundária vale na escalação, não aqui */
     const [fp, fs] = posF.split(':');
-    list = list.filter(p => (p.pos === fp || (p.roles || []).includes(fp)) &&
-      (!fs || p.pos !== fp || cobreLado(p, fs)));
+    list = list.filter(p => p.pos === fp && (!fs || cobreLado(p, fs)));
   }
   if (q) list = list.filter(p => (p.name + ' ' + p.club).toLowerCase().includes(q));
   if (TAB !== 'squad'){
@@ -1878,18 +1878,24 @@ function renderReport(){
           pts:Math.round(ev.total), form:G.form, a:G.baseXI.toFixed(1), b:ev.xi.toFixed(1),
           in:G.signings.length, out:G.sales.length, spend:money(ev.spend), cash:money(G.money) }) +
       '</div>' +
-      '<div class="actions" style="justify-content:center"><button class="btn" id="btnAgain">' + t('report.again') + '</button></div>' +
+      '<div class="actions" style="justify-content:center">' +
+        (G.season || SIM ? '' : '<button class="btn" id="btnSeason">' + t('season.btn') + '</button>') +
+        '<button class="btn ghost" id="btnAgain">' + t('report.again') + '</button></div>' +
+      (SIM ? simStageHtml() : G.season ? '' : '<p class="hint" style="margin-top:12px">' + t('season.hint') + '</p>') +
     '</div>' +
     '<div class="rgrid">' +
       '<div><div class="pnl"><header><h3>' + t('report.goals') + '</h3><span class="r">' + ev.feitas + '/' + ev.goals.length + '</span></header>' + goalRows + '</div>' +
       '<div class="pnl"><header><h3>' + t('report.score') + '</h3><span class="r">' + t('report.pts', { n:Math.round(ev.total) }) + '</span></header>' + compRows + '</div></div>' +
       '<div><div class="pnl"><header><h3>' + t('report.signings') + '</h3><span class="r">' + G.signings.length + '</span></header>' + signRows + '</div>' +
       '<div class="pnl"><header><h3>' + t('report.xi') + '</h3><span class="r">' + G.form + '</span></header>' + xiRows + '</div></div>' +
-    '</div>';
+    '</div>' +
+    (G.season ? seasonHtml(G.season) : '');
   $('#screenDesk').hidden = true;
   $('#screenReport').hidden = false;
+  if ($('#btnSeason')) $('#btnSeason').onclick = runSeason;
   $('#btnAgain').onclick = () => {
     /* janela nova: chances de sorteio de volta e todo clube guardado é descartado */
+    simAbort();
     Object.keys(SAVED).forEach(k => delete SAVED[k]);
     REROLLS = MODES[MODE].rerolls;
     drawGame(false);
